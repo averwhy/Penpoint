@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <img src="/penmenpridelogo.png" alt="Penn Men Pride Logo" class="logo-image" />
+    <h1 class="welcome-text">Penmen Pride</h1>
     <NuxtRouteAnnouncer />
   </div>
 </template>
@@ -12,20 +12,23 @@ html, body {
   height: 100%;
   width: 100%;
   overflow: hidden;
-  background-color: #202027;
+  background-color: #1e1e22;
 }
 
 .app-container {
   min-height: 100vh;
   width: 100%;
-  background-color: #202027;
+  background-color: #1e1e22;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.logo-image {
-  max-width: 80%;
-  height: auto;
+.welcome-text {
+  color: white;
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
 }
 </style>
