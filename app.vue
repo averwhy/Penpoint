@@ -7,7 +7,12 @@
         </NuxtLink>
         <div class="nav-links">
           <NuxtLink to="/" class="nav-link">Home</NuxtLink>
-          <NuxtLink to="/login" class="nav-link">Admin Login</NuxtLink>
+          <NuxtLink to="/points" class="nav-link">Points Check</NuxtLink>
+          <UTooltip text="Staff login" placement="right">
+            <NuxtLink to="/login" class="nav-link">
+              <Icon name="material-symbols:security" />
+            </NuxtLink>
+          </UTooltip>
         </div>
       </div>
     </div>
@@ -65,6 +70,12 @@ html, body {
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s;
+}
+
+.admin-link {
+  color: white;
+  transition: color 0.2s;
+  padding-top: 2%;
 }
 
 .nav-link:hover {
