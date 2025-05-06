@@ -66,5 +66,6 @@ const fetchPoints = () => {
 
 .search-button {
   min-width: 100px;
+  text-align: center;
 }
 </style>
