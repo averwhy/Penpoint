@@ -34,14 +34,14 @@
 
 <script lang="ts" setup>
 const formState = reactive({
-  email: '',
-  password: ''
+	email: "",
+	password: "",
 });
 
 const handleLogin = () => {
-  // Here you would implement the actual login logic
-  console.log('Login attempt:', formState);
-  // For example, check credentials against a database or make an API call
+	// Here you would implement the actual login logic
+	console.log("Login attempt:", formState);
+	// For example, check credentials against a database or make an API call
 };
 </script>
 

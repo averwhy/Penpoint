@@ -26,16 +26,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, nextTick } from 'vue';
+import { ref, nextTick } from "vue";
 
-const studentId = ref('');
+const studentId = ref("");
 const isLoading = ref(false);
 
 const fetchPoints = async () => {
-  isLoading.value = true;
-  await nextTick(); // Ensures the loading state is reflected before continuing
-  // This function will be implemented later to handle points checking
-  console.log('Checking points for student ID:', studentId.value);
+	isLoading.value = true;
+	await nextTick(); // Ensures the loading state is reflected before continuing
+	// This function will be implemented later to handle points checking
+	console.log("Checking points for student ID:", studentId.value);
 };
 </script>
 
