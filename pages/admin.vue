@@ -1,50 +1,30 @@
 <template>
   <div class="flex flex-col items-center justify-center min-h-screen p-4">
-    <div class="max-w-md w-full space-y-6 p-8 rounded-lg">
-      <h2 class="text-2xl font-bold text-center">Admin Login</h2>
+    <div class="max-w-md w-full space-y-6 p-8 rounded-lg flex flex-col items-center">
+      <div class="text-center mb-6">
+        <h2 class="text-2xl font-bold">Admin Login</h2>
+        <p class="text-sm text-gray-600 mt-1">Authorized access only.</p>
+      </div>
       
-      <div class="relative">
-        <UForm :state="formState" class="space-y-4">
-          <!-- Email field with button -->
-          <div>
-            <UFormGroup label="Email" name="email" class="w-full">
-              <div class="flex items-center gap-1">
-                <UInput v-model="formState.email" placeholder="Enter your email" type="email" class="flex-grow" />
-                <UButton 
-                  icon="i-material-symbols-arrow-forward-rounded" 
-                  color="primary"
-                  :disabled="!formState.email"
-                  @click="showPassword = true"
-                  v-if="!showPassword"
-                  class="ml-1"
-                />
-              </div>
-            </UFormGroup>
-          </div>
+      <div class="relative w-full flex flex-col items-center">
+        <UForm :state="formState" class="space-y-4 w-full max-w-xs">
+          <UFormGroup label="Email" name="email">
+            <UInput v-model="formState.email" placeholder="Enter your email" type="email" class="w-full mb-2" variant="soft" />
+          </UFormGroup>
           
-          <!-- Password field and login button -->
-          <div v-if="showPassword">
-            <UFormGroup 
-              label="Password" 
-              name="password"
-              class="password-field w-full"
+          <UFormGroup label="Password" name="password">
+            <UInput v-model="formState.password" type="password" placeholder="Enter your password" class="w-full" variant="soft" />
+          </UFormGroup>
+          
+          <div class="flex justify-center mt-6">
+            <UButton 
+              icon="i-material-symbols-login-rounded" 
+              color="primary"
+              @click="handleLogin"
+              aria-label="Login"
             >
-              <UInput 
-                v-model="formState.password" 
-                type="password" 
-                placeholder="Enter your password" 
-              />
-            </UFormGroup>
-            
-            <div class="flex justify-end mt-4">
-              <UButton 
-                type="submit" 
-                color="primary" 
-                @click="handleLogin"
-              >
-                Login
-              </UButton>
-            </div>
+              Login
+            </UButton>
           </div>
         </UForm>
       </div>
@@ -53,7 +33,6 @@
 </template>
 
 <script lang="ts" setup>
-const showPassword = ref(false);
 const formState = reactive({
   email: '',
   password: ''
@@ -67,18 +46,5 @@ const handleLogin = () => {
 </script>
 
 <style>
-.password-field {
-  animation: slideDown 0.5s ease-out forwards;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* Remove animation styles that are no longer needed */
 </style>

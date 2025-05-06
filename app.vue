@@ -17,7 +17,9 @@
       </div>
     </div>
     <main class="main-content">
-      <NuxtPage />
+      <Transition name="fade" mode="out-in">
+        <NuxtPage />
+      </Transition>
     </main>
   </UApp>
 </template>
@@ -85,5 +87,17 @@ html, body {
 .main-content {
   margin-top: 60px; /* Space for navbar */
   min-height: calc(100vh - 60px);
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-to, .fade-leave-from {
+  opacity: 1;
 }
 </style>
