@@ -1,20 +1,32 @@
 {
-    "workbench.colorCustomizations": {
-        "sideBar.border": "#222",
-        "editorGroup.border": "#222",
-        "editorIndentGuide.background": "#222",
-        "editorIndentGuide.activeBackground": "#333",
-        "editor.selectionBackground": "#007acc",
-        "editor.selectionHighlightBackground": "#007acc",
-        "editor.inactiveSelectionBackground": "#007acc",
-        "editor.findMatchBackground": "#fa05",
-        "editor.findMatchHighlightBackground": "#fa05",
-        "editor.findMatchBorder": "#fe0",
-        "editor.findMatchHighlightBorder": "#fe0",
-        "editor.selectionHighlightBorder": "#fe0",
-        "terminal.background": "#00000000",
-        "activityBar.background": "#29300F",
-        "titleBar.activeBackground": "#3A4415",
-        "titleBar.activeForeground": "#F9FBF3"
-    }
+	"workbench.colorCustomizations": {
+		"sideBar.border": "#222",
+		"editorGroup.border": "#222",
+		"editorIndentGuide.background": "#222",
+		"editorIndentGuide.activeBackground": "#333",
+		"editor.selectionBackground": "#007acc",
+		"editor.selectionHighlightBackground": "#007acc",
+		"editor.inactiveSelectionBackground": "#007acc",
+		"editor.findMatchBackground": "#fa05",
+		"editor.findMatchHighlightBackground": "#fa05",
+		"editor.findMatchBorder": "#fe0",
+		"editor.findMatchHighlightBorder": "#fe0",
+		"editor.selectionHighlightBorder": "#fe0",
+		"terminal.background": "#00000000",
+		"activityBar.background": "#29300F",
+		"titleBar.activeBackground": "#3A4415",
+		"titleBar.activeForeground": "#F9FBF3"
+	},
+	"sqltools.connections": [
+		{
+			"previewLimit": 50,
+			"server": "localhost",
+			"port": 5777,
+			"driver": "PostgreSQL",
+			"name": "pride25db",
+			"database": "pridedb",
+			"username": "petey",
+			"password": "Pr1de2025!"
+		}
+	]
 }

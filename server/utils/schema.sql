@@ -3,8 +3,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- regular students (They won't be able to login to anything)
 CREATE TABLE students (
     student_id VARCHAR(7) PRIMARY KEY,
-    email TEXT UNIQUE, -- This and `name` are going to be null by default
-    name TEXT, -------------^^^^^^^^^^^^^^^
+    email TEXT UNIQUE DEFAULT NULL, -- This and `name` are going to be null by default
+    name TEXT DEFAULT NULL, -------------^^^^^^^^^^^^^^^
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -62,7 +62,7 @@ CREATE TABLE events (
 
 CREATE TABLE taps (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    semester_id
+    semester_id UUID REFERENCES semesters(id),
     student_id VARCHAR(7) REFERENCES students(student_id),
     event_id UUID REFERENCES events(id)
 );

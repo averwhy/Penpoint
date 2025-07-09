@@ -33,18 +33,40 @@
 </template>
 
 <script lang="ts" setup>
+import { loginResponseSchema } from "~/server/utils/schemas";
+
 const formState = reactive({
 	email: "",
 	password: "",
 });
 
-const handleLogin = () => {
-	// Here you would implement the actual login logic
-	console.log("Login attempt:", formState);
-	// For example, check credentials against a database or make an API call
+const handleLogin = async () => {
+	try {
+		const response = await $fetch("/api/login", {
+			method: "POST",
+			body: formState,
+		});
+
+		// Validate response with Zod
+		const data = loginResponseSchema.parse(response);
+
+		// Store token in secure cookie and redirect
+		const token = useCookie("access-token", {
+			httpOnly: false, // Needs to be accessible by client for API calls
+			secure: process.env.NODE_ENV === "production",
+			sameSite: "strict",
+			maxAge: 60 * 15, // 15 minutes
+		});
+		token.value = data.accessToken;
+
+		await navigateTo("/dashboard");
+	} catch (error) {
+		console.error("Login failed:", error);
+		// Handle error (show toast, etc.)
+	}
 };
 </script>
 
 <style>
-/* Remove animation styles that are no longer needed */
+
 </style>
