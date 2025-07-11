@@ -61,17 +61,14 @@ export default defineEventHandler(async (event) => {
 
 		// Find user with admin privileges
 		const users = await sql`
-      SELECT u.*, a.active 
-      FROM users u
-      JOIN admins a ON u.id = a.id
-      WHERE u.email = ${email} AND a.active = true
-    `;
+			SELECT u.*, a.active 
+			FROM users u
+			WHERE u.email = ${email} AND a.active = true
+		`;
 
 		if (users.length === 0) {
-			throw createError({
-				statusCode: 401,
-				statusMessage: "Invalid credentials",
-			});
+			// TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			// Wtf is the difference between this and the 401 below?
 		}
 
 		const user = users[0];
@@ -114,9 +111,17 @@ export default defineEventHandler(async (event) => {
 		};
 	} catch (error) {
 		if (error instanceof ZodError) {
+			if (error.errors[0].code === "too_small") {
+				throw createError({
+					statusCode: 400,
+					statusMessage: `Password too short: ${error}`,
+				});
+			}
+
+			// Fallback
 			throw createError({
 				statusCode: 400,
-				statusMessage: "Invalid input data",
+				statusMessage: `Invalid input data: ${error}`,
 			});
 		}
 		throw error;

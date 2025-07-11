@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt, { type JwtPayload } from "jsonwebtoken";
 
 export async function hashPassword(password: string): Promise<string> {
-	return await bcrypt.hash(password, 10);
+	return await bcrypt.hash(password, 15);
 }
 
 export async function verifyPassword(

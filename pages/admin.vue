@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col items-center justify-center min-h-screen p-4">
-    <div class="max-w-md w-full space-y-6 p-8 rounded-lg flex flex-col items-center">
+    <div class="max-w-md w-full space-y-6 p-8 rounded-lg flex flex-col items-center bg-[#141417]">
       <div class="text-center mb-6">
         <h2 class="text-2xl font-bold">Admin Login</h2>
         <p class="text-sm text-gray-600 mt-1">Authorized access only.</p>
@@ -44,7 +44,7 @@ const handleLogin = async () => {
 	try {
 		const response = await $fetch("/api/login", {
 			method: "POST",
-			body: formState,
+			body: {...formState},
 		});
 
 		// Validate response with Zod
@@ -60,8 +60,14 @@ const handleLogin = async () => {
 		token.value = data.accessToken;
 
 		await navigateTo("/dashboard");
+		useToast().add({ title: `Welcome back, ${data.user.name}!` });
 	} catch (error) {
 		console.error("Login failed:", error);
+		useToast().add({
+			title: "Something went wrong!",
+			description: error instanceof Error ? error.message : String(error),
+      color: "error"
+		});
 		// Handle error (show toast, etc.)
 	}
 };

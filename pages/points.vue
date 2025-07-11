@@ -1,26 +1,30 @@
 <template>
-  <div class="points-container">
-    <h1 class="title">Points Check</h1>
-    <p class="description">Want to know how many points you have? Enter your Student ID here</p>
-    <p class="sub-description">All data is cached locally - so your student ID never leaves your computer.</p>
-    <div class="search-container px-20 sm:px-35">
-      <UInput
-        v-model="studentId"
-        placeholder="e.g. 1234567"
-        type="text"
-        maxlength="7"
-        variant="soft"
-        class="search-input"
-        :disabled="isLoading"
-      />
-      <UButton class="search-button flex items-center justify-center w-24" @click="fetchPoints" :disabled="isLoading">
-        <Transition name="fade" mode="out-in">
-          <span v-if="!isLoading" key="text" class="flex items-center justify-center">Check</span>
-          <span v-else key="spinner" class="flex items-center justify-center w-full">
-            <UIcon name="i-heroicons-arrow-path-20-solid" class="animate-spin" />
-          </span>
-        </Transition>
-      </UButton>
+  <div class="flex flex-col items-center justify-center min-h-screen p-4">
+    <div class="max-w-md w-full space-y-6 p-20 rounded-lg flex flex-col items-center bg-[#141417]">
+      <div class="text-center">
+        <h1 class="title">Points Check</h1>
+        <p class="description">Want to know how many points you have? Enter your Student ID!</p>
+        <div class="search-container my-3">
+          <UInput
+            v-model="studentId"
+            placeholder="e.g. 1234567"
+            type="text"
+            maxlength="7"
+            variant="soft"
+            class="search-input"
+            :disabled="isLoading"
+          />
+          <UButton class="search-button flex items-center justify-center w-24" @click="fetchPoints" :disabled="isLoading">
+            <Transition name="fade" mode="out-in">
+              <span v-if="!isLoading" key="text" class="flex items-center justify-center">Check</span>
+              <span v-else key="spinner" class="flex items-center justify-center w-full">
+                <UIcon name="i-heroicons-arrow-path-20-solid" class="animate-spin" />
+              </span>
+            </Transition>
+          </UButton>
+          </div>
+          <p class="sub-description">All data is cached locally - so your student ID never leaves your computer.</p>
+        </div>
     </div>
   </div>
 </template>
@@ -49,6 +53,7 @@ const fetchPoints = async () => {
   max-width: 800px;
   margin: 0 auto;
   height: 80vh;
+  background-color: #141417;
 }
 
 .title {

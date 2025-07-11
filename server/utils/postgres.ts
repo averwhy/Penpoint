@@ -1,11 +1,14 @@
 import postgres from "postgres";
 
-export function usePostgres() {
+export function usePostgres() : postgres.Sql {
 	if (!process.env.POSTGRES_URL) {
 		throw createError("Missing `POSTGRES_URL` environment variable");
 	}
+	const pgconnection = postgres(process.env.POSTGRES_URL as string, {
+		//ssl: "require",
+		connect_timeout: 60,
 
-	return postgres(process.env.POSTGRES_URL as string, {
-		ssl: "require",
 	});
+	console.info("Connected to Postgres!");
+	return pgconnection;
 }
