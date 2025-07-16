@@ -59,7 +59,6 @@ export default defineEventHandler(async (event) => {
 
 		const sql = usePostgres();
 
-		// Find user with admin privileges
 		const users = await sql`
 			SELECT u.*, a.active 
 			FROM users u
@@ -67,8 +66,11 @@ export default defineEventHandler(async (event) => {
 		`;
 
 		if (users.length === 0) {
-			// TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			// Wtf is the difference between this and the 401 below?
+			// No users found at all
+			throw createError({
+				statusCode: 401,
+				statusMessage: "Invalid credentials",
+			});
 		}
 
 		const user = users[0];
