@@ -22,6 +22,11 @@ CREATE TABLE users (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE TABLE unapproved (
+    id UUID PRIMARY KEY REFERENCES users(id),
+    requested_at TIMESTAMPTZ NOT NULL DEFAULT now()
+)
+
 CREATE TABLE admins (
     id UUID PRIMARY KEY REFERENCES users(id),
     active BOOLEAN NOT NULL DEFAULT true,
@@ -33,7 +38,7 @@ CREATE TABLE semesters (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     starts TIMESTAMPTZ NOT NULL,
     ends TIMESTAMPTZ NOT NULL,
-    code VARCHAR(3) NOT NULL -- E.g. A3 (it's snhu's new semester coding system, used to be like FADAY23)
+    code VARCHAR(3) NOT NULL -- E.g. A3 (it's snhu's new semester coding system)
 );
 
 CREATE TABLE clubs (

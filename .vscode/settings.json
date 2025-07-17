@@ -28,5 +28,7 @@
 			"username": "petey",
 			"password": "Pr1de2025!"
 		}
-	]
+	],
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "biomejs.biome"
 }

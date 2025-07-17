@@ -113,7 +113,7 @@ export default defineEventHandler(async (event) => {
 		};
 	} catch (error) {
 		if (error instanceof ZodError) {
-			if (error.errors[0].code === "too_small") {
+			if (error.cause === "too_small") { // TODO test
 				throw createError({
 					statusCode: 400,
 					statusMessage: `Password too short: ${error}`,

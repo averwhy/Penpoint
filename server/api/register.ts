@@ -44,9 +44,9 @@ export default defineEventHandler(async (event) => {
 
 		// Insert user as pending/awaiting approval
 		await sql`
-      INSERT INTO users (email, password_hash)
-      VALUES (${email}, ${password_hash})
-    `;
+			INSERT INTO users (email, password_hash)
+			VALUES (${email}, ${password_hash})
+			`;
 
 		// Optionally: send notification email to admin here
 
@@ -55,7 +55,7 @@ export default defineEventHandler(async (event) => {
 		if (error instanceof z.ZodError) {
 			throw createError({
 				statusCode: 400,
-				statusMessage: error.errors[0]?.message || "Invalid input data.",
+				statusMessage: error?.message || "Invalid input data.",
 			});
 		}
 		throw error;

@@ -1,16 +1,27 @@
 import { z } from "zod";
 
 export const loginSchema = z.object({
-	email: z.string().email(),
+	email: z.email(),
 	password: z.string().min(6),
 });
 
-// User schemas
+// db schemas
 export const userSchema = z.object({
-	id: z.string().uuid(),
-	email: z.string().email(),
+	id: z.uuid(),
+	email: z.email(),
 	name: z.string(),
+	last_login: z.iso.datetime(),
+	created_at: z.iso.datetime(),
+	updated_at: z.iso.datetime()
 });
+
+export const studentSchema = z.object({
+	student_id: z.string().length(7),
+	email: z.email(),
+	name: z.string(),
+	created_at: z.iso.datetime(),
+	updated_at: z.iso.datetime()
+})
 
 // API Response schemas
 export const loginResponseSchema = z.object({
