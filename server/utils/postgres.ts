@@ -1,5 +1,7 @@
 import postgres from "postgres";
-import type User from "#imports";
+import { studentSchema } from "#imports";
+import type { Student } from "./schemas";
+
 export function usePostgres() : postgres.Sql {
 	if (!process.env.POSTGRES_URL) {
 		throw createError("Missing `POSTGRES_URL` environment variable");
@@ -13,6 +15,24 @@ export function usePostgres() : postgres.Sql {
 	return pgconnection;
 }
 
-// export function createStudent(): User {
+export async function createStudent(student_id: number): Promise<Student> {
+	const sql = usePostgres();
+	const result = await sql`
+		INSERT INTO users (student_id)
+		VALUES (${student_id})
+		RETURNING *
+	`;
 
-// }
+	return studentSchema.parse(result.at(0));
+}
+
+export async function studentExists(student_id: number): Promise<boolean> {
+	const sql = usePostgres();
+	const result = await sql`
+		SELECT student_id
+		FROM students
+		WHERE student_id = ${student_id}
+	`;
+
+	return result.count === 1;
+}

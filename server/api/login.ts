@@ -89,10 +89,10 @@ export default defineEventHandler(async (event) => {
 
 		// Update refresh token in database
 		await sql`
-      UPDATE users 
-      SET refresh_token = ${refreshToken}, last_login = now()
-      WHERE id = ${user.id}
-    `;
+			UPDATE users 
+			SET refresh_token = ${refreshToken}, last_login = now()
+			WHERE id = ${user.id}
+		`;
 
 		// Set HTTP-only cookie for refresh token
 		setCookie(event, "refresh-token", refreshToken, {
