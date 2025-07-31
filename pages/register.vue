@@ -11,7 +11,7 @@
       <div class="relative w-full flex flex-col items-center">
         <UForm :state="formState" class="space-y-4 w-full max-w-xs">
           <UFormGroup label="Name" name="name" class="">
-            <UInput v-model="formState.studentid" placeholder="First name" type="text" class="w-full mb-2" variant="soft" />
+            <UInput v-model="formState.name" placeholder="First name" type="text" class="w-full mb-2" variant="soft" />
           </UFormGroup>
           <UFormGroup label="Email" name="email">
             <UInput v-model="formState.email" placeholder="Enter your email" type="email" class="w-full mb-2" variant="soft" />

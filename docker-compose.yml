@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # app:
+  #   build: .
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5041/${POSTGRES_DB}
+  #     - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}
+  #     - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+  #     - NODE_ENV=${NODE_ENV}
+  #     - NUXT_PUBLIC_AUTH_BASE_URL=${NUXT_PUBLIC_AUTH_BASE_URL}
+  #     - RATE_LIMIT_WINDOW_MS=${RATE_LIMIT_WINDOW_MS}
+  #     - RATE_LIMIT_MAX_ATTEMPTS=${RATE_LIMIT_MAX_ATTEMPTS}
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   # Remove this volume for production, keep for development
+  #   volumes:
+  #     - .:/app
+    
+  db:
+    image: postgres:17.5-alpine
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5041:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./server/utils/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U petey -d pridedb"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
