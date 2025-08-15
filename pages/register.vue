@@ -47,34 +47,49 @@
 const passwordFocused = ref(false);
 
 const formState = reactive({
-  name: "",
+	name: "",
 	email: "",
 	password: "",
-  studentid: "",
-  reason: ""
+	studentid: "",
+	reason: "",
 });
 
 const handleRegister = async () => {
-	try {
-		await $fetch("/api/register", {
-			method: "POST",
-			body: { ...formState },
-		});
-		useToast().add({
-			title:
-				"Your request has been submitted. You will recieve an email from sga@snhu.edu once approved.",
-			color: "success",
-		});
-		formState.email = "";
-		formState.password = "";
-	} catch (error) {
-		useToast().add({
-			title: "Something went wrong!",
-			description: error instanceof Error ? error.message : String(error),
-			color: "error",
-		});
-	}
-};
+try {
+    // this will throw on non-2xx
+    const res = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formState),
+    })
+
+    if (!res.ok) {
+      const errBody = await res.json()
+      throw errBody
+    }
+
+    useToast().add({
+      title: 'Your request has been submitted. You will receive an email from sga@snhu.edu once approved.',
+      color: 'success'
+    })
+
+    formState.name = ''
+    formState.email = ''
+    formState.password = ''
+    formState.studentid = ''
+    formState.reason = ''
+    
+  }
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  catch (err: any) {
+    const errors = err.data?.errors ?? { _unexpected: [ err.message || 'Unknown error' ] }
+    useToast().add({
+      title: 'Validation failed',
+      description: Object.values(errors).flat().join('; '),
+      color: 'error'
+    })
+  }
+}
 </script>
 
 <style>

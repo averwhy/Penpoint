@@ -1,4 +1,4 @@
-import { loginSchema } from "~/server/utils/schemas";
+import { loginSchema, userSchema } from "~/server/utils/schemas";
 import { usePostgres } from "~/server/utils/postgres";
 import {
 	verifyPassword,
@@ -60,9 +60,9 @@ export default defineEventHandler(async (event) => {
 		const sql = usePostgres();
 
 		const users = await sql`
-			SELECT u.*, a.active 
+			SELECT * 
 			FROM users u
-			WHERE u.email = ${email} AND a.active = true
+			WHERE u.email = ${email}
 		`;
 
 		if (users.length === 0) {
@@ -113,7 +113,8 @@ export default defineEventHandler(async (event) => {
 		};
 	} catch (error) {
 		if (error instanceof ZodError) {
-			if (error.cause === "too_small") { // TODO test
+			if (error.cause === "too_small") {
+				// TODO test
 				throw createError({
 					statusCode: 400,
 					statusMessage: `Password too short: ${error}`,

@@ -2,14 +2,13 @@ import postgres from "postgres";
 import { studentSchema } from "#imports";
 import type { Student } from "./schemas";
 
-export function usePostgres() : postgres.Sql {
+export function usePostgres(): postgres.Sql {
 	if (!process.env.POSTGRES_URL) {
 		throw createError("Missing `POSTGRES_URL` environment variable");
 	}
 	const pgconnection = postgres(process.env.POSTGRES_URL as string, {
 		//ssl: "require",
 		connect_timeout: 60,
-
 	});
 	console.info("Connected to Postgres!");
 	return pgconnection;
@@ -17,6 +16,7 @@ export function usePostgres() : postgres.Sql {
 
 export async function createStudent(student_id: number): Promise<Student> {
 	const sql = usePostgres();
+	// here we only insert the student ID because we don't have the name or email, and the created_at is set to now by default
 	const result = await sql`
 		INSERT INTO users (student_id)
 		VALUES (${student_id})

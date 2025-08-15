@@ -21,7 +21,7 @@
 		{
 			"previewLimit": 50,
 			"server": "localhost",
-			"port": 5777,
+			"port": 5041,
 			"driver": "PostgreSQL",
 			"name": "pride25db",
 			"database": "pridedb",

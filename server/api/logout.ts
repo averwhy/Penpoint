@@ -12,10 +12,10 @@ export default defineEventHandler(async (event) => {
 			// Clear refresh token from database
 			const sql = usePostgres();
 			await sql`
-        UPDATE users 
-        SET refresh_token = NULL 
-        WHERE id = ${decoded.userId}
-      `;
+				UPDATE users 
+				SET refresh_token = NULL 
+				WHERE id = ${decoded.userId}
+			`;
 		}
 
 		// Clear refresh token cookie

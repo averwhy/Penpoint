@@ -44,7 +44,7 @@ const handleLogin = async () => {
 	try {
 		const response = await $fetch("/api/login", {
 			method: "POST",
-			body: {...formState},
+			body: { ...formState },
 		});
 
 		// Validate response with Zod
@@ -66,7 +66,7 @@ const handleLogin = async () => {
 		useToast().add({
 			title: "Something went wrong!",
 			description: error instanceof Error ? error.message : String(error),
-      color: "error"
+			color: "error",
 		});
 		// Handle error (show toast, etc.)
 	}

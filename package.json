@@ -26,6 +26,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
+		"@iconify-json/lucide": "^1.2.62",
 		"@iconify-json/material-symbols": "^1.2.20",
 		"@iconify-json/solar": "^1.2.2",
 		"@sidebase/nuxt-auth": "^0.10.1",

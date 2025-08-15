@@ -8,26 +8,44 @@ import { studentExists, createStudent } from "~/server/utils/postgres";
 export default defineEventHandler(async (event) => {
 	try {
 		const body = await readBody(event);
-		const { name, email, password, studentid, reason} = registerSchema.parse(body);
+		const result = registerSchema.safeParse(body);
+		if (!result.success) {
+			const errors = z.treeifyError(result.error);
+			return sendError(
+				event,
+				createError({
+					statusCode: 400,
+					data: { errors },
+				}),
+			);
+		}
 
-		const sql = usePostgres();
+		const { name, email, password, studentid, reason } = result.data;
 
-		
-		if (!studentExists(Number.parseInt(studentid))) {
-			createStudent(Number.parseInt(studentid))
+		usePostgres();
+
+		try {
+			if (!(await studentExists(+studentid))) {
+				await createStudent(+studentid);
+			}
+		} catch (err) {
+			console.error("register error:", err);
+			throw createError({ statusCode: 500 });
 		}
 
 		const password_hash = await hashPassword(password);
-
-		// createUser() // TODO
+		// TODO: createUser()
 
 		return { success: true };
-
 	} catch (error) {
 		if (error instanceof z.ZodError) {
+			const errorMessages = JSON.parse(error.message).map(
+				// biome-ignore lint/suspicious/noExplicitAny: We do NOT care
+				(msg: any) => msg.message,
+			);
 			throw createError({
 				statusCode: 400,
-				statusMessage: error?.message || "Invalid input data.",
+				statusMessage: errorMessages.join(""),
 			});
 		}
 		throw error;

@@ -10,13 +10,13 @@ export const passwordSchema = z
 	.min(8, "Password must be at least 8 characters.")
 	.max(256, "Password must be at most 256 characters.")
 	.refine((val) => /[A-Z]/.test(val), {
-		message: "Password must contain at least one uppercase letter.",
+		error: "Password must contain at least one uppercase letter.",
 	})
 	.refine((val) => /[0-9]/.test(val), {
-		message: "Password must contain at least one number.",
+		error: "Password must contain at least one number.",
 	})
 	.refine((val) => /[^A-Za-z0-9].*[^A-Za-z0-9]/.test(val), {
-		message: "Password must contain at least two special characters.",
+		error: "Password must contain at least two special characters.",
 	});
 
 export const registerSchema = z.object({
@@ -24,7 +24,7 @@ export const registerSchema = z.object({
 	email: z.email(),
 	password: passwordSchema,
 	studentid: z.string(),
-	reason: z.string()
+	reason: z.string(),
 });
 
 // db schemas

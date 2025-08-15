@@ -18,6 +18,7 @@
       },
       "devDependencies": {
         "@biomejs/biome": "1.9.4",
+        "@iconify-json/lucide": "^1.2.62",
         "@iconify-json/material-symbols": "^1.2.20",
         "@iconify-json/solar": "^1.2.2",
         "@sidebase/nuxt-auth": "^0.10.1",
@@ -193,6 +194,8 @@
     "@floating-ui/utils": ["@floating-ui/utils@0.2.9", "", {}, "sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg=="],
 
     "@floating-ui/vue": ["@floating-ui/vue@1.1.6", "", { "dependencies": { "@floating-ui/dom": "^1.0.0", "@floating-ui/utils": "^0.2.9", "vue-demi": ">=0.13.0" } }, "sha512-XFlUzGHGv12zbgHNk5FN2mUB7ROul3oG2ENdTpWdE+qMFxyNxWSRmsoyhiEnpmabNm6WnUvR1OvJfUfN4ojC1A=="],
+
+    "@iconify-json/lucide": ["@iconify-json/lucide@1.2.62", "", { "dependencies": { "@iconify/types": "*" } }, "sha512-K0KfhvP5YQZ2KraOgCm6jJbwwzQCVocvXcdMpDou5uLa48QnLBRW/dQ8VDGmxHTGpwF9EqLlvnUSinH2i6xs3Q=="],
 
     "@iconify-json/material-symbols": ["@iconify-json/material-symbols@1.2.20", "", { "dependencies": { "@iconify/types": "*" } }, "sha512-+KqOT+3fD+LC2FbWiV8gd4+JLMiVUtmqrjzpKN1ji7rfMQTwvYJ94RT0WQlmL+vfDNJ5MTRe3rBzzJyvIH/aSg=="],
 

@@ -25,11 +25,10 @@ export default defineEventHandler(async (event) => {
 		const sql = usePostgres();
 
 		const users = await sql`
-      SELECT u.id, u.email, u.name, a.active
-      FROM users u
-      JOIN admins a ON u.id = a.id
-      WHERE u.id = ${decoded.userId} AND a.active = true
-    `;
+			SELECT u.id, u.email, u.name
+			FROM users u
+			WHERE u.id = ${decoded.userId} AND u.role is distinct from 'unapproved'
+			`;
 
 		if (users.length === 0) {
 			throw createError({
