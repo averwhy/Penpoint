@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
     name TEXT,
     role VARCHAR(10) NOT NULL DEFAULT 'unapproved', -- 'unapproved', 'club', 'sga', 'admin'
     request_reason TEXT,
-    requested_at TIMESTAMPTZ,
+    requested_at TIMESTAMPTZ DEFAULT now(),
     password_hash TEXT NOT NULL,
     refresh_token TEXT,
     last_login TIMESTAMPTZ NOT NULL DEFAULT now(),

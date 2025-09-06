@@ -23,7 +23,6 @@
             </Transition>
           </UButton>
           </div>
-          <p class="sub-description">All data is cached locally - so your student ID never leaves your computer.</p>
         </div>
     </div>
   </div>

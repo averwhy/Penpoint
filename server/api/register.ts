@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { usePostgres } from "~/server/utils/postgres";
+import { createUser, usePostgres, userExists } from "~/server/utils/postgres";
 import { hashPassword } from "~/server/utils/auth";
 import { registerSchema } from "../utils/schemas";
 
@@ -9,13 +9,16 @@ export default defineEventHandler(async (event) => {
 	try {
 		const body = await readBody(event);
 		const result = registerSchema.safeParse(body);
+
 		if (!result.success) {
-			const errors = z.treeifyError(result.error);
+			// zod schema errors are caught here
+			const errors = z.treeifyError(result.error).errors;
 			return sendError(
 				event,
 				createError({
 					statusCode: 400,
-					data: { errors },
+					name: "Validation Error",
+					data: errors,
 				}),
 			);
 		}
@@ -24,30 +27,24 @@ export default defineEventHandler(async (event) => {
 
 		usePostgres();
 
-		try {
-			if (!(await studentExists(+studentid))) {
-				await createStudent(+studentid);
-			}
-		} catch (err) {
-			console.error("register error:", err);
-			throw createError({ statusCode: 500 });
+		// Making sure the 'student' exists for swiping purposes
+		if (!(await studentExists(+studentid))) {
+			await createStudent(+studentid);
 		}
 
+		// Create actual user now
 		const password_hash = await hashPassword(password);
-		// TODO: createUser()
+		if (!(await userExists(+studentid))){
+			await createUser(+studentid, email, name, reason, password_hash)
+			// We're not expecting any login or refresh token since this is just an account 'request'
+			// Once approved, they can login as normal
+		}
 
 		return { success: true };
 	} catch (error) {
-		if (error instanceof z.ZodError) {
-			const errorMessages = JSON.parse(error.message).map(
-				// biome-ignore lint/suspicious/noExplicitAny: We do NOT care
-				(msg: any) => msg.message,
-			);
-			throw createError({
-				statusCode: 400,
-				statusMessage: errorMessages.join(""),
-			});
-		}
-		throw error;
+		throw createError({
+			statusCode: 500,
+			name: `Unexpected internal error: ${typeof error}`,
+		});
 	}
 });
