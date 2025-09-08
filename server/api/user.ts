@@ -1,3 +1,4 @@
+import { userSchema } from "#imports";
 import { verifyToken } from "~/server/utils/auth";
 import { usePostgres } from "~/server/utils/postgres";
 
@@ -25,22 +26,22 @@ export default defineEventHandler(async (event) => {
 		const sql = usePostgres();
 
 		const users = await sql`
-			SELECT u.id, u.email, u.name
+			SELECT *
 			FROM users u
 			WHERE u.id = ${decoded.userId} AND u.role is distinct from 'unapproved'
-			`;
+		`;
 
 		if (users.length === 0) {
 			throw createError({
 				statusCode: 401,
-				statusMessage: "User not found or inactive",
+				statusMessage: "User not found or unapproved",
 			});
 		}
-
-		return {
-			user: users[0],
-		};
-	} catch (error) {
+		
+		const parsedUser = userSchema.parse(users.at(0))
+		return parsedUser;
+	} catch (err) {
+		console.error(err);
 		throw createError({
 			statusCode: 401,
 			statusMessage: "Invalid token",

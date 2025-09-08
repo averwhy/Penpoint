@@ -1,17 +1,21 @@
 import postgres from "postgres";
 import { studentSchema, userSchema } from "#imports";
-import type { Student, User } from "./schemas";
+import type { Student, User } from "./models";
 
 export function usePostgres(): postgres.Sql {
-	if (!process.env.POSTGRES_URL) {
-		throw createError("Missing `POSTGRES_URL` environment variable");
+	if (!process.env.DATABASE_URL) {
+		throw createError("Missing `DATABASE_URL` environment variable");
 	}
-	const pgconnection = postgres(process.env.POSTGRES_URL as string, {
-		//ssl: "require",
-		connect_timeout: 60,
-	});
-	console.info("Connected to Postgres!");
-	return pgconnection;
+	try {
+		const pgconnection = postgres(process.env.DATABASE_URL as string, {
+			//ssl: "require",
+			connect_timeout: 60,
+		});
+		console.info("Connected to Postgres!");
+		return pgconnection;
+	} catch (err) {
+		throw createError(`Unexpected error when connecting to PostgreSQL: ${err}`);
+	}
 }
 
 export async function createStudent(student_id: number): Promise<Student> {
@@ -26,7 +30,14 @@ export async function createStudent(student_id: number): Promise<Student> {
 	return studentSchema.parse(result.at(0));
 }
 
-export async function createUser(student_id: number, email: string, name: string, request_reason: string, password_hash: string, role = "unapproved"): Promise<User> {
+export async function createUser(
+	student_id: number,
+	email: string,
+	name: string,
+	request_reason: string,
+	password_hash: string,
+	role = "unapproved",
+): Promise<User> {
 	const sql = usePostgres();
 
 	const result = await sql`

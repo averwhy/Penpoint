@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import { sessionResponseSchema, type User } from "~/server/utils/schemas";
+import { type User, userSchema } from "~/server/utils/models";
 
 definePageMeta({
 	middleware: "auth",
@@ -32,27 +32,33 @@ definePageMeta({
 const user = ref<User | null>(null);
 
 onMounted(async () => {
+	const toast = useToast();
 	try {
 		const token = useCookie("access-token");
 
 		if (!token.value) {
-			await navigateTo("/admin");
+			await navigateTo("/login");
 			return;
 		}
 
-		const response = await $fetch("/api/session", {
+		const response = await $fetch("/api/user", {
 			headers: {
 				Authorization: `Bearer ${token.value}`,
 			},
 		});
 
-		const data = sessionResponseSchema.parse(response);
-		user.value = data.user;
-	} catch (error) {
+		const data = userSchema.parse(response);
+		user.value = data;
+	} 
+	catch (error) {
 		console.error("Authentication failed:", error);
 		const token = useCookie("access-token");
 		token.value = null;
-		await navigateTo("/admin");
+		toast.add({
+			title: "Authentication failed",
+			color: "error",
+		});
+		await navigateTo("/login");
 	}
 });
 
@@ -68,12 +74,12 @@ const handleLogout = async () => {
 		});
 
 		token.value = null;
-		await navigateTo("/admin");
+		await navigateTo("/login");
 	} catch (error) {
 		console.error("Logout failed:", error);
 		const token = useCookie("access-token");
 		token.value = null;
-		await navigateTo("/admin");
+		await navigateTo("/login");
 	}
 };
 </script>

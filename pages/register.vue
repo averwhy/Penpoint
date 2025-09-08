@@ -9,7 +9,7 @@
         </p>
       </div>
       <div class="relative w-full flex flex-col items-center">
-        <UForm :state="formState" @submit.prevent="handleRegister" class="space-y-4 w-full max-w-xs">
+        <UForm :state="formState" @submit.prevent="handleRegister" autocomplete="off" class="space-y-4 w-full max-w-xs">
           <UFormField label="Name" name="name" class="">
             <UInput v-model="formState.name" placeholder="First name" type="text" class="w-full mb-2" variant="soft" />
           </UFormField>
@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-import { UForm, UFormField, UInput, UTextarea, UButton } from '#components';
+import { UForm, UFormField, UInput, UTextarea, UButton } from "#components";
 import { useToast } from "#imports";
 const passwordFocused = ref(false);
 
@@ -57,33 +57,41 @@ const formState = reactive({
 });
 
 const handleRegister = async () => {
-  const toast = useToast();
+	const toast = useToast();
 
-  if (formState.name === "" || formState.email === "" || formState.password === "" || formState.studentid === "" || formState.reason === ""){
-    toast.add?.({
-      title: "Validation failed",
-      description: "One or more fields were left empty. Double check and try again.",
-      color: "error",
+	if (
+		formState.name === "" ||
+		formState.email === "" ||
+		formState.password === "" ||
+		formState.studentid === "" ||
+		formState.reason === ""
+	) {
+		toast.add?.({
+			title: "Validation failed",
+			description:
+				"One or more fields were left empty. Double check and try again.",
+			color: "error",
 		});
-    return;
-  }
+		return;
+	}
 
-  try {
-		// this will throw on non-2xx
+	try {
 		const res = await fetch("/api/register", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(formState),
 		});
 
+		// this will throw on non-2xx (all api errors)
 		if (!res.ok) {
 			const errBody = await res.json();
+			console.error(JSON.stringify(errBody));
 			toast.add?.({
-				title: "Validation failed",
-				description: JSON.stringify(errBody),
+				title: errBody.statusMessage ?? "Error",
+				description: `The request failed with error code ${errBody.statusCode}. If this issue persists, please let SGA know.`,
 				color: "error",
 			});
-      return;
+			return;
 		}
 
 		toast.add?.({
@@ -98,9 +106,11 @@ const handleRegister = async () => {
 		formState.studentid = "";
 		formState.reason = "";
 	} catch (err) {
-		const toast = useToast()
-    toast.add?.({
-			title: "Unknown Internal Error",
+		// This catches frontend errors, all API errors are caught above
+		const toast = useToast();
+		console.error(err);
+		toast.add?.({
+			title: "Unknown Frontend Error",
 			color: "error",
 		});
 	}

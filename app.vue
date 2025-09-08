@@ -9,7 +9,7 @@
           <NuxtLink to="/" class="nav-link">Home</NuxtLink>
           <NuxtLink to="/points" class="nav-link">Points Check</NuxtLink>
           <UTooltip text="Staff login" placement="right">
-            <NuxtLink to="/admin" class="nav-link">
+            <NuxtLink to="/login" class="nav-link">
               <Icon name="material-symbols:security" />
             </NuxtLink>
           </UTooltip>

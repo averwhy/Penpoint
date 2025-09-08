@@ -1,10 +1,5 @@
 import { z } from "zod";
 
-export const loginSchema = z.object({
-	email: z.email(),
-	password: z.string().min(6),
-});
-
 export const passwordSchema = z
 	.string()
 	.min(8, "Password must be at least 8 characters.")
@@ -19,6 +14,11 @@ export const passwordSchema = z
 		error: "Password must contain at least two special characters.",
 	});
 
+export const loginSchema = z.object({
+	email: z.email(),
+	password: passwordSchema,
+});
+
 export const registerSchema = z.object({
 	name: z.string(),
 	email: z.email(),
@@ -32,8 +32,8 @@ export const studentSchema = z.object({
 	student_id: z.string().length(7),
 	email: z.email(),
 	name: z.string(),
-	created_at: z.iso.datetime(),
-	updated_at: z.iso.datetime(),
+	created_at: z.coerce.date(),
+	updated_at: z.coerce.date(),
 });
 
 export const userSchema = z.object({
@@ -41,20 +41,20 @@ export const userSchema = z.object({
 	student_id: z.string().length(7),
 	email: z.email(),
 	name: z.string(),
-	role: z.string().length(10),
+	role: z.enum(["unapproved", "club", "sga", "admin"]),
 	request_reason: z.string(),
-	last_login: z.iso.datetime(),
-	created_at: z.iso.datetime(),
-	updated_at: z.iso.datetime(),
+	last_login: z.coerce.date(),
+	created_at: z.coerce.date(),
+	updated_at: z.coerce.date(),
 });
 
 export const semesterSchema = z.object({
 	id: z.uuid(),
-	starts: z.iso.datetime(),
-	ends: z.iso.datetime(),
+	starts: z.coerce.date(),
+	ends: z.coerce.date(),
 	code: z.string().length(3),
-	created_at: z.iso.datetime(),
-	updated_at: z.iso.datetime(),
+	created_at: z.coerce.date(),
+	updated_at: z.coerce.date(),
 });
 
 export const clubSchema = z.object({
@@ -62,8 +62,8 @@ export const clubSchema = z.object({
 	name: z.string(),
 	acronym: z.string(),
 	governing_board: z.boolean(),
-	created_at: z.iso.datetime(),
-	updated_at: z.iso.datetime(),
+	created_at: z.coerce.date(),
+	updated_at: z.coerce.date(),
 });
 
 export const clubUserSchema = z.object({
@@ -72,8 +72,8 @@ export const clubUserSchema = z.object({
 	user_id: z.uuid(),
 	club_id: z.uuid(),
 	semester_id: z.uuid(),
-	created_at: z.iso.datetime(),
-	updated_at: z.iso.datetime(),
+	created_at: z.coerce.date(),
+	updated_at: z.coerce.date(),
 });
 
 export const eventSchema = z.object({
@@ -81,10 +81,10 @@ export const eventSchema = z.object({
 	name: z.string(),
 	location: z.string(),
 	point_value: z.int(),
-	starts_at: z.iso.datetime(),
-	ends_at: z.iso.datetime(),
-	created_at: z.iso.datetime(),
-	updated_at: z.iso.datetime(),
+	starts_at: z.coerce.date(),
+	ends_at: z.coerce.date(),
+	created_at: z.coerce.date(),
+	updated_at: z.coerce.date(),
 });
 
 export const tapSchema = z.object({
@@ -97,10 +97,6 @@ export const tapSchema = z.object({
 // API Response schemas
 export const loginResponseSchema = z.object({
 	accessToken: z.string(),
-	user: userSchema,
-});
-
-export const sessionResponseSchema = z.object({
 	user: userSchema,
 });
 
@@ -117,4 +113,3 @@ export type Login = z.infer<typeof loginSchema>;
 export type Password = z.infer<typeof passwordSchema>;
 export type Registration = z.infer<typeof registerSchema>;
 export type LoginResponse = z.infer<typeof loginResponseSchema>;
-export type SessionResponse = z.infer<typeof sessionResponseSchema>;

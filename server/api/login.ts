@@ -1,13 +1,12 @@
-import { loginSchema, userSchema } from "~/server/utils/schemas";
-import { usePostgres } from "~/server/utils/postgres";
+import { ZodError } from "zod";
 import {
-	verifyPassword,
 	generateAccessToken,
 	generateRefreshToken,
+	verifyPassword,
 } from "~/server/utils/auth";
-import { ZodError } from "zod";
+import { usePostgres } from "~/server/utils/postgres";
+import { loginSchema, userSchema } from "~/server/utils/models";
 
-// Simple rate limiting storage (use Redis in production)
 const loginAttempts = new Map<string, { count: number; lastAttempt: number }>();
 
 function checkRateLimit(ip: string): boolean {
@@ -73,13 +72,23 @@ export default defineEventHandler(async (event) => {
 			});
 		}
 
-		const user = users[0];
+		let user = users[0];
 		const isValidPassword = await verifyPassword(password, user.password_hash);
 
 		if (!isValidPassword) {
+			// Wrong password
 			throw createError({
 				statusCode: 401,
 				statusMessage: "Invalid credentials",
+			});
+		}
+
+		if (user["role"] === "unapproved") {
+			// Not approved to login yet
+			throw createError({
+				statusCode: 403,
+				statusMessage:
+					"Access denied. Please wait for approval email before logging in.",
 			});
 		}
 
@@ -88,16 +97,19 @@ export default defineEventHandler(async (event) => {
 		const refreshToken = generateRefreshToken(user.id);
 
 		// Update refresh token in database
-		await sql`
+		const result = await sql`
 			UPDATE users 
 			SET refresh_token = ${refreshToken}, last_login = now()
 			WHERE id = ${user.id}
+			RETURNING *
 		`;
+
+		const parsedUser = userSchema.parse(result.at(0));
 
 		// Set HTTP-only cookie for refresh token
 		setCookie(event, "refresh-token", refreshToken, {
 			httpOnly: true,
-			secure: process.env.NODE_ENV === "production", // Only HTTPS in production
+			secure: true,
 			sameSite: "strict",
 			maxAge: 60 * 60 * 24 * 7, // 7 days
 			path: "/", // Explicit path
@@ -105,26 +117,13 @@ export default defineEventHandler(async (event) => {
 
 		return {
 			accessToken,
-			user: {
-				id: user.id,
-				email: user.email,
-				name: user.name,
-			},
+			user: parsedUser,
 		};
 	} catch (error) {
 		if (error instanceof ZodError) {
-			if (error.cause === "too_small") {
-				// TODO test
-				throw createError({
-					statusCode: 400,
-					statusMessage: `Password too short: ${error}`,
-				});
-			}
-
-			// Fallback
 			throw createError({
 				statusCode: 400,
-				statusMessage: `Invalid input data: ${error}`,
+				statusMessage: `Validation Error: ${error}`,
 			});
 		}
 		throw error;
