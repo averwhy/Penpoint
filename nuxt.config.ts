@@ -4,4 +4,7 @@ export default defineNuxtConfig({
 	devtools: { enabled: true },
 	modules: ["@nuxt/ui", "@nuxthub/core"],
 	css: ["~/assets/css/main.css"],
+	build: {
+		transpile: ['trpc-nuxt']
+	}
 });
