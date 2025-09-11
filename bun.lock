@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "pride25",
+      "name": "penpoint",
       "dependencies": {
         "@nuxt/ui": "^3.0.2",
         "@nuxthub/core": "0.8.26",
