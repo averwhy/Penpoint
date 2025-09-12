@@ -1,5 +1,6 @@
 import type { IncomingMessage } from "node:http";
 import type { User } from "~/server/utils/models";
+import { usePostgres } from "~/server/utils/postgres";
 
 export type Context = {
 	req?: IncomingMessage;
@@ -18,5 +19,7 @@ export async function createContext({ req }: { req?: IncomingMessage }) {
 }
 
 async function getUserFromToken(token: string): Promise<User | null> {
+	const sql = usePostgres();
+	// TODO
 	return null;
 }
