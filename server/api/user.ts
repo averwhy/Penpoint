@@ -37,8 +37,8 @@ export default defineEventHandler(async (event) => {
 				statusMessage: "User not found or unapproved",
 			});
 		}
-		
-		const parsedUser = userSchema.parse(users.at(0))
+
+		const parsedUser = userSchema.parse(users.at(0));
 		return parsedUser;
 	} catch (err) {
 		console.error(err);

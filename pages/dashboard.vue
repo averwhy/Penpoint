@@ -49,8 +49,7 @@ onMounted(async () => {
 
 		const data = userSchema.parse(response);
 		user.value = data;
-	} 
-	catch (error) {
+	} catch (error) {
 		console.error("Authentication failed:", error);
 		const token = useCookie("access-token");
 		token.value = null;
