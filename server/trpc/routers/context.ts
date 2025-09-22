@@ -20,6 +20,19 @@ export async function createContext({ req }: { req?: IncomingMessage }) {
 
 async function getUserFromToken(token: string): Promise<User | null> {
 	const sql = usePostgres();
-	// TODO
-	return null;
+
+	const decoded = verifyToken(token);
+
+	if (decoded.type !== "access") {
+		return null;
+	}
+
+	const users = await sql`
+		SELECT *
+		FROM users u
+		WHERE u.id = ${decoded.userId} AND u.role is distinct from 'unapproved'
+	`;
+
+	if (!users[0]) return null;
+	return userSchema.parse(users[0]);
 }
