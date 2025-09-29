@@ -58,7 +58,7 @@ export const appRouter = createTRPCRouter({
 				WHERE id = ${user.id}
 			`;
 
-			// TODO local storage
+			// TODO cookies
 			
 			return {
 				accessToken,
