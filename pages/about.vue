@@ -13,7 +13,7 @@
             </td>
             <td class="p-8 align-middle">
               <p class="text-base leading-relaxed text-white">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                The Penmen Pride program created by the SNHU Student Government Organization (SGA) to create enthusiasm about participating in events and programs around campus. This program enhances school spirit within our student body by implementing incentives for students to attend events. By having Penmen Pride at your event, you can look forward to students showing up and being excited to attend.<br/><br/>Penmen Pride is just one of the ways that the (SGA) builds student community spirit by creating a common goal among all SNHU students - to earn points, and win prizes!
               </p>
             </td>
           </tr>
@@ -22,7 +22,3 @@
     </div>
   </section>
 </template>
-
-<script lang="ts" setup>
-
-</script>
