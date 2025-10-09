@@ -16,5 +16,10 @@
         "activityBar.background": "#05360E",
         "titleBar.activeBackground": "#084B13",
         "titleBar.activeForeground": "#F2FEF4"
+    },
+
+    "[svelte]": {
+        "editor.defaultFormatter": "svelte.svelte-vscode",
+        "editor.formatOnSave": true
     }
 }
