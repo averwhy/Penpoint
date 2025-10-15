@@ -1,4 +1,5 @@
 <script lang="ts">
+	import * as NavigationMenu from "$lib/components/ui/navigation-menu/index.js";
 	import pp from "$lib/assets/penmenpride.png";
 	import favicon from "$lib/assets/sga.svg";
 	import "../app.css";
@@ -18,8 +19,34 @@
 			<a data-sveltekit-preload-data="hover" href="/">
 				<img src={pp} alt="Penmen Pride Logo" class="h-10 w-auto" />
 			</a>
-			<div class="flex gap-5 text-white">
-				<a data-sveltekit-preload-data="hover" href="/">Home</a>
+			<div class="flex gap-5">
+				<NavigationMenu.Root class="bg-transparent text-[#141417]">
+					<NavigationMenu.List>
+						<NavigationMenu.Item>
+							<NavigationMenu.Trigger class="bg-transparent text-white hover:bg-[#1e1e22]">
+								Home
+							</NavigationMenu.Trigger>
+							<NavigationMenu.Content>
+								<NavigationMenu.Link>
+									Link
+								</NavigationMenu.Link>
+							</NavigationMenu.Content>
+						</NavigationMenu.Item>
+						<NavigationMenu.Item>
+							<NavigationMenu.Trigger class="bg-transparent text-white hover:bg-[#1e1e22]">
+								Students
+							</NavigationMenu.Trigger>
+							<NavigationMenu.Content>
+								<NavigationMenu.Link>
+									Check Points
+								</NavigationMenu.Link>
+								<NavigationMenu.Link>
+									Club Login
+								</NavigationMenu.Link>
+							</NavigationMenu.Content>
+						</NavigationMenu.Item>
+					</NavigationMenu.List>
+				</NavigationMenu.Root>
 			</div>
 		</div>
 	</div>
