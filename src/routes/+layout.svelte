@@ -20,30 +20,55 @@
 				<img src={pp} alt="Penmen Pride Logo" class="h-10 w-auto" />
 			</a>
 			<div class="flex gap-5">
-				<NavigationMenu.Root class="bg-transparent text-[#141417]">
+				<NavigationMenu.Root class="select-none leading-none no-underline outline-none transition-colors" viewport={false}>
 					<NavigationMenu.List>
 						<NavigationMenu.Item>
-							<NavigationMenu.Trigger class="bg-transparent text-white hover:bg-[#1e1e22]">
-								Home
-							</NavigationMenu.Trigger>
-							<NavigationMenu.Content>
-								<NavigationMenu.Link>
-									Link
-								</NavigationMenu.Link>
-							</NavigationMenu.Content>
+							<NavigationMenu.Link href="/">Home</NavigationMenu.Link>
 						</NavigationMenu.Item>
 						<NavigationMenu.Item>
-							<NavigationMenu.Trigger class="bg-transparent text-white hover:bg-[#1e1e22]">
+							<NavigationMenu.Trigger>
 								Students
 							</NavigationMenu.Trigger>
 							<NavigationMenu.Content>
-								<NavigationMenu.Link>
-									Check Points
-								</NavigationMenu.Link>
-								<NavigationMenu.Link>
-									Club Login
-								</NavigationMenu.Link>
+								<ul class="grid w-[200px] gap-4 p-2">
+									<li>
+										<NavigationMenu.Link href="/points"
+											>Check Points</NavigationMenu.Link
+										>
+										<NavigationMenu.Link href="#"
+											>Club Login</NavigationMenu.Link
+										>
+										<NavigationMenu.Link href="#"
+											>Support</NavigationMenu.Link
+										>
+									</li>
+								</ul>
 							</NavigationMenu.Content>
+						</NavigationMenu.Item>
+						<NavigationMenu.Item>
+							<NavigationMenu.Trigger>
+								Faculty
+							</NavigationMenu.Trigger>
+							<NavigationMenu.Content>
+								<ul class="grid w-[200px] gap-4 p-2">
+									<li>
+										<NavigationMenu.Link href="/points"
+											>OSI Login</NavigationMenu.Link
+										>
+										<NavigationMenu.Link href="#"
+											>Club Login</NavigationMenu.Link
+										>
+										<NavigationMenu.Link href="#"
+											>Support</NavigationMenu.Link
+										>
+									</li>
+								</ul>
+							</NavigationMenu.Content>
+						</NavigationMenu.Item>
+						<NavigationMenu.Item>
+							<NavigationMenu.Link href="/about"
+								>About</NavigationMenu.Link
+							>
 						</NavigationMenu.Item>
 					</NavigationMenu.List>
 				</NavigationMenu.Root>
