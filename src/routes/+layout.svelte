@@ -20,20 +20,25 @@
 				<img src={pp} alt="Penmen Pride Logo" class="h-10 w-auto" />
 			</a>
 			<div class="flex gap-5">
-				<NavigationMenu.Root class="select-none leading-none no-underline outline-none transition-colors" viewport={false}>
+				<NavigationMenu.Root
+					class="select-none leading-none no-underline outline-none transition-colors"
+					viewport={false}
+				>
 					<NavigationMenu.List>
 						<NavigationMenu.Item>
-							<NavigationMenu.Link href="/">Home</NavigationMenu.Link>
+							<NavigationMenu.Link href="/"
+								>Home</NavigationMenu.Link
+							>
 						</NavigationMenu.Item>
 						<NavigationMenu.Item>
-							<NavigationMenu.Trigger>
+							<NavigationMenu.Trigger class="bg-primary">
 								Students
 							</NavigationMenu.Trigger>
 							<NavigationMenu.Content>
 								<ul class="grid w-[200px] gap-4 p-2">
 									<li>
 										<NavigationMenu.Link href="/points"
-											>Check Points</NavigationMenu.Link
+											>Points Checker</NavigationMenu.Link
 										>
 										<NavigationMenu.Link href="#"
 											>Club Login</NavigationMenu.Link
@@ -46,7 +51,7 @@
 							</NavigationMenu.Content>
 						</NavigationMenu.Item>
 						<NavigationMenu.Item>
-							<NavigationMenu.Trigger>
+							<NavigationMenu.Trigger class="bg-primary">
 								Faculty
 							</NavigationMenu.Trigger>
 							<NavigationMenu.Content>
@@ -57,9 +62,6 @@
 										>
 										<NavigationMenu.Link href="#"
 											>Club Login</NavigationMenu.Link
-										>
-										<NavigationMenu.Link href="#"
-											>Support</NavigationMenu.Link
 										>
 									</li>
 								</ul>
