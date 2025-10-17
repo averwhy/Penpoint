@@ -1,10 +1,18 @@
 <script lang="ts">
+    import { fade } from "svelte/transition";
+    import { page } from "$app/state"; // page is an object, not a store
+    import { writable } from "svelte/store";
+    import { afterNavigate } from "$app/navigation";
+
 	import * as NavigationMenu from "$lib/components/ui/navigation-menu/index.js";
 	import pp from "$lib/assets/penmenpride.png";
 	import favicon from "$lib/assets/sga.svg";
 	import "../app.css";
 
 	let { children } = $props();
+
+	const pathname = writable(page.url.pathname);
+    afterNavigate(() => pathname.set(page.url.pathname));
 </script>
 
 <svelte:head>
@@ -26,8 +34,8 @@
 				>
 					<NavigationMenu.List>
 						<NavigationMenu.Item>
-							<NavigationMenu.Link href="/"
-								>Home</NavigationMenu.Link
+							<NavigationMenu.Link href="/events"
+								>Events</NavigationMenu.Link
 							>
 						</NavigationMenu.Item>
 						<NavigationMenu.Item>
@@ -40,11 +48,8 @@
 										<NavigationMenu.Link href="/points"
 											>Points Checker</NavigationMenu.Link
 										>
-										<NavigationMenu.Link href="#"
+										<NavigationMenu.Link href="/login"
 											>Club Login</NavigationMenu.Link
-										>
-										<NavigationMenu.Link href="#"
-											>Support</NavigationMenu.Link
 										>
 									</li>
 								</ul>
@@ -57,11 +62,8 @@
 							<NavigationMenu.Content>
 								<ul class="grid w-[200px] gap-4 p-2">
 									<li>
-										<NavigationMenu.Link href="/points"
+										<NavigationMenu.Link href="/login"
 											>OSI Login</NavigationMenu.Link
-										>
-										<NavigationMenu.Link href="#"
-											>Club Login</NavigationMenu.Link
 										>
 									</li>
 								</ul>
@@ -79,4 +81,8 @@
 	</div>
 </header>
 
-{@render children?.()}
+{#key $pathname}
+    <div in:fade={{ duration: 400 }}>
+        {@render children?.()}
+    </div>
+{/key}

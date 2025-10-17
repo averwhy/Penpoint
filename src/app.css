@@ -39,7 +39,7 @@
   --sidebar-ring: oklch(0.709 0.01 56.259);
 }
 
-.dark {
+.light {
   --background: oklch(0.147 0.004 49.25);
   --foreground: oklch(0.985 0.001 106.423);
   --card: oklch(0.216 0.006 56.043);
@@ -58,6 +58,8 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.553 0.013 58.071);
+  --link-primary: oklch(48.459% 0.24537 264.582);
+  --link-hover: oklch(61.714% 0.16963 250.322);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -117,5 +119,6 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Jost', sans-serif;
   }
 }
