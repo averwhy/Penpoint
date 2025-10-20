@@ -1,9 +1,8 @@
 <script lang="ts">
-    import { page } from "$app/state";
-    import { fade } from "svelte/transition";
-    // page is an object, not a store
     import { afterNavigate } from "$app/navigation";
+    import { page } from "$app/state";
     import { writable } from "svelte/store";
+    import { fade } from "svelte/transition";
 
     import pp from "$lib/assets/penmenpride.png";
     import favicon from "$lib/assets/sga.svg";
