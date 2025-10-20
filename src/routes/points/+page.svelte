@@ -15,7 +15,11 @@
                 <Field.Set class="w-full">
                     <Field.Group>
                         <Field.Field>
-                            <Input id="studentid" class="w-full" placeholder="Enter student ID" />
+                            <Input
+                                id="studentid"
+                                class="w-full"
+                                placeholder="Enter student ID"
+                            />
                         </Field.Field>
                     </Field.Group>
                 </Field.Set>

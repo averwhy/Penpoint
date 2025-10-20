@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { fade } from "svelte/transition";
-    import { page } from "$app/state"; // page is an object, not a store
-    import { writable } from "svelte/store";
-    import { afterNavigate } from "$app/navigation";
+	import { fade } from "svelte/transition";
+	import { page } from "$app/state";
+	import { writable } from "svelte/store";
+	import { afterNavigate } from "$app/navigation";
 
 	import * as NavigationMenu from "$lib/components/ui/navigation-menu/index.js";
 	import pp from "$lib/assets/penmenpride.png";
@@ -12,7 +12,7 @@
 	let { children } = $props();
 
 	const pathname = writable(page.url.pathname);
-    afterNavigate(() => pathname.set(page.url.pathname));
+	afterNavigate(() => pathname.set(page.url.pathname));
 </script>
 
 <svelte:head>
@@ -82,7 +82,7 @@
 </header>
 
 {#key $pathname}
-    <div in:fade={{ duration: 400 }}>
-        {@render children?.()}
-    </div>
+	<div in:fade={{ duration: 400 }}>
+		{@render children?.()}
+	</div>
 {/key}
