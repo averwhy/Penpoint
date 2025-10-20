@@ -1,23 +1,4 @@
 {
-    "workbench.colorCustomizations": {
-        "sideBar.border": "#222",
-        "editorGroup.border": "#222",
-        "editorIndentGuide.background": "#222",
-        "editorIndentGuide.activeBackground": "#333",
-        "editor.selectionBackground": "#007acc",
-        "editor.selectionHighlightBackground": "#007acc",
-        "editor.inactiveSelectionBackground": "#007acc",
-        "editor.findMatchBackground": "#fa05",
-        "editor.findMatchHighlightBackground": "#fa05",
-        "editor.findMatchBorder": "#fe0",
-        "editor.findMatchHighlightBorder": "#fe0",
-        "editor.selectionHighlightBorder": "#fe0",
-        "terminal.background": "#00000000",
-        "activityBar.background": "#05360E",
-        "titleBar.activeBackground": "#084B13",
-        "titleBar.activeForeground": "#F2FEF4"
-    },
-
     "[svelte]": {
         "editor.defaultFormatter": "svelte.svelte-vscode",
         "editor.formatOnSave": true

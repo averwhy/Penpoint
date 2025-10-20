@@ -3,14 +3,8 @@
     import * as Accordion from "$lib/components/ui/accordion/index.js";
 </script>
 
-<div
-    class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-4"
->
-    <h1
-        class="mb-8 text-center text-7xl font-semibold text-foreground tracking-widest"
-    >
-        Penmen Pride
-    </h1>
+<div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-4">
+    <h1 class="mb-8 text-center text-7xl font-semibold text-foreground tracking-widest">Penmen Pride</h1>
     <div class="grid grid-cols-2 gap-x-3 gap-y-3">
         <Card.Root class="">
             <Card.Content class="text-5xl">
@@ -41,24 +35,17 @@
         <Accordion.Item value="item-1">
             <Accordion.Trigger>What's Penmen Pride?</Accordion.Trigger>
             <Accordion.Content>
-                Penmen Pride is a program created by the Student Government
-                Association<br /> to drive engagement and reward students for
-                attending events on campus at SNHU.<br /> Learn more
-                <a
-                    href="https://snhusga.org/penmen-pride"
-                    class="text-link-primary hover:text-link-hover">here.</a
-                >
+                Penmen Pride is a program created by the Student Government Association<br />
+                to drive engagement and reward students for attending events on campus at SNHU.<br /> Learn more
+                <a href="https://snhusga.org/penmen-pride" class="text-link-primary hover:text-link-hover">here.</a>
             </Accordion.Content>
         </Accordion.Item>
         <Accordion.Item value="item-2">
             <Accordion.Trigger>How do i earn points?</Accordion.Trigger>
             <Accordion.Content>
-                Events that have Penmen Pride are listed <a href="/events"
-                    >here,</a
-                >
-                and by attending them, you'll earn <br /> a certain amount of
-                points (usually 3). Just look for the Penmen Pride table or<br
-                />SGA Senator with an iPad to claim your points!
+                Events that have Penmen Pride are listed <a href="/events">here,</a>
+                and by attending them, you'll earn <br /> a certain amount of points (usually 3). Just look for the
+                Penmen Pride table or<br />SGA Senator with an iPad to claim your points!
             </Accordion.Content>
         </Accordion.Item>
     </Accordion.Root>

@@ -1,84 +1,69 @@
 <script lang="ts">
+    import { page } from "$app/state";
     import { fade } from "svelte/transition";
-    import { page } from "$app/state"; // page is an object, not a store
-    import { writable } from "svelte/store";
+    // page is an object, not a store
     import { afterNavigate } from "$app/navigation";
+    import { writable } from "svelte/store";
 
-	import * as NavigationMenu from "$lib/components/ui/navigation-menu/index.js";
-	import pp from "$lib/assets/penmenpride.png";
-	import favicon from "$lib/assets/sga.svg";
-	import "../app.css";
+    import pp from "$lib/assets/penmenpride.png";
+    import favicon from "$lib/assets/sga.svg";
+    import * as NavigationMenu from "$lib/components/ui/navigation-menu/index.js";
+    import "../app.css";
 
-	let { children } = $props();
+    let { children } = $props();
 
-	const pathname = writable(page.url.pathname);
+    const pathname = writable(page.url.pathname);
     afterNavigate(() => pathname.set(page.url.pathname));
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+    <link rel="icon" href={favicon} />
 </svelte:head>
 
 <header>
-	<div class="p-2.5 bg-[#141417] fixed w-full top-0 left-0 z-[1000]">
-		<div
-			class="max-w-[1200px] m-auto p-1 flex justify-between items-center"
-		>
-			<a data-sveltekit-preload-data="hover" href="/">
-				<img src={pp} alt="Penmen Pride Logo" class="h-10 w-auto" />
-			</a>
-			<div class="flex gap-5">
-				<NavigationMenu.Root
-					class="select-none leading-none no-underline outline-none transition-colors"
-					viewport={false}
-				>
-					<NavigationMenu.List>
-						<NavigationMenu.Item>
-							<NavigationMenu.Link href="/events"
-								>Events</NavigationMenu.Link
-							>
-						</NavigationMenu.Item>
-						<NavigationMenu.Item>
-							<NavigationMenu.Trigger class="bg-primary">
-								Students
-							</NavigationMenu.Trigger>
-							<NavigationMenu.Content>
-								<ul class="grid w-[200px] gap-4 p-2">
-									<li>
-										<NavigationMenu.Link href="/points"
-											>Points Checker</NavigationMenu.Link
-										>
-										<NavigationMenu.Link href="/login"
-											>Club Login</NavigationMenu.Link
-										>
-									</li>
-								</ul>
-							</NavigationMenu.Content>
-						</NavigationMenu.Item>
-						<NavigationMenu.Item>
-							<NavigationMenu.Trigger class="bg-primary">
-								Faculty
-							</NavigationMenu.Trigger>
-							<NavigationMenu.Content>
-								<ul class="grid w-[200px] gap-4 p-2">
-									<li>
-										<NavigationMenu.Link href="/login"
-											>OSI Login</NavigationMenu.Link
-										>
-									</li>
-								</ul>
-							</NavigationMenu.Content>
-						</NavigationMenu.Item>
-						<NavigationMenu.Item>
-							<NavigationMenu.Link href="/about"
-								>About</NavigationMenu.Link
-							>
-						</NavigationMenu.Item>
-					</NavigationMenu.List>
-				</NavigationMenu.Root>
-			</div>
-		</div>
-	</div>
+    <div class="p-2.5 bg-[#141417] fixed w-full top-0 left-0 z-[1000]">
+        <div class="max-w-[1200px] m-auto p-1 flex justify-between items-center">
+            <a data-sveltekit-preload-data="hover" href="/">
+                <img src={pp} alt="Penmen Pride Logo" class="h-10 w-auto" />
+            </a>
+            <div class="flex gap-5">
+                <NavigationMenu.Root
+                    class="select-none leading-none no-underline outline-none transition-colors"
+                    viewport={false}
+                >
+                    <NavigationMenu.List>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link href="/events">Events</NavigationMenu.Link>
+                        </NavigationMenu.Item>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Trigger class="bg-primary">Students</NavigationMenu.Trigger>
+                            <NavigationMenu.Content>
+                                <ul class="grid w-[200px] gap-4 p-2">
+                                    <li>
+                                        <NavigationMenu.Link href="/points">Points Checker</NavigationMenu.Link>
+                                        <NavigationMenu.Link href="/login">Club Login</NavigationMenu.Link>
+                                    </li>
+                                </ul>
+                            </NavigationMenu.Content>
+                        </NavigationMenu.Item>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Trigger class="bg-primary">Faculty</NavigationMenu.Trigger>
+                            <NavigationMenu.Content>
+                                <ul class="grid w-[200px] gap-4 p-2">
+                                    <li>
+                                        <NavigationMenu.Link href="/login">OSI Login</NavigationMenu.Link>
+                                    </li>
+                                </ul>
+                            </NavigationMenu.Content>
+                        </NavigationMenu.Item>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link href="/about">About</NavigationMenu.Link>
+                        </NavigationMenu.Item>
+                    </NavigationMenu.List>
+                </NavigationMenu.Root>
+            </div>
+        </div>
+    </div>
 </header>
 
 {#key $pathname}
