@@ -56,7 +56,11 @@
                             </NavigationMenu.Content>
                         </NavigationMenu.Item>
                         <NavigationMenu.Item>
-                            <NavigationMenu.Link href="/about">About</NavigationMenu.Link>
+                            <NavigationMenu.Link
+                                href="https://www.snhusga.org/penmen-pride"
+                                target="_blank"
+                                rel="noopener noreferrer">About</NavigationMenu.Link
+                            >
                         </NavigationMenu.Item>
                     </NavigationMenu.List>
                 </NavigationMenu.Root>
