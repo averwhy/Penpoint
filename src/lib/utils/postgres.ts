@@ -1,6 +1,6 @@
 import { error } from "@sveltejs/kit";
 import postgres from "postgres";
-import { Student, User } from "./models";
+import { Semester, Student, User } from "./models";
 
 export function usePostgres(): postgres.Sql {
     if (!process.env.DATABASE_URL) {
@@ -16,6 +16,19 @@ export function usePostgres(): postgres.Sql {
     } catch (err) {
         error(500, `Unexpected error when connecting to PostgreSQL: ${err}`);
     }
+}
+
+export async function getMostRecentSemesterIncludingActive(): Promise<Semester> {
+    const sql = usePostgres();
+
+    const result = await sql`
+        SELECT *
+        FROM semesters
+        ORDER BY starts DESC
+        LIMIT 1
+    `
+
+    return Semester.parse(result.at(0));
 }
 
 export async function createStudent(student_id: number): Promise<Student> {
@@ -35,18 +48,31 @@ export async function createUser(
     email: string,
     name: string,
     request_reason: string,
-    password_hash: string,
     role = "unapproved",
+    password_hash?: string,
 ): Promise<User> {
     const sql = usePostgres();
 
     const result = await sql`
 		INSERT INTO users (student_id, email, name, role, request_reason, password_hash)
-		VALUES (${student_id}, ${email}, ${name}, ${role}, ${request_reason}, ${password_hash})
+		VALUES (${student_id}, ${email}, ${name}, ${role}, ${request_reason}, ${password_hash ?? null})
 		RETURNING *
 	`;
 
     return User.parse(result.at(0));
+}
+
+export async function updateUserPassword(
+    email: string,
+    password_hash: string
+) {
+    const sql = usePostgres();
+
+    await sql`
+        UPDATE users 
+        SET password_hash = ${password_hash}
+        WHERE email = ${email}
+    `;
 }
 
 export async function studentExists(student_id: number): Promise<boolean> {
