@@ -1,6 +1,7 @@
 import { error } from "@sveltejs/kit";
 import postgres from "postgres";
 import { Semester, Student, User } from "./models";
+import 'dotenv/config';
 
 export function usePostgres(): postgres.Sql {
     if (!process.env.DATABASE_URL) {
@@ -24,9 +25,22 @@ export async function getMostRecentSemesterIncludingActive(): Promise<Semester> 
     const result = await sql`
         SELECT *
         FROM semesters
+        WHERE NOW() BETWEEN starts AND ends
         ORDER BY starts DESC
         LIMIT 1
-    `
+    `;
+
+    if (result.count === 0) {
+        // No active semester, get the most recently ended one
+        const fallback = await sql`
+            SELECT *
+            FROM semesters
+            WHERE ends < NOW()
+            ORDER BY ends DESC
+            LIMIT 1
+        `;
+        return Semester.parse(fallback.at(0));
+    }
 
     return Semester.parse(result.at(0));
 }

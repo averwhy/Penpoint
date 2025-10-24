@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS semesters (
 CREATE TABLE IF NOT EXISTS clubs (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT UNIQUE NOT NULL,
-    acronym TEXT UNIQUE NOT NULL,
+    acronym TEXT UNIQUE,
     governing_board BOOLEAN NOT NULL DEFAULT false,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS club_users(
 
 CREATE TABLE IF NOT EXISTS events (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    club_id UUID REFERENCES clubs(id),
     name TEXT NOT NULL,
     location TEXT NOT NULL,
     point_value INT NOT NULL DEFAULT 3,

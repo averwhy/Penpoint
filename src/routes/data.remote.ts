@@ -7,12 +7,11 @@ export const getHomepageData = query(async () => {
     const semester = await getMostRecentSemesterIncludingActive();
 
     const pointEarnersResult = await sql`
-        SELECT UNIQUE(student_id)
+        SELECT COUNT(DISTINCT student_id)
         FROM taps
         WHERE semester_id = ${semester.id}
     `;
-    const pointEarners = pointEarnersResult.at(0);
-
+    const pointEarners = Number(pointEarnersResult.at(0)?.count ?? 0);
 
     const pointsEarnedResult = await sql`
         SELECT SUM(e.point_value) as total_points
@@ -20,14 +19,14 @@ export const getHomepageData = query(async () => {
         JOIN events e ON t.event_id = e.id
         WHERE t.semester_id = ${semester.id}
     `;
-    const pointsEarned = pointsEarnedResult.at(0);
+    const pointsEarned = Number(pointsEarnedResult.at(0)?.total_points ?? 0);
 
     const upcomingEventsResult = await sql`
         SELECT COUNT(*)
         FROM events
         WHERE starts_at > now() AND starts_at < ${semester.ends}
     `;
-    const upcomingEvents = upcomingEventsResult.at(0)
+    const upcomingEvents = Number(upcomingEventsResult.at(0)?.count ?? 0);
 
     const now = new Date();
     const semesterEnd = new Date(semester.ends);
