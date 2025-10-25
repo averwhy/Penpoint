@@ -5,18 +5,18 @@ export const getHomepageData = query(async () => {
     const semester = await getMostRecentSemesterIncludingActive();
 
     const [pointEarnersResult, pointsEarnedResult, upcomingEventsResult] = await Promise.all([
-        await sql`
+        sql`
             SELECT COUNT(DISTINCT student_id)
             FROM taps
             WHERE semester_id = ${semester.id}
         `,
-        await sql`
+        sql`
             SELECT SUM(e.point_value) as total_points
             FROM taps t
             JOIN events e ON t.event_id = e.id
             WHERE t.semester_id = ${semester.id}
         `,
-        await sql`
+        sql`
             SELECT COUNT(*)
             FROM events
             WHERE starts_at > now() AND starts_at < ${semester.ends}
