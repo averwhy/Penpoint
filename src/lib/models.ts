@@ -32,8 +32,11 @@ export type Registration = z.infer<typeof Registration>;
 
 // db schemas
 
+export const StudentId = z.string().regex(/^\d{7}$/);
+export type StudentId = z.infer<typeof StudentId>;
+
 export const Student = z.object({
-    student_id: z.string().length(7),
+    student_id: StudentId,
     email: z.email(),
     name: z.string(),
     created_at: z.coerce.date(),
@@ -43,7 +46,7 @@ export type Student = z.infer<typeof Student>;
 
 export const User = z.object({
     id: z.uuid(),
-    student_id: z.string().length(7),
+    student_id: StudentId,
     email: z.email(),
     name: z.string(),
     role: z.enum(["unapproved", "club", "sga", "admin"]),
@@ -100,7 +103,7 @@ export type Event = z.infer<typeof Event>;
 export const Tap = z.object({
     id: z.uuid(),
     semester_id: z.uuid(),
-    student_id: z.string().length(7),
+    student_id: StudentId,
     event_id: z.uuid(),
 });
 export type Tap = z.infer<typeof Tap>;
