@@ -1,32 +1,36 @@
 <script lang="ts">
     import * as Accordion from "$lib/components/ui/accordion/index.js";
     import * as Card from "$lib/components/ui/card/index.js";
+
+    import { getHomepageData } from "./data.remote";
+
+    let [pointEarners, pointsEarned, upcomingEvents, daysLeft] = await getHomepageData();
 </script>
 
 <div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-4">
-    <h1 class="mb-8 text-center text-7xl font-semibold text-foreground tracking-widest">Penmen Pride</h1>
+    <h1 class="mb-8 text-center text-7xl font-semibold text-foreground tracking-wide">Penmen Pride</h1>
     <div class="grid grid-cols-2 gap-x-3 gap-y-3">
         <Card.Root class="">
             <Card.Content class="text-5xl">
-                <p>123</p>
+                <p>{pointEarners}</p>
             </Card.Content>
             <Card.Footer class="text-xl">Students earning points</Card.Footer>
         </Card.Root>
         <Card.Root>
             <Card.Content class="text-5xl">
-                <p>123</p>
+                <p>{pointsEarned}</p>
             </Card.Content>
             <Card.Footer class="text-xl">Points earned</Card.Footer>
         </Card.Root>
         <Card.Root>
             <Card.Content class="text-5xl">
-                <p>123</p>
+                <p>{upcomingEvents}</p>
             </Card.Content>
             <Card.Footer class="text-xl">Upcoming events</Card.Footer>
         </Card.Root>
         <Card.Root>
             <Card.Content class="text-5xl">
-                <p>123</p>
+                <p>{daysLeft}</p>
             </Card.Content>
             <Card.Footer class="text-xl">Days left to earn points</Card.Footer>
         </Card.Root>

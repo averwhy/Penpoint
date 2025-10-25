@@ -1,11 +1,35 @@
 import { privateEnv } from "$lib/env/private";
-import { Student, User } from "$lib/models";
+import { Semester, Student, User } from "$lib/models";
 import postgres from "postgres";
 
 export const sql = postgres(privateEnv.DATABASE_URL, {
     //ssl: "require",
     connect_timeout: 60,
 });
+
+export async function getMostRecentSemesterIncludingActive(): Promise<Semester> {
+    const result = await sql`
+        SELECT *
+        FROM semesters
+        WHERE NOW() BETWEEN starts AND ends
+        ORDER BY starts DESC
+        LIMIT 1
+    `;
+
+    if (result.count === 0) {
+        // No active semester, get the most recently ended one
+        const fallback = await sql`
+            SELECT *
+            FROM semesters
+            WHERE ends < NOW()
+            ORDER BY ends DESC
+            LIMIT 1
+        `;
+        return Semester.parse(fallback[0]);
+    }
+
+    return Semester.parse(result[0]);
+}
 
 export async function createStudent(student_id: number): Promise<Student> {
     // here we only insert the student ID because we don't have the name or email, and the created_at is set to now by default
@@ -23,16 +47,24 @@ export async function createUser(
     email: string,
     name: string,
     request_reason: string,
-    password_hash: string,
     role = "unapproved",
+    password_hash?: string,
 ): Promise<User> {
     const result = await sql`
 		INSERT INTO users (student_id, email, name, role, request_reason, password_hash)
-		VALUES (${student_id}, ${email}, ${name}, ${role}, ${request_reason}, ${password_hash})
+		VALUES (${student_id}, ${email}, ${name}, ${role}, ${request_reason}, ${password_hash ?? null})
 		RETURNING *
 	`;
 
     return User.parse(result[0]);
+}
+
+export async function updateUserPassword(email: string, password_hash: string) {
+    await sql`
+        UPDATE users 
+        SET password_hash = ${password_hash}
+        WHERE email = ${email}
+    `;
 }
 
 export async function studentExists(student_id: number): Promise<boolean> {

@@ -58,7 +58,7 @@ export const Semester = z.object({
     id: z.uuid(),
     starts: z.coerce.date(),
     ends: z.coerce.date(),
-    code: z.string().length(3),
+    code: z.string().max(3),
     created_at: z.coerce.date(),
     updated_at: z.coerce.date(),
 });
