@@ -19,7 +19,6 @@ CREATE TABLE IF NOT EXISTS users (
     request_reason TEXT,
     requested_at TIMESTAMPTZ DEFAULT now(),
     password_hash TEXT NOT NULL,
-    refresh_token TEXT,
     last_login TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()

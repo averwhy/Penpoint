@@ -2,6 +2,7 @@
     import { Button } from "$lib/components/ui/button/index";
     import * as Field from "$lib/components/ui/field/index.js";
     import { Input } from "$lib/components/ui/input/index.js";
+    import { login } from "$lib/functions/login.remote";
 </script>
 
 <div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#1e1e22]">
@@ -13,18 +14,25 @@
             </h3>
         </div>
         <div class="items-center gap-2 flex-1">
-            <Field.Set class="w-full">
-                <Field.Group>
-                    <Field.Field>
-                        <Input id="email" class="w-full" placeholder="Email" />
-                    </Field.Field>
-                    <Field.Field>
-                        <Input id="pw" class="w-full" placeholder="Password" />
-                    </Field.Field>
-                </Field.Group>
-            </Field.Set>
+            <form {...login}>
+                <Field.Set class="w-full">
+                    <Field.Group>
+                        <Field.Field>
+                            <Input {...login.fields.email.as("email")} class="w-full" placeholder="Email" />
+                        </Field.Field>
+                        <Field.Field>
+                            <Input
+                                {...login.fields.password.as("password")}
+                                id="pw"
+                                class="w-full"
+                                placeholder="Password"
+                            />
+                        </Field.Field>
+                    </Field.Group>
+                </Field.Set>
 
-            <Button class="mt-3">Login</Button>
+                <Button class="mt-3" type="submit">Login</Button>
+            </form>
         </div>
     </div>
 </div>

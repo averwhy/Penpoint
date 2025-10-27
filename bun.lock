@@ -3,13 +3,6 @@
   "workspaces": {
     "": {
       "name": "penpoint",
-      "dependencies": {
-        "bcrypt": "^6.0.0",
-        "dotenv": "^17.2.3",
-        "jsonwebtoken": "^9.0.2",
-        "postgres": "^3.4.7",
-        "zod": "^4.1.12",
-      },
       "devDependencies": {
         "@internationalized/date": "^3.8.1",
         "@lucide/svelte": "^0.544.0",
@@ -21,9 +14,12 @@
         "@types/bcrypt": "^6.0.0",
         "@types/jsonwebtoken": "^9.0.10",
         "@vitest/browser": "^3.2.4",
+        "bcrypt": "^6.0.0",
         "bits-ui": "^2.11.0",
         "clsx": "^2.1.1",
+        "jsonwebtoken": "^9.0.2",
         "playwright": "^1.55.1",
+        "postgres": "^3.4.7",
         "prettier": "^3.6.2",
         "prettier-plugin-svelte": "^3.4.0",
         "svelte": "^5.39.5",
@@ -36,6 +32,7 @@
         "vite": "^7.1.7",
         "vitest": "^3.2.4",
         "vitest-browser-svelte": "^1.1.0",
+        "zod": "^4.1.12",
       },
     },
   },
@@ -307,8 +304,6 @@
     "devalue": ["devalue@5.3.2", "", {}, "sha512-UDsjUbpQn9kvm68slnrs+mfxwFkIflOhkanmyabZ8zOYk8SMEIbJ3TK+88g70hSIeytu4y18f0z/hYHMTrXIWw=="],
 
     "dom-accessibility-api": ["dom-accessibility-api@0.5.16", "", {}, "sha512-X7BJ2yElsnOJ30pZF4uIIDfBEVgF4XEBxL9Bxhy6dnrm5hkzqmsWHGTiHqRiITNhMyFLyAiWndIJP7Z1NTteDg=="],
-
-    "dotenv": ["dotenv@17.2.3", "", {}, "sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w=="],
 
     "ecdsa-sig-formatter": ["ecdsa-sig-formatter@1.0.11", "", { "dependencies": { "safe-buffer": "^5.0.1" } }, "sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ=="],
 

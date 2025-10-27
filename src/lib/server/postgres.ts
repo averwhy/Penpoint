@@ -1,27 +1,13 @@
-import { error } from "@sveltejs/kit";
+import { privateEnv } from "$lib/env/private";
+import { Semester, Student, User } from "$lib/models";
 import postgres from "postgres";
-import { Semester, Student, User } from "./models";
-import 'dotenv/config';
 
-export function usePostgres(): postgres.Sql {
-    if (!process.env.DATABASE_URL) {
-        error(500, "Missing `DATABASE_URL` environment variable");
-    }
-    try {
-        const pgconnection = postgres(process.env.DATABASE_URL as string, {
-            //ssl: "require",
-            connect_timeout: 60,
-        });
-        console.info("Connected to Postgres!");
-        return pgconnection;
-    } catch (err) {
-        error(500, `Unexpected error when connecting to PostgreSQL: ${err}`);
-    }
-}
+export const sql = postgres(privateEnv.DATABASE_URL, {
+    //ssl: "require",
+    connect_timeout: 60,
+});
 
 export async function getMostRecentSemesterIncludingActive(): Promise<Semester> {
-    const sql = usePostgres();
-
     const result = await sql`
         SELECT *
         FROM semesters
@@ -39,14 +25,13 @@ export async function getMostRecentSemesterIncludingActive(): Promise<Semester> 
             ORDER BY ends DESC
             LIMIT 1
         `;
-        return Semester.parse(fallback.at(0));
+        return Semester.parse(fallback[0]);
     }
 
-    return Semester.parse(result.at(0));
+    return Semester.parse(result[0]);
 }
 
 export async function createStudent(student_id: number): Promise<Student> {
-    const sql = usePostgres();
     // here we only insert the student ID because we don't have the name or email, and the created_at is set to now by default
     const result = await sql`
 		INSERT INTO students (student_id)
@@ -54,7 +39,7 @@ export async function createStudent(student_id: number): Promise<Student> {
 		RETURNING *
 	`;
 
-    return Student.parse(result.at(0));
+    return Student.parse(result[0]);
 }
 
 export async function createUser(
@@ -65,23 +50,16 @@ export async function createUser(
     role = "unapproved",
     password_hash?: string,
 ): Promise<User> {
-    const sql = usePostgres();
-
     const result = await sql`
 		INSERT INTO users (student_id, email, name, role, request_reason, password_hash)
 		VALUES (${student_id}, ${email}, ${name}, ${role}, ${request_reason}, ${password_hash ?? null})
 		RETURNING *
 	`;
 
-    return User.parse(result.at(0));
+    return User.parse(result[0]);
 }
 
-export async function updateUserPassword(
-    email: string,
-    password_hash: string
-) {
-    const sql = usePostgres();
-
+export async function updateUserPassword(email: string, password_hash: string) {
     await sql`
         UPDATE users 
         SET password_hash = ${password_hash}
@@ -90,7 +68,6 @@ export async function updateUserPassword(
 }
 
 export async function studentExists(student_id: number): Promise<boolean> {
-    const sql = usePostgres();
     const result = await sql`
 		SELECT student_id
 		FROM students
@@ -101,7 +78,6 @@ export async function studentExists(student_id: number): Promise<boolean> {
 }
 
 export async function userExists(student_id = 0, email = ""): Promise<boolean> {
-    const sql = usePostgres();
     const result = await sql`
 		SELECT student_id
 		FROM users
