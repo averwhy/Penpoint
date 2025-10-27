@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS clubs (
     name TEXT UNIQUE NOT NULL,
     acronym TEXT UNIQUE,
     governing_board BOOLEAN NOT NULL DEFAULT false,
+    logo_filename VARCHAR(64) UNIQUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

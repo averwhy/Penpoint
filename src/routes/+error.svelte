@@ -9,6 +9,7 @@
     <div class="text-4xl text-center">
         <h1>
             Something went wrong.<br />
+            {page.error} <br />
             Try going <a href="/" class="text-blue-400 hover:text-blue-600">home</a>.
         </h1>
     </div>
