@@ -5,6 +5,7 @@ import { generateAccessToken, verifyPassword } from "$lib/server/auth";
 import { sql } from "$lib/server/postgres";
 import { error } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
+import { getUser } from "./user/get.remote";
 
 export const login = form(Login, async login => {
     const users = await sql`
@@ -43,6 +44,8 @@ export const login = form(Login, async login => {
         secure: privateEnv.NODE_ENV === "production",
         maxAge: 7 * 24 * 60 * 60,
     });
+
+    await getUser().set(user);
 
     redirect(303, "/app");
 });
