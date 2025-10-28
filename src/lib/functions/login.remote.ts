@@ -4,6 +4,7 @@ import { Login, User } from "$lib/models";
 import { generateAccessToken, verifyPassword } from "$lib/server/auth";
 import { sql } from "$lib/server/postgres";
 import { error } from "@sveltejs/kit";
+import { redirect } from "@sveltejs/kit";
 
 export const login = form(Login, async login => {
     const users = await sql`
@@ -43,5 +44,5 @@ export const login = form(Login, async login => {
         maxAge: 7 * 24 * 60 * 60,
     });
 
-    return { user };
+    redirect(303, "/app");
 });

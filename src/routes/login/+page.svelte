@@ -19,7 +19,7 @@
                     <Field.Group>
                         <Field.Field>
                             <Input {...login.fields.email.as("email")} class="w-full" placeholder="Email" />
-                        </Field.Field>
+                        </Field.Field>           
                         <Field.Field>
                             <Input
                                 {...login.fields.password.as("password")}
