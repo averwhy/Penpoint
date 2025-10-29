@@ -1,5 +1,4 @@
 import { privateEnv } from "$lib/env/private";
-import { error } from "@sveltejs/kit";
 import bcrypt from "bcrypt";
 import jwt, { type JwtPayload } from "jsonwebtoken";
 
@@ -21,8 +20,8 @@ export function verifyToken(
     token: string,
     tokenType: "access" = "access",
     deleteCookie: () => void,
-): JwtPayload & { sub: string } {
-    if (tokenType !== "access") error(401, "Invalid token type");
+): (JwtPayload & { sub: string }) | null {
+    if (tokenType !== "access") return null;
 
     const secret = privateEnv.JWT_ACCESS_SECRET;
 
@@ -32,18 +31,18 @@ export function verifyToken(
         // Verify token contains a user id
         if (!decoded.sub) {
             deleteCookie();
-            error(401, "Token missing subject");
+            return null;
         }
 
         // Verify token type matches expected type
         if (decoded.type !== tokenType) {
             deleteCookie();
-            error(401, "Invalid token type");
+            return null;
         }
 
         return decoded as JwtPayload & { sub: string };
     } catch {
         deleteCookie();
-        error(401, "Invalid or expired token");
+        return null;
     }
 }

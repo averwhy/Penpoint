@@ -1,7 +1,7 @@
-import { query } from "$app/server";
 import { getMostRecentSemesterIncludingActive, sql } from "$lib/server/postgres";
+import type { PageServerLoad } from "./$types";
 
-export const getHomepageData = query(async () => {
+export const load: PageServerLoad = async () => {
     const semester = await getMostRecentSemesterIncludingActive();
 
     const [pointEarnersResult, pointsEarnedResult, upcomingEventsResult] = await Promise.all([
@@ -31,5 +31,5 @@ export const getHomepageData = query(async () => {
     const semesterEnd = new Date(semester.ends);
     const daysLeft = Math.ceil((semesterEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 
-    return [pointEarners, pointsEarned, upcomingEvents, daysLeft];
-});
+    return { pointEarners, pointsEarned, upcomingEvents, daysLeft };
+};

@@ -3,10 +3,10 @@
     import * as Card from "$lib/components/ui/card/index.js";
     import { Skeleton } from "$lib/components/ui/skeleton/index";
     import * as Tooltip from "$lib/components/ui/tooltip/index";
+    import type { PageProps } from "./$types";
 
-    import { getHomepageData } from "./data.remote";
-    
-    let [pointEarners, pointsEarned, upcomingEvents, daysLeft] = await getHomepageData();
+    const { data }: PageProps = $props();
+    const { pointEarners, pointsEarned, upcomingEvents, daysLeft } = data;
 </script>
 
 <div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-4">
@@ -22,9 +22,7 @@
                             <Tooltip.Trigger>
                                 <Skeleton class="h-14 w-20" />
                             </Tooltip.Trigger>
-                            <Tooltip.Content>
-                                This is taking a while to load.. try again?
-                            </Tooltip.Content>
+                            <Tooltip.Content>This is taking a while to load.. try again?</Tooltip.Content>
                         </Tooltip.Root>
                     </Tooltip.Provider>
                 {/if}
@@ -41,9 +39,7 @@
                             <Tooltip.Trigger>
                                 <Skeleton class="h-14 w-20" />
                             </Tooltip.Trigger>
-                            <Tooltip.Content>
-                                This is taking a while to load.. try again?
-                            </Tooltip.Content>
+                            <Tooltip.Content>This is taking a while to load.. try again?</Tooltip.Content>
                         </Tooltip.Root>
                     </Tooltip.Provider>
                 {/if}
@@ -60,9 +56,7 @@
                             <Tooltip.Trigger>
                                 <Skeleton class="h-14 w-20" />
                             </Tooltip.Trigger>
-                            <Tooltip.Content>
-                                This is taking a while to load.. try again?
-                            </Tooltip.Content>
+                            <Tooltip.Content>This is taking a while to load.. try again?</Tooltip.Content>
                         </Tooltip.Root>
                     </Tooltip.Provider>
                 {/if}
@@ -79,9 +73,7 @@
                             <Tooltip.Trigger>
                                 <Skeleton class="h-14 w-20" />
                             </Tooltip.Trigger>
-                            <Tooltip.Content>
-                                This is taking a while to load.. try again?
-                            </Tooltip.Content>
+                            <Tooltip.Content>This is taking a while to load.. try again?</Tooltip.Content>
                         </Tooltip.Root>
                     </Tooltip.Provider>
                 {/if}
