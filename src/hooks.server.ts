@@ -8,6 +8,9 @@ import { sequence } from "@sveltejs/kit/hooks";
 
 if (!building && privateEnv.PENPOINT_INIT) {
     const { email, password } = privateEnv.PENPOINT_INIT;
+    const init_name = "Penny Point";
+    const init_id = '0000000';
+    const init_role = "admin"; // Don't change
 
     async function init() {
         const hashedPassword = await hashPassword(password);
@@ -16,8 +19,8 @@ if (!building && privateEnv.PENPOINT_INIT) {
             INSERT INTO students (email, student_id, name)
             VALUES (
                 ${email},
-                '0000000',
-                'Penpoint Init User'
+                ${init_id},
+                ${init_name}
             )
             ON CONFLICT DO NOTHING
             RETURNING *
@@ -27,9 +30,9 @@ if (!building && privateEnv.PENPOINT_INIT) {
             INSERT INTO users (email, student_id, name, role, password_hash, request_reason)
             VALUES (
                 ${email},
-                '0000000',
-                'Penpoint Init User',
-                'admin',
+                ${init_id},
+                ${init_name},
+                ${init_role},
                 ${hashedPassword},
                 'Initial Penpoint admin user.'
             )

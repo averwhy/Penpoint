@@ -3,6 +3,7 @@
     import * as Field from "$lib/components/ui/field/index.js";
     import { Input } from "$lib/components/ui/input/index.js";
     import { login } from "$lib/functions/login.remote";
+    import { toast } from "svelte-sonner";
 </script>
 
 <div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#1e1e22]">
@@ -19,7 +20,7 @@
                     <Field.Group>
                         <Field.Field>
                             <Input {...login.fields.email.as("email")} class="w-full" placeholder="Email" />
-                        </Field.Field>           
+                        </Field.Field>
                         <Field.Field>
                             <Input
                                 {...login.fields.password.as("password")}
