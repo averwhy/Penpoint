@@ -1,8 +1,10 @@
 import { form, getRequestEvent } from "$app/server";
 import { privateEnv } from "$lib/env/private";
 import { redirect } from "@sveltejs/kit";
+import { z } from "zod";
 
-export const logout = form(async () => {
+export const logout = form(z.any(), async () => {
+    console.log("yo im gonna logout");
     const { cookies } = getRequestEvent();
 
     cookies.delete("authorization", {

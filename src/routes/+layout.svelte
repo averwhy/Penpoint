@@ -3,6 +3,7 @@
     import { page } from "$app/state";
     import { writable } from "svelte/store";
     import { fade } from "svelte/transition";
+    import { Toaster } from "$lib/components/ui/sonner/index";
 
     import pp from "$lib/assets/penmenpride.png";
     import favicon from "$lib/assets/sga.svg";
@@ -20,6 +21,7 @@
 </svelte:head>
 
 <header>
+    <Toaster richColors/>
     <div class="p-2.5 bg-[#141417] fixed w-full top-0 left-0 z-[1000]">
         <div class="max-w-[1200px] m-auto p-1 flex justify-between items-center">
             <a data-sveltekit-preload-data="hover" href="/">

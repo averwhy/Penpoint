@@ -3,9 +3,8 @@ import { privateEnv } from "$lib/env/private";
 import { Login, User } from "$lib/models";
 import { generateAccessToken, verifyPassword } from "$lib/server/auth";
 import { sql } from "$lib/server/postgres";
-import { fail } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
-import { getUser } from "./user/get.remote";
 
 export const login = form(Login, async login => {
     const users = await sql`
@@ -15,17 +14,17 @@ export const login = form(Login, async login => {
         LIMIT 1
     `;
 
-    if (users.length === 0) return fail(401, { message: "Invalid credentials" });
+    if (users.length === 0) error(401, { message: "Invalid credentials" });
 
     const passwordHash = users[0]?.password_hash;
     const user = User.parse(users[0]);
 
-    const isValidPassword = await verifyPassword(login.password, passwordHash);
+    const isValidPassword = await verifyPassword(login._password, passwordHash);
 
-    if (!isValidPassword) return fail(401, { message: "Invalid credentials" });
+    if (!isValidPassword) error(401, { message: "Invalid credentials" });
 
     if (user.role === "unapproved")
-        return fail(403, { message: "Access denied. Please wait for approval email from SGA before logging in." });
+        error(403, { message: "Access denied. Please wait for approval email from SGA before logging in." });
 
     const accessToken = generateAccessToken(user.id);
 
@@ -44,8 +43,6 @@ export const login = form(Login, async login => {
         secure: privateEnv.NODE_ENV === "production",
         maxAge: 7 * 24 * 60 * 60,
     });
-
-    await getUser().set(user);
 
     redirect(303, "/app");
 });

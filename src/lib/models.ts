@@ -17,14 +17,14 @@ export type Password = z.infer<typeof Password>;
 
 export const Login = z.object({
     email: z.email(),
-    password: Password,
+    _password: z.string(), // don't use password schema for logging in, it's used on registration
 });
 export type Login = z.infer<typeof Login>;
 
 export const Registration = z.object({
     name: z.string(),
     email: z.email(),
-    password: Password,
+    password: Password, // password schema should only be used here
     studentid: z.string(),
     reason: z.string(),
 });

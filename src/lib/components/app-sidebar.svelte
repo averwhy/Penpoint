@@ -7,12 +7,12 @@
     import ChevronUp from "@lucide/svelte/icons/chevron-up";
     import * as Sidebar from "$lib/components/ui/sidebar/index";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index";
+    import { User } from "$lib/models";
     import { error, redirect } from "@sveltejs/kit";
 
-    import { getUser } from "$lib/functions/user/get.remote";
-    import { logout } from "$lib/functions/logout.remote";
+    const { user }: { user: User } = $props();
 
-    const user = await getUser();
+    import { logout } from "$lib/functions/logout.remote";
 
     // Menu items.
     const items = [
@@ -80,11 +80,12 @@
                         <DropdownMenu.Item>
                             <span>Account</span>
                         </DropdownMenu.Item>
-                        <DropdownMenu.Item>
-                            <form {...logout}>
-                                <button type="submit">Sign out</button>
-                            </form>
-                        </DropdownMenu.Item>
+
+                        <form {...logout}>
+                            <DropdownMenu.Item>
+                                <button class="w-full h-full text-left" type="submit">Sign out</button>
+                            </DropdownMenu.Item>
+                        </form>
                     </DropdownMenu.Content>
                 </DropdownMenu.Root>
             </Sidebar.MenuItem>

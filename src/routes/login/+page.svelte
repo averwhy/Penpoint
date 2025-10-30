@@ -15,19 +15,28 @@
             </h3>
         </div>
         <div class="items-center gap-2 flex-1">
-            <form {...login}>
+            <form
+                {...login.enhance(async ({ form, data, submit }) => {
+                    try {
+                        await submit();
+                        form.reset();
+                    } catch (error: any) {
+                        // ignore redirects
+                        if (error?.status >= 300 && error?.status < 400) {
+                            throw error;
+                        }
+                        console.error("login failed", error);
+                        toast.error("Login failed", { description: error?.body.message });
+                    }
+                })}
+            >
                 <Field.Set class="w-full">
                     <Field.Group>
                         <Field.Field>
                             <Input {...login.fields.email.as("email")} class="w-full" placeholder="Email" />
                         </Field.Field>
                         <Field.Field>
-                            <Input
-                                {...login.fields.password.as("password")}
-                                id="pw"
-                                class="w-full"
-                                placeholder="Password"
-                            />
+                            <Input {...login.fields._password.as("password")} class="w-full" placeholder="Password" />
                         </Field.Field>
                     </Field.Group>
                 </Field.Set>
