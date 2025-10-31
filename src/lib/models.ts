@@ -108,6 +108,11 @@ export const Tap = z.object({
 });
 export type Tap = z.infer<typeof Tap>;
 
+export const PointCheck = z.object({
+    student_id: StudentId
+})
+export type PointCheck = z.infer<typeof PointCheck>;
+
 // API Response schemas
 
 export const LoginResponse = z.object({

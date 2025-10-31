@@ -2,7 +2,19 @@ import { getMostRecentSemesterIncludingActive, sql } from "$lib/server/postgres"
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async () => {
-    const semester = await getMostRecentSemesterIncludingActive();
+    let semester: any;
+    try {
+        semester = await getMostRecentSemesterIncludingActive();
+    } catch (err: unknown) {
+        const e = err as any;
+        const isConnRefused =
+            err instanceof AggregateError
+                ? Array.isArray(err.errors) && err.errors.some((inner: any) => inner?.code === "ECONNREFUSED")
+                : e?.code === "ECONNREFUSED" || String(e?.message).includes("ECONNREFUSED");
+
+        if (isConnRefused) return undefined;
+        throw err;
+    }
 
     const [pointEarnersResult, pointsEarnedResult, upcomingEventsResult] = await Promise.all([
         sql`

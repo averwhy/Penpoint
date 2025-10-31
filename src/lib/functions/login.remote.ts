@@ -7,12 +7,19 @@ import { error } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
 
 export const login = form(Login, async login => {
-    const users = await sql`
-        SELECT *
-        FROM users u
-        WHERE u.email = ${login.email}
-        LIMIT 1
-    `;
+    let users;
+    try {
+        users = await sql`
+            SELECT *
+            FROM users u
+            WHERE u.email = ${login.email}
+            LIMIT 1
+        `;
+    } catch (err: unknown) {
+        if ((err as any)?.code === "ECONNREFUSED")
+            error(503, { message: "Backend unavailiable" });
+        throw err;
+    }
 
     if (users.length === 0) error(401, { message: "Invalid credentials" });
 

@@ -4,6 +4,11 @@
     import { Input } from "$lib/components/ui/input/index.js";
     import { login } from "$lib/functions/login.remote";
     import { toast } from "svelte-sonner";
+    import LoginIcon from "@lucide/svelte/icons/log-in";
+    import { Login } from "$lib/models";
+    import Disc  from "@lucide/svelte/icons/disc-3";
+
+    let pending = false;
 </script>
 
 <div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#1e1e22]">
@@ -17,6 +22,7 @@
         <div class="items-center gap-2 flex-1">
             <form
                 {...login.enhance(async ({ form, data, submit }) => {
+                    pending = true;
                     try {
                         await submit();
                         form.reset();
@@ -27,6 +33,8 @@
                         }
                         console.error("login failed", error);
                         toast.error("Login failed", { description: error?.body.message });
+                    } finally {
+                        pending = false;
                     }
                 })}
             >
@@ -41,7 +49,15 @@
                     </Field.Group>
                 </Field.Set>
 
-                <Button class="mt-3" type="submit">Login</Button>
+                <Button class="mt-3" type="submit" disabled={pending} aria-disabled={pending}>
+                    {#if pending}
+                        <Disc class="h-4 w-4 mr-2 animate-spin" aria-hidden="true" />
+                        Logging in...
+                    {:else}
+                        <LoginIcon class="h-4 w-4 mr-2"/>
+                        Login
+                    {/if}
+                </Button>
             </form>
         </div>
     </div>
