@@ -11,7 +11,7 @@
     let pending = false;
 </script>
 
-<div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#1e1e22]">
+<div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background">
     <div class="grid grid-cols-2 gap-x-5">
         <div class="">
             <h1 class="text-4xl">Login</h1>
