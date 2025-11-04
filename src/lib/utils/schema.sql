@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS club_users(
 CREATE TABLE IF NOT EXISTS events (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     club_id UUID REFERENCES clubs(id),
+    semester_id UUID REFERENCES semesters(id),
     name TEXT NOT NULL,
     location TEXT NOT NULL,
     point_value INT NOT NULL DEFAULT 3,
@@ -67,7 +68,6 @@ CREATE TABLE IF NOT EXISTS events (
 
 CREATE TABLE IF NOT EXISTS taps (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    semester_id UUID REFERENCES semesters(id),
     student_id VARCHAR(7) REFERENCES students(student_id),
     event_id UUID REFERENCES events(id)
 );

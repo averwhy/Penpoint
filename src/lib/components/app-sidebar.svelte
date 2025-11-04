@@ -3,12 +3,10 @@
     import HouseIcon from "@lucide/svelte/icons/house";
     import InboxIcon from "@lucide/svelte/icons/inbox";
     import SearchIcon from "@lucide/svelte/icons/search";
-    import SettingsIcon from "@lucide/svelte/icons/settings";
     import ChevronUp from "@lucide/svelte/icons/chevron-up";
     import * as Sidebar from "$lib/components/ui/sidebar/index";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index";
     import { User } from "$lib/models";
-    import { error, redirect } from "@sveltejs/kit";
 
     const { user }: { user: User } = $props();
 
