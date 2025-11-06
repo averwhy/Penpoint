@@ -1,9 +1,14 @@
 <script lang="ts">
     import CalendarIcon from "@lucide/svelte/icons/calendar";
-    import HouseIcon from "@lucide/svelte/icons/house";
-    import InboxIcon from "@lucide/svelte/icons/inbox";
+    import LeftPanel from "@lucide/svelte/icons/layout-panel-left";
     import SearchIcon from "@lucide/svelte/icons/search";
     import ChevronUp from "@lucide/svelte/icons/chevron-up";
+    import IdCard from "@lucide/svelte/icons/id-card";
+    import CalendarCog from "@lucide/svelte/icons/calendar-cog";
+    import AddUser from "@lucide/svelte/icons/user-plus";
+    import UserCog from "@lucide/svelte/icons/user-round-cog";
+    import CalendarCheck from "@lucide/svelte/icons/calendar-check-2";
+    import UsersIcon from "@lucide/svelte/icons/users";
     import * as Sidebar from "$lib/components/ui/sidebar/index";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index";
     import { User } from "$lib/models";
@@ -13,16 +18,11 @@
     import { logout } from "$lib/functions/logout.remote";
 
     // Menu items.
-    const items = [
-        {
-            title: "Home",
-            url: "/app",
-            icon: HouseIcon,
-        },
+    let items = [
         {
             title: "Dashboard",
-            url: "/app/dashboard",
-            icon: InboxIcon,
+            url: "/app",
+            icon: LeftPanel,
         },
         {
             title: "Events",
@@ -34,6 +34,47 @@
             url: "/app/club",
             icon: SearchIcon,
         },
+    ];
+
+    let sgaItems = [
+        {
+            title: "Event Scanning",
+            url: "",
+            icon: IdCard,
+        },
+        {
+            title: "New User Requests",
+            url: "",
+            icon: AddUser,
+        },
+        {
+            title: "Event Requests",
+            url: "",
+            icon: CalendarCheck,
+        },
+    ];
+
+    let adminItems = [
+        {
+            title: "Semesters",
+            url: "",
+            icon: CalendarCog,
+        },
+        {
+            title: "User Management",
+            url: "",
+            icon: UserCog
+        },
+        {
+            title: "Club Management",
+            url: "",
+            icon: UsersIcon,
+        },
+        {
+            title: "Event Management",
+            url: "",
+            icon: CalendarCog,
+        }
     ];
 </script>
 
@@ -57,6 +98,44 @@
                     {/each}
                 </Sidebar.Menu>
             </Sidebar.GroupContent>
+            {#if user.role === "sga" || user.role === "admin"}
+                <Sidebar.GroupLabel>SGA</Sidebar.GroupLabel>
+                <Sidebar.GroupContent>
+                    <Sidebar.Menu>
+                        {#each sgaItems as item (item.title)}
+                            <Sidebar.MenuItem>
+                                <Sidebar.MenuButton>
+                                    {#snippet child({ props })}
+                                        <a href={item.url} {...props}>
+                                            <item.icon />
+                                            <span>{item.title}</span>
+                                        </a>
+                                    {/snippet}
+                                </Sidebar.MenuButton>
+                            </Sidebar.MenuItem>
+                        {/each}
+                    </Sidebar.Menu>
+                </Sidebar.GroupContent>
+            {/if}
+            {#if user.role === "admin"}
+                <Sidebar.GroupLabel>Admins</Sidebar.GroupLabel>
+                <Sidebar.GroupContent>
+                    <Sidebar.Menu>
+                        {#each adminItems as item (item.title)}
+                            <Sidebar.MenuItem>
+                                <Sidebar.MenuButton>
+                                    {#snippet child({ props })}
+                                        <a href={item.url} {...props}>
+                                            <item.icon />
+                                            <span>{item.title}</span>
+                                        </a>
+                                    {/snippet}
+                                </Sidebar.MenuButton>
+                            </Sidebar.MenuItem>
+                        {/each}
+                    </Sidebar.Menu>
+                </Sidebar.GroupContent>
+            {/if}
         </Sidebar.Group>
     </Sidebar.Content>
     <Sidebar.Footer>

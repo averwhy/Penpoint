@@ -72,6 +72,7 @@ export const Club = z.object({
     name: z.string(),
     acronym: z.string(),
     governing_board: z.boolean(),
+    image_filename: z.string().max(64),
     created_at: z.coerce.date(),
     updated_at: z.coerce.date(),
 });
@@ -95,6 +96,8 @@ export const Event = z.object({
     name: z.string(),
     location: z.string(),
     point_value: z.int(),
+    image_filename: z.string().max(64),
+    permalink: z.string().max(64),
     starts_at: z.coerce.date(),
     ends_at: z.coerce.date(),
     created_at: z.coerce.date(),

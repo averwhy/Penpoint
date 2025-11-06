@@ -18,6 +18,7 @@
         "clsx": "^2.1.1",
         "jsonwebtoken": "^9.0.2",
         "mode-watcher": "^1.1.0",
+        "paneforge": "^1.0.2",
         "playwright": "^1.55.1",
         "postgres": "^3.4.7",
         "prettier": "^3.6.2",

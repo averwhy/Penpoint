@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS events (
     location TEXT NOT NULL,
     point_value INT NOT NULL DEFAULT 3,
     image_filename VARCHAR(64) UNIQUE,
+    permalink VARCHAR(64) UNIQUE,
     starts_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     ends_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
