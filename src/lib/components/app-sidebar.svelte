@@ -16,22 +16,22 @@
     const items = [
         {
             title: "Home",
-            url: "#",
+            url: "/app",
             icon: HouseIcon,
         },
         {
             title: "Dashboard",
-            url: "#",
+            url: "/app/dashboard",
             icon: InboxIcon,
         },
         {
             title: "Events",
-            url: "#",
+            url: "/app/events",
             icon: CalendarIcon,
         },
         {
             title: "Your Club",
-            url: "#",
+            url: "/app/club",
             icon: SearchIcon,
         },
     ];
@@ -76,7 +76,7 @@
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content side="top" class="w-(--bits-dropdown-menu-anchor-width)">
                         <DropdownMenu.Item>
-                            <span>Account</span>
+                            <a href="/app/account" class="w-full h-full text-left">Account</a>
                         </DropdownMenu.Item>
 
                         <form {...logout}>

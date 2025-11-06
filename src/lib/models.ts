@@ -49,7 +49,7 @@ export const User = z.object({
     student_id: StudentId,
     email: z.email(),
     name: z.string(),
-    role: z.enum(["unapproved", "club", "sga", "admin"]),
+    role: z.enum(["inactive", "unapproved", "club", "sga", "admin"]),
     request_reason: z.string(),
     last_login: z.coerce.date(),
     created_at: z.coerce.date(),
