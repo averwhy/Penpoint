@@ -12,7 +12,7 @@
 <div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-4">
     <h1 class="mb-8 text-center text-7xl font-semibold text-foreground tracking-wide">Penmen Pride</h1>
     <div class="grid grid-cols-2 gap-x-3 gap-y-3">
-        <Card.Root class="">
+        <Card.Root>
             <Card.Content class="text-5xl">
                 {#if pointEarners !== undefined}
                     <p>{pointEarners}</p>

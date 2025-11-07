@@ -1,10 +1,20 @@
 <script lang="ts">
     import * as Card from "$lib/components/ui/card/index";
     import { getClubFromUser } from "$lib/functions/user/club.remote";
-    import { Club } from "$lib/models.js";
+    import type { PageProps } from "./$types";
 
-    const { data } = $props();
-    const { user } = data;
+    const { data }: PageProps = $props();
+    const { 
+        user,
+        upcomingEvents,
+        uniqueClubsHostingEvents,
+        eventsHostedSemester,
+        pointsEarnedSemester,
+        attendanceCountSem,
+        allEventsHosted,
+        allPointsEarned,
+        allAttendanceCount
+    } = data;
 
     const theDay: string = new Date().toLocaleDateString("en-US", { weekday: "long" });
     const nameGreetings = [
@@ -43,7 +53,7 @@
                     <Card.Title>Club Info</Card.Title>
                 </Card.Header>
                 {#if userClub === undefined}
-                <Card.Content>You are not part of a club.</Card.Content>
+                <Card.Content>You're not part of a club...</Card.Content>
                 {:else}
                 <Card.Content>
                     {userClub.name} ({userClub.acronym}) <br/>
@@ -87,8 +97,8 @@
                     <Card.Title>Upcoming</Card.Title>
                 </Card.Header>
                 <Card.Content>
-                    0 events upcoming this semester <br/>
-                    0 different clubs hosting events <br/>
+                    {upcomingEvents} events upcoming this semester <br/>
+                    {uniqueClubsHostingEvents} different clubs hosting events <br/>
 
                 </Card.Content>
             </Card.Root>
@@ -97,9 +107,9 @@
                     <Card.Title>Semester</Card.Title>
                 </Card.Header>
                 <Card.Content>
-                    0 events hosted<br />
-                    0 points earned by students<br />
-                    0 students attended events
+                    {eventsHostedSemester} events hosted<br />
+                    {pointsEarnedSemester} points earned by students<br />
+                    {attendanceCountSem} students attended events
                 </Card.Content>
             </Card.Root>
             <Card.Root class="flex-1">
@@ -107,9 +117,9 @@
                     <Card.Title>All Time</Card.Title>
                 </Card.Header>
                 <Card.Content>
-                    0 events hosted<br />
-                    0 points earned by students<br />
-                    0 students attended events
+                    {allEventsHosted} events hosted<br />
+                    {pointsEarnedSemester} points earned by students<br />
+                    {allAttendanceCount} students attended events
                 </Card.Content>
             </Card.Root>
         </div>
