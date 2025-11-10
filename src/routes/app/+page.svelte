@@ -1,12 +1,12 @@
 <script lang="ts">
-    import * as Card from "$lib/components/ui/card/index";
-    import { getClubFromUser } from "$lib/functions/user/club.remote";
     import Countup from "$lib/components/countup.svelte";
+    import * as Card from "$lib/components/ui/card/index";
     import type { PageProps } from "./$types";
 
     const { data }: PageProps = $props();
     const {
         user,
+        userClub,
         upcomingEvents,
         uniqueClubsHostingEvents,
         eventsHostedSemester,
@@ -30,11 +30,6 @@
         "Today's a good day, ",
     ];
     const randomNum = Math.floor(Math.random() * nameGreetings.length);
-
-    const userClub = await getClubFromUser(user.id);
-    if (userClub !== undefined) {
-        // other remote functions will go here to get club stats
-    }
 </script>
 
 <div>

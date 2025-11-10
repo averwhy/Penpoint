@@ -1,10 +1,21 @@
-import type { LayoutServerLoad } from "./$types";
+import { Club } from "$lib/models";
+import { sql } from "$lib/server/postgres";
 import { redirect } from "@sveltejs/kit";
+import type { LayoutServerLoad } from "./$types";
 
 export const load: LayoutServerLoad = async ({ locals }) => {
     if (!locals.user) redirect(303, "/login");
 
+    const userClub = await sql`
+        SELECT clubs.*
+        FROM clubs
+        INNER JOIN club_users ON clubs.id = club_users.club_id
+        WHERE club_users.user_id = ${locals.user.id}
+        LIMIT 1
+    `;
+
     return {
-        user: locals.user!
+        user: locals.user!,
+        userClub: userClub[0] ? Club.safeParse(userClub[0]).data : undefined,
     };
-}
+};

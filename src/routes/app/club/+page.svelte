@@ -1,16 +1,12 @@
 <script lang="ts">
-    import * as Card from "$lib/components/ui/card/index";
-    import { getClubFromUser } from "$lib/functions/user/club.remote";
-    import * as Dialog from "$lib/components/ui/dialog/index";
     import { Button } from "$lib/components/ui/button/index";
+    import * as Dialog from "$lib/components/ui/dialog/index";
     import type { PageProps } from "./$types";
-    import { redirect } from "@sveltejs/kit";
 
     const { data }: PageProps = $props();
     let open = $state(false);
-    const { user } = data;
+    const { user, userClub } = data;
 
-    const userClub = await getClubFromUser(user.id);
     if (userClub === undefined) {
         open = true;
     }

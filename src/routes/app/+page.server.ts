@@ -1,7 +1,10 @@
 import { getMostRecentSemesterIncludingActive, sql } from "$lib/server/postgres";
+import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals }) => {
+    if (!locals.user) redirect(303, "/login");
+
     const semester = await getMostRecentSemesterIncludingActive();
 
     const [
@@ -12,7 +15,7 @@ export const load: PageServerLoad = async () => {
         attendanceCountSemResult,
         allEventsHostedResult,
         allPointsEarnedResult,
-        allAttendanceCountResult
+        allAttendanceCountResult,
     ] = await Promise.all([
         // upcoming
         sql`
@@ -72,7 +75,6 @@ export const load: PageServerLoad = async () => {
     const allPointsEarned = Number(allPointsEarnedResult[0]?.total_points ?? 0);
     const allAttendanceCount = Number(allAttendanceCountResult[0]?.count ?? 0);
 
-
     return {
         upcomingEvents,
         uniqueClubsHostingEvents,
@@ -81,6 +83,6 @@ export const load: PageServerLoad = async () => {
         attendanceCountSem,
         allEventsHosted,
         allPointsEarned,
-        allAttendanceCount
+        allAttendanceCount,
     };
 };
