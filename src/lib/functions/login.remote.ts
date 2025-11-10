@@ -16,6 +16,9 @@ export const login = form(Login, async login => {
     if (users.length === 0) error(401, { message: "Invalid credentials" });
 
     const passwordHash = users[0]?.password_hash;
+
+    if (!passwordHash) error(401, { message: "Invalid credentials" });
+
     const user = User.parse(users[0]);
 
     const isValidPassword = await verifyPassword(login._password, passwordHash);
