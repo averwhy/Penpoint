@@ -9,7 +9,7 @@
     let pending = false;
 </script>
 
-<div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#1e1e22] px-4">
+<div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-4">
     <div class="w-full max-w-[720px]">
         <div class="flex items-center gap-6">
             <h1 class="w-90 text-right text-4xl">Check Your Points</h1>

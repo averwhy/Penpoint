@@ -12,7 +12,7 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 
 export function generateAccessToken(userId: string): string {
     return jwt.sign({ sub: userId, type: "access" }, privateEnv.JWT_ACCESS_SECRET, {
-        expiresIn: "15m",
+        expiresIn: "7d",    
     });
 }
 

@@ -13,3 +13,9 @@ export type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>;
 export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & {
     ref?: U | null;
 };
+
+export function fallOrSpring(semesterStart: Date): "Spring" | "Fall" {
+    const month = semesterStart.getMonth();
+    // return 'Spring' for a start date before jun 1, else 'Fall'
+    return month < 5 ? "Spring" : "Fall";
+}
