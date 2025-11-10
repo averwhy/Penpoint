@@ -67,19 +67,19 @@
                     </Card.Header>
                     <Card.Content class="space-y-2">
                         <div class="flex items-center gap-3">
-                            <span class="text-3xl"><Countup target={0} duration={2} /></span>
+                            <span class="text-3xl">0</span>
                             <span class="text-xl">events hosted</span>
                         </div>
                         <div class="flex items-center gap-3">
-                            <span class="text-3xl"><Countup target={0} duration={2} /></span>
+                            <span class="text-3xl">0</span>
                             <span class="text-xl">points earned by students</span>
                         </div>
                         <div class="flex items-center gap-3">
-                            <span class="text-3xl"><Countup target={0} duration={2} /></span>
+                            <span class="text-3xl">0</span>
                             <span class="text-xl">students attended your events</span>
                         </div>
                         <div class="flex items-center gap-3">
-                            <span class="text-3xl"><Countup target={0} duration={2} /></span>
+                            <span class="text-3xl">0</span>
                             <span class="text-xl">events upcoming</span>
                         </div>
                     </Card.Content>
@@ -90,15 +90,15 @@
                     </Card.Header>
                     <Card.Content class="space-y-2">
                         <div class="flex items-center gap-3">
-                            <span class="text-3xl"><Countup target={0} duration={2} /></span>
+                            <span class="text-3xl">0</span>
                             <span class="text-xl">events hosted</span>
                         </div>
                         <div class="flex items-center gap-3">
-                            <span class="text-3xl"><Countup target={0} duration={3} /></span>
+                            <span class="text-3xl">0</span>
                             <span class="text-xl">points earned by students</span>
                         </div>
                         <div class="flex items-center gap-3">
-                            <span class="text-3xl"><Countup target={0} duration={3} /></span>
+                            <span class="text-3xl">0</span>
                             <span class="text-xl">students attended your events</span>
                         </div>
                     </Card.Content>
@@ -115,11 +115,11 @@
                 </Card.Header>
                 <Card.Content class="space-y-2">
                     <div class="flex items-center gap-3">
-                        <span class="text-3xl"><Countup target={upcomingEvents} duration={2} /></span>
+                        <span class="text-3xl">{upcomingEvents}</span>
                         <span class="text-xl">events upcoming</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <span class="text-3xl"><Countup target={uniqueClubsHostingEvents} duration={2} /></span>
+                        <span class="text-3xl">{uniqueClubsHostingEvents}</span>
                         <span class="text-xl">different clubs</span>
                     </div>
                 </Card.Content>
@@ -130,15 +130,15 @@
                 </Card.Header>
                 <Card.Content class="space-y-2">
                     <div class="flex items-center gap-3">
-                        <span class="text-3xl"><Countup target={eventsHostedSemester} duration={2} /></span>
+                        <span class="text-3xl">{eventsHostedSemester}</span>
                         <span class="text-xl">events hosted</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <span class="text-3xl"><Countup target={pointsEarnedSemester} duration={2} /></span>
+                        <span class="text-3xl">{pointsEarnedSemester}</span>
                         <span class="text-xl">points earned by students</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <span class="text-3xl"><Countup target={attendanceCountSem} duration={2} /></span>
+                        <span class="text-3xl">{attendanceCountSem}</span>
                         <span class="text-xl">students attended events</span>
                     </div>
                 </Card.Content>
@@ -149,15 +149,15 @@
                 </Card.Header>
                 <Card.Content class="space-y-2">
                     <div class="flex items-center gap-3">
-                        <span class="text-3xl"><Countup target={allEventsHosted} duration={2} /></span>
+                        <span class="text-3xl">{allEventsHosted}</span>
                         <span class="text-xl">events hosted</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <span class="text-3xl"><Countup target={allPointsEarned} duration={2} /></span>
+                        <span class="text-3xl">{allPointsEarned}</span>
                         <span class="text-xl">points earned by students</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <span class="text-3xl"><Countup target={allAttendanceCount} duration={2} /></span>
+                        <span class="text-3xl">{allAttendanceCount}</span>
                         <span class="text-xl">students attended events</span>
                     </div>
                 </Card.Content>
