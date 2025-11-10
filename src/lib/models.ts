@@ -49,7 +49,7 @@ export const User = z.object({
     student_id: StudentId,
     email: z.email().max(100),
     name: z.string().max(100),
-    role: z.enum(["unapproved", "club", "sga", "admin"]),
+    role: z.enum(["inactive", "unapproved", "club", "sga", "admin"]),
     request_reason: z.string().max(10000),
     last_login: z.coerce.date(),
     created_at: z.coerce.date(),
@@ -72,6 +72,7 @@ export const Club = z.object({
     name: z.string().max(100),
     acronym: z.string().max(100),
     governing_board: z.boolean(),
+    image_filename: z.string().max(64),
     created_at: z.coerce.date(),
     updated_at: z.coerce.date(),
 });
@@ -82,7 +83,7 @@ export const ClubUser = z.object({
     position: z.string().max(100),
     user_id: z.uuid(),
     club_id: z.uuid(),
-    semester_id: z.uuid(),
+    for_semester: z.uuid(),
     created_at: z.coerce.date(),
     updated_at: z.coerce.date(),
 });
@@ -92,7 +93,11 @@ export const Event = z.object({
     id: z.uuid(),
     name: z.string().max(100),
     location: z.string().max(100),
+    club_id: z.uuid(),
+    semester_id: z.uuid(),
     point_value: z.int(),
+    image_filename: z.string().max(64),
+    permalink: z.string().max(64),
     starts_at: z.coerce.date(),
     ends_at: z.coerce.date(),
     created_at: z.coerce.date(),
@@ -102,7 +107,6 @@ export type Event = z.infer<typeof Event>;
 
 export const Tap = z.object({
     id: z.uuid(),
-    semester_id: z.uuid(),
     student_id: StudentId,
     event_id: z.uuid(),
 });
@@ -120,3 +124,9 @@ export const LoginResponse = z.object({
     user: User,
 });
 export type LoginResponse = z.infer<typeof LoginResponse>;
+
+export const EventPageResponse = z.object({
+    event: Event,
+    club_name: z.string(),
+});
+export type EventPageResponse = z.infer<typeof EventPageResponse>;

@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
     student_id VARCHAR(7) REFERENCES students(student_id),
     email TEXT UNIQUE NOT NULL,
     name TEXT,
-    role VARCHAR(10) NOT NULL DEFAULT 'unapproved', -- 'unapproved', 'club', 'sga', 'admin'
+    role VARCHAR(10) NOT NULL DEFAULT 'unapproved', -- 'inactive', 'unapproved', 'club', 'sga', 'admin'
     request_reason TEXT,
     requested_at TIMESTAMPTZ DEFAULT now(),
     password_hash TEXT NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS clubs (
     name TEXT UNIQUE NOT NULL,
     acronym TEXT UNIQUE,
     governing_board BOOLEAN NOT NULL DEFAULT false,
-    logo_filename VARCHAR(64) UNIQUE,
+    image_filename VARCHAR(64) UNIQUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -56,9 +56,12 @@ CREATE TABLE IF NOT EXISTS club_users(
 CREATE TABLE IF NOT EXISTS events (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     club_id UUID REFERENCES clubs(id),
+    semester_id UUID REFERENCES semesters(id),
     name TEXT NOT NULL,
     location TEXT NOT NULL,
     point_value INT NOT NULL DEFAULT 3,
+    image_filename VARCHAR(64) UNIQUE,
+    permalink VARCHAR(64) UNIQUE,
     starts_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     ends_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -67,7 +70,6 @@ CREATE TABLE IF NOT EXISTS events (
 
 CREATE TABLE IF NOT EXISTS taps (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    semester_id UUID REFERENCES semesters(id),
     student_id VARCHAR(7) REFERENCES students(student_id),
     event_id UUID REFERENCES events(id)
 );

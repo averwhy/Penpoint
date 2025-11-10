@@ -3,6 +3,7 @@
     import * as Card from "$lib/components/ui/card/index.js";
     import { Skeleton } from "$lib/components/ui/skeleton/index";
     import * as Tooltip from "$lib/components/ui/tooltip/index";
+    import Countup from "$lib/components/countup.svelte";
     import type { PageProps } from "./$types";
 
     const { data }: PageProps = $props();
@@ -12,10 +13,10 @@
 <div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-4">
     <h1 class="mb-8 text-center text-7xl font-semibold text-foreground tracking-wide">Penmen Pride</h1>
     <div class="grid grid-cols-2 gap-x-3 gap-y-3">
-        <Card.Root class="">
+        <Card.Root>
             <Card.Content class="text-5xl">
                 {#if pointEarners !== undefined}
-                    <p>{pointEarners}</p>
+                    <Countup target={pointEarners} duration={2} />
                 {:else}
                     <Tooltip.Provider>
                         <Tooltip.Root>
@@ -32,7 +33,7 @@
         <Card.Root>
             <Card.Content class="text-5xl">
                 {#if pointsEarned !== undefined}
-                    <p>{pointsEarned}</p>
+                    <Countup target={pointsEarned} duration={3}/>
                 {:else}
                     <Tooltip.Provider>
                         <Tooltip.Root>
@@ -49,7 +50,7 @@
         <Card.Root>
             <Card.Content class="text-5xl">
                 {#if upcomingEvents !== undefined}
-                    <p>{upcomingEvents}</p>
+                    <Countup target={upcomingEvents} duration={3}/>
                 {:else}
                     <Tooltip.Provider>
                         <Tooltip.Root>
@@ -66,7 +67,7 @@
         <Card.Root>
             <Card.Content class="text-5xl">
                 {#if daysLeft !== undefined}
-                    <p>{daysLeft}</p>
+                    <Countup target={daysLeft} duration={3}/>
                 {:else}
                     <Tooltip.Provider>
                         <Tooltip.Root>

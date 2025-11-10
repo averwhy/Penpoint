@@ -25,6 +25,9 @@ export const login = form(Login, async login => {
     if (user.role === "unapproved")
         error(403, { message: "Access denied. Please wait for approval email from SGA before logging in." });
 
+    if (user.role === "inactive")
+        error(401, { message: "Access denied. Your account has been marked as inactive. Contact SGA for assistance." })
+
     const accessToken = generateAccessToken(user.id);
 
     await sql`
