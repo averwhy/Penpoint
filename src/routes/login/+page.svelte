@@ -3,10 +3,10 @@
     import * as Field from "$lib/components/ui/field/index.js";
     import { Input } from "$lib/components/ui/input/index.js";
     import { login } from "$lib/functions/login.remote";
-    import { toast } from "svelte-sonner";
-    import LoginIcon from "@lucide/svelte/icons/log-in";
     import { Login } from "$lib/models";
-    import Disc  from "@lucide/svelte/icons/disc-3";
+    import Disc from "@lucide/svelte/icons/disc-3";
+    import LoginIcon from "@lucide/svelte/icons/log-in";
+    import { toast } from "svelte-sonner";
 
     let pending = false;
 </script>
@@ -21,7 +21,7 @@
         </div>
         <div class="items-center gap-2 flex-1">
             <form
-                {...login.enhance(async ({ form, data, submit }) => {
+                {...login.preflight(Login).enhance(async ({ form, data, submit }) => {
                     pending = true;
                     try {
                         await submit();
@@ -54,7 +54,7 @@
                         <Disc class="h-4 w-4 mr-2 animate-spin" aria-hidden="true" />
                         Logging in...
                     {:else}
-                        <LoginIcon class="h-4 w-4 mr-2"/>
+                        <LoginIcon class="h-4 w-4 mr-2" />
                         Login
                     {/if}
                 </Button>

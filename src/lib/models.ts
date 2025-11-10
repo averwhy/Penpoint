@@ -25,11 +25,11 @@ export const Login = z.object({
 export type Login = z.infer<typeof Login>;
 
 export const Registration = z.object({
-    name: z.string().max(100),
+    name: z.string().min(1).max(100),
     email: z.email().max(100),
     // password: Password, // password schema should only be used here
     student_id: StudentId,
-    reason: z.string().max(10000),
+    reason: z.string().min(1).max(10000),
 });
 export type Registration = z.infer<typeof Registration>;
 

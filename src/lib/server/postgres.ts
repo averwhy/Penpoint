@@ -47,19 +47,22 @@ export async function getMostRecentSemesterIncludingActive(): Promise<Semester> 
     return Semester.parse(result[0]);
 }
 
-export async function createStudent(student_id: number): Promise<Student> {
-    // here we only insert the student ID because we don't have the name or email, and the created_at is set to now by default
+export async function createStudent({
+    student_id,
+    email,
+    name,
+}: Pick<Student, "student_id" | "email" | "name">): Promise<Student> {
     const result = await sql`
-		INSERT INTO students (student_id)
-		VALUES (${student_id})
-		RETURNING *
+        INSERT INTO students (student_id, email, name)
+        VALUES (${student_id}, ${email}, ${name})
+        RETURNING *
 	`;
 
     return Student.parse(result[0]);
 }
 
 export async function createUser(
-    student_id: number,
+    student_id: string,
     email: string,
     name: string,
     request_reason: string,
@@ -67,9 +70,9 @@ export async function createUser(
     password_hash?: string,
 ): Promise<User> {
     const result = await sql`
-		INSERT INTO users (student_id, email, name, role, request_reason, password_hash)
-		VALUES (${student_id}, ${email}, ${name}, ${role}, ${request_reason}, ${password_hash ?? null})
-		RETURNING *
+        INSERT INTO users (student_id, email, name, role, request_reason, password_hash)
+        VALUES (${student_id}, ${email}, ${name}, ${role}, ${request_reason}, ${password_hash ?? null})
+        RETURNING *
 	`;
 
     return User.parse(result[0]);
@@ -83,22 +86,25 @@ export async function updateUserPassword(email: string, password_hash: string) {
     `;
 }
 
-export async function studentExists(student_id: number): Promise<boolean> {
+export async function studentExists(student_id: string, email: string): Promise<boolean> {
     const result = await sql`
-		SELECT student_id
-		FROM students
-		WHERE student_id = ${student_id}
+        SELECT student_id
+        FROM students
+        WHERE student_id = ${student_id}
+        OR email = ${email}
+        LIMIT 1
 	`;
 
     return result.count === 1;
 }
 
-export async function userExists(student_id = 0, email = ""): Promise<boolean> {
+export async function userExists(student_id: string, email: string): Promise<boolean> {
     const result = await sql`
-		SELECT student_id
-		FROM users
-		WHERE student_id = ${student_id}
-		OR email = ${email}
+        SELECT student_id
+        FROM users
+        WHERE student_id = ${student_id}
+        OR email = ${email}
+        LIMIT 1
 	`;
 
     return result.count === 1;
