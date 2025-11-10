@@ -1,9 +1,9 @@
 <script lang="ts">
     import { afterNavigate } from "$app/navigation";
     import { page } from "$app/state";
+    import { Toaster } from "$lib/components/ui/sonner/index";
     import { writable } from "svelte/store";
     import { fade } from "svelte/transition";
-    import { Toaster } from "$lib/components/ui/sonner/index";
 
     import pp from "$lib/assets/penmenpride.png";
     import favicon from "$lib/assets/sga.svg";
@@ -21,7 +21,7 @@
 </svelte:head>
 
 <header>
-    <Toaster richColors/>
+    <Toaster richColors />
     <div class="p-2.5 bg-[#141417] fixed w-full top-0 left-0 z-[1000]">
         <div class="max-w-[1200px] m-auto p-1 flex justify-between items-center">
             <a data-sveltekit-preload-data="hover" href="/">
@@ -43,6 +43,7 @@
                                     <li>
                                         <NavigationMenu.Link href="/points">Points Checker</NavigationMenu.Link>
                                         <NavigationMenu.Link href="/login">Club Login</NavigationMenu.Link>
+                                        <NavigationMenu.Link href="/register">Club Registration</NavigationMenu.Link>
                                     </li>
                                 </ul>
                             </NavigationMenu.Content>
@@ -53,6 +54,7 @@
                                 <ul class="grid w-[200px] gap-4 p-2">
                                     <li>
                                         <NavigationMenu.Link href="/login">OSI Login</NavigationMenu.Link>
+                                        <NavigationMenu.Link href="/register">OSI Registration</NavigationMenu.Link>
                                     </li>
                                 </ul>
                             </NavigationMenu.Content>
