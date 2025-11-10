@@ -1,10 +1,10 @@
 <script lang="ts">
-    import Countup from "$lib/components/countup.svelte";
     import * as Card from "$lib/components/ui/card/index";
     import type { PageProps } from "./$types";
 
     const { data }: PageProps = $props();
     const {
+        greeting,
         user,
         userClub,
         upcomingEvents,
@@ -18,24 +18,12 @@
     } = data;
 
     const theDay: string = new Date().toLocaleDateString("en-US", { weekday: "long" });
-    const nameGreetings = [
-        "Hey there, ",
-        "Welcome back, ",
-        "Good to see you, ",
-        "Hello, ",
-        "Hi there, ",
-        "Howdy, ",
-        "What's up, ",
-        "Ahoy, ",
-        "Today's a good day, ",
-    ];
-    const randomNum = Math.floor(Math.random() * nameGreetings.length);
 </script>
 
 <div>
     <div class="flex items-center justify-center pt-20">
         <div class="text-center">
-            <h1 class="text-4xl font-bold">{nameGreetings[randomNum]}{user.name}.</h1>
+            <h1 class="text-4xl font-bold">{greeting}{user.name}.</h1>
             <h2 class="text-xl">Today is {theDay}. What's next?</h2>
         </div>
     </div>

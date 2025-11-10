@@ -75,7 +75,20 @@ export const load: PageServerLoad = async ({ locals }) => {
     const allPointsEarned = Number(allPointsEarnedResult[0]?.total_points ?? 0);
     const allAttendanceCount = Number(allAttendanceCountResult[0]?.count ?? 0);
 
+    const nameGreetings = [
+        "Hey there, ",
+        "Welcome back, ",
+        "Good to see you, ",
+        "Hello, ",
+        "Hi there, ",
+        "Howdy, ",
+        "What's up, ",
+        "Ahoy, ",
+        "Today's a good day, ",
+    ];
+
     return {
+        greeting: nameGreetings[Math.floor(Math.random() * nameGreetings.length)],
         upcomingEvents,
         uniqueClubsHostingEvents,
         eventsHostedSemester,
