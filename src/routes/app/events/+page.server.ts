@@ -1,8 +1,8 @@
 import { sql } from "$lib/server/postgres";
 import { Semester } from "$lib/models";
-import { query } from "$app/server";
+import type { PageServerLoad } from "./$types";
 
-export const getSemesters = query(async () => {
+export const load: PageServerLoad = async () => {
     const result = await sql`
             SELECT *
             FROM semesters
@@ -10,5 +10,6 @@ export const getSemesters = query(async () => {
         `;
 
     // return the list of parsed Semester's
-    return result.map((row) => Semester.parse(row));
-});
+    const semesters = result.map((row) => Semester.parse(row));
+    return { semesters };
+};

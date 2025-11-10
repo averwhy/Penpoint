@@ -1,7 +1,6 @@
 import type { PageServerLoad } from "./$types";
 import type { Semester, EventPageResponse, Event } from "$lib/models";
 import { getMostRecentSemesterIncludingActive, sql } from "$lib/server/postgres";
-import type postgres from "postgres";
 
 export const load: PageServerLoad = async () => {    
     const semester: Semester = await getMostRecentSemesterIncludingActive();
@@ -15,6 +14,8 @@ export const load: PageServerLoad = async () => {
             e.name,
             e.location,
             e.point_value,
+            e.image_filename,
+            e.permalink,
             e.starts_at,
             e.ends_at,
             e.created_at,
@@ -35,6 +36,8 @@ export const load: PageServerLoad = async () => {
             name: row.name,
             location: row.location,
             point_value: row.point_value,
+            image_filename: row.image_filename,
+            permalink: row.permalink,
             starts_at: row.starts_at,
             ends_at: row.ends_at,
             created_at: row.created_at,
