@@ -1,7 +1,6 @@
 <script lang="ts">
     import * as HoverCard from "$lib/components/ui/hover-card/index";
     import { Club } from "$lib/models";
-    import type { Snippet } from "svelte";
     import { getClub } from "$lib/functions/club.remote";
 
     interface Props {

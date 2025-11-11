@@ -12,6 +12,7 @@
     import * as Sidebar from "$lib/components/ui/sidebar/index";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index";
     import { User } from "$lib/models";
+    import { page } from "$app/stores";
 
     const { user }: { user: User } = $props();
 
@@ -63,7 +64,7 @@
         {
             title: "User Management",
             url: "",
-            icon: UserCog
+            icon: UserCog,
         },
         {
             title: "Club Management",
@@ -74,7 +75,7 @@
             title: "Event Management",
             url: "",
             icon: CalendarCog,
-        }
+        },
     ];
 </script>
 
@@ -86,7 +87,7 @@
                 <Sidebar.Menu>
                     {#each items as item (item.title)}
                         <Sidebar.MenuItem>
-                            <Sidebar.MenuButton>
+                            <Sidebar.MenuButton class={$page.url.pathname === item.url ? "bg-background" : ""}>
                                 {#snippet child({ props })}
                                     <a href={item.url} {...props}>
                                         <item.icon />

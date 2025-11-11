@@ -12,9 +12,7 @@
     }
 </script>
 
-<div class=""> 
-    <!-- TODO figure out why dialog doesn't show up on page -->
-     <!-- The background goes dark but the actual dialog isn't visible -->
+<div class="">
     <Dialog.Root bind:open>
         <Dialog.Content>
             <Dialog.Header>

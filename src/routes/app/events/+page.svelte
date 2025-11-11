@@ -8,6 +8,8 @@
     import { cn } from "$lib/utils";
     import { fallOrSpring } from "$lib/utils";
     import type { PageProps } from "./$types";
+    import EventsTable from "$lib/components/events-table/events-table.svelte";
+    import { getEvents } from "$lib/functions/events.remote";
 
     const { data }: PageProps = $props();
     const { user, semesters } = data;
@@ -15,6 +17,7 @@
     const semesterData = semesters.map(semester => ({
         label: `${fallOrSpring(semester.starts)} ${new Date(semester.starts).getFullYear()} (${semester.code})`,
         value: `${fallOrSpring(semester.starts)} ${new Date(semester.starts).getFullYear()} (${semester.code})`,
+        data: semester,
         // the value has to be the same because the default search algorithm searches by value for some reason
     }));
 
@@ -22,7 +25,7 @@
     let value = $state("");
     let triggerRef = $state<HTMLButtonElement>(null!);
 
-    const selectedValue = $derived(semesterData.find(f => f.value === value)?.label);
+    const selectedValue = $derived(semesterData.find(f => f.value === value));
 
     // We want to refocus the trigger button when the user selects
     // an item from the list so users can continue navigating the
@@ -33,6 +36,10 @@
             triggerRef.focus();
         });
     }
+
+    // TODO use selectedValue?.data to fetch events for the selected semester (and based on users club)
+    let events = [];
+
 </script>
 
 <div class="flex justify-center pt-10">
@@ -46,7 +53,7 @@
                     role="combobox"
                     aria-expanded={open}
                 >
-                    {selectedValue || "Select a semester..."}
+                    {selectedValue?.label || "Select a semester..."}
                     <ChevronsUpDownIcon class="opacity-50" />
                 </Button>
             {/snippet}
@@ -74,4 +81,6 @@
             </Command.Root>
         </Popover.Content>
     </Popover.Root>
+
+    <!-- <EventsTable /> -->
 </div>
