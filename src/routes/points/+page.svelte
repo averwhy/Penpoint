@@ -5,8 +5,11 @@
     import { getPoints } from "$lib/functions/user/points.remote";
     import * as Drawer from "$lib/components/ui/drawer/index";
     import { toast } from "svelte-sonner";
+    import Countup from "$lib/components/countup.svelte";
 
-    let pending = false;
+    let pending = $state(false);
+    let open = $state(false);
+    let points = $state(0);
 </script>
 
 <div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-4">
@@ -19,7 +22,11 @@
                     {...getPoints.enhance(async ({ form, data, submit }) => {
                         pending = true;
                         try {
+                            console.log("Submitting points check form");
                             await submit();
+                            console.log("result: ", getPoints.result);
+                            points = getPoints.result?.points ?? 0;
+                            open = true;
                         } catch (error: any) {
                             console.log("point check failed", error);
                             toast.error("Point check failed", { description: error?.body.message });
@@ -31,14 +38,20 @@
                     <Field.Set class="w-full">
                         <Field.Group>
                             <Field.Field>
-                                <Input id="studentid" class="w-full" placeholder="Enter student ID" />
+                                <Input
+                                    {...getPoints.fields.student_id.as("text")}
+                                    required
+                                    id="student_id"
+                                    class="w-full"
+                                    placeholder="Enter student ID"
+                                />
                             </Field.Field>
                         </Field.Group>
                     </Field.Set>
 
                     <Button type="submit" disabled={pending} class="mt-3"
                         >{#if pending}
-                            Counting your points...
+                            Counting...
                         {:else}
                             Check
                         {/if}</Button
@@ -48,11 +61,14 @@
         </div>
     </div>
 </div>
-<Drawer.Root>
+<Drawer.Root bind:open>
     <Drawer.Content>
+        <Drawer.Header>
+            <Drawer.Title class="text-center mb-[-20px]">You have...</Drawer.Title>
+        </Drawer.Header>
         <Drawer.Header class="text-center">
-            <Drawer.Title>XX</Drawer.Title>
-            <Drawer.Description>points</Drawer.Description>
+            <Drawer.Title class="text-7xl font-bold"><Countup target={points} duration={1} /></Drawer.Title>
+            <Drawer.Description class="text-2xl">points</Drawer.Description>
         </Drawer.Header>
         <Drawer.Footer>
             <Drawer.Close>Done</Drawer.Close>
