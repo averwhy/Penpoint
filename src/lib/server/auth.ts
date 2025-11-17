@@ -11,38 +11,44 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 }
 
 export function generateAccessToken(userId: string): string {
-    return jwt.sign({ sub: userId, type: "access" }, privateEnv.JWT_ACCESS_SECRET, {
-        expiresIn: "7d",    
+    return jwt.sign({ sub: userId, type: "access" }, privateEnv.jwtSecrets.access, {
+        expiresIn: "7d",
+    });
+}
+
+export function generateOnboardingToken(userId: string): string {
+    return jwt.sign({ sub: userId, type: "onboarding" }, privateEnv.jwtSecrets.onboarding, {
+        expiresIn: "3d",
     });
 }
 
 export function verifyToken(
     token: string,
-    tokenType: "access" = "access",
-    deleteCookie: () => void,
+    tokenType: "access" | "onboarding",
+    deleteCookie?: () => void,
 ): (JwtPayload & { sub: string }) | null {
-    if (tokenType !== "access") return null;
+    if (tokenType !== "access" && tokenType !== "onboarding") return null;
 
-    const secret = privateEnv.JWT_ACCESS_SECRET;
+    const secret = privateEnv.jwtSecrets[tokenType];
 
     try {
         const decoded = jwt.verify(token, secret) as JwtPayload;
 
         // Verify token contains a user id
         if (!decoded.sub) {
-            deleteCookie();
+            deleteCookie?.();
             return null;
         }
 
         // Verify token type matches expected type
         if (decoded.type !== tokenType) {
-            deleteCookie();
+            deleteCookie?.();
             return null;
         }
 
         return decoded as JwtPayload & { sub: string };
     } catch {
-        deleteCookie();
+        deleteCookie?.();
         return null;
     }
 }

@@ -1,18 +1,18 @@
 <script lang="ts">
+    import { page } from "$app/state";
+    import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index";
+    import * as Sidebar from "$lib/components/ui/sidebar/index";
+    import { User } from "$lib/models";
     import CalendarIcon from "@lucide/svelte/icons/calendar";
-    import LeftPanel from "@lucide/svelte/icons/layout-panel-left";
-    import SearchIcon from "@lucide/svelte/icons/search";
+    import CalendarCheck from "@lucide/svelte/icons/calendar-check-2";
+    import CalendarCog from "@lucide/svelte/icons/calendar-cog";
     import ChevronUp from "@lucide/svelte/icons/chevron-up";
     import IdCard from "@lucide/svelte/icons/id-card";
-    import CalendarCog from "@lucide/svelte/icons/calendar-cog";
+    import LeftPanel from "@lucide/svelte/icons/layout-panel-left";
+    import SearchIcon from "@lucide/svelte/icons/search";
     import AddUser from "@lucide/svelte/icons/user-plus";
     import UserCog from "@lucide/svelte/icons/user-round-cog";
-    import CalendarCheck from "@lucide/svelte/icons/calendar-check-2";
     import UsersIcon from "@lucide/svelte/icons/users";
-    import * as Sidebar from "$lib/components/ui/sidebar/index";
-    import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index";
-    import { User } from "$lib/models";
-    import { page } from "$app/stores";
 
     const { user }: { user: User } = $props();
 
@@ -45,7 +45,7 @@
         },
         {
             title: "New User Requests",
-            url: "",
+            url: "/app/new-user-requests",
             icon: AddUser,
         },
         {
@@ -87,7 +87,7 @@
                 <Sidebar.Menu>
                     {#each items as item (item.title)}
                         <Sidebar.MenuItem>
-                            <Sidebar.MenuButton class={$page.url.pathname === item.url ? "bg-background" : ""}>
+                            <Sidebar.MenuButton class={page.url.pathname === item.url ? "bg-background" : ""}>
                                 {#snippet child({ props })}
                                     <a href={item.url} {...props}>
                                         <item.icon />

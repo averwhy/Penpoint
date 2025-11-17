@@ -7,6 +7,8 @@ export const privateEnv = z
         DATABASE_URL: z.url(),
         /** JWT access token secrets. */
         JWT_ACCESS_SECRET: z.string(),
+        /** JWT onboarding token secrets. */
+        JWT_ONBOARDING_SECRET: z.string(),
         /** If the specified user does not exist on startup, it will be created with the specified email and `PENPOINT_INIT_PASSWORD`. */
         PENPOINT_INIT_EMAIL: z.string().optional(),
         /** If the specified user does not exist on startup, it will be created with the specified password and `PENPOINT_INIT_USERNAME`. */
@@ -15,10 +17,16 @@ export const privateEnv = z
         NODE_ENV: z.enum(["development", "production", "test"]),
     })
     .transform(env => {
-        const { PENPOINT_INIT_EMAIL, PENPOINT_INIT_PASSWORD, ...rest } = env;
+        const { JWT_ACCESS_SECRET, JWT_ONBOARDING_SECRET, PENPOINT_INIT_EMAIL, PENPOINT_INIT_PASSWORD, ...rest } = env;
 
         return {
             ...rest,
+            ...{
+                jwtSecrets: {
+                    access: JWT_ACCESS_SECRET,
+                    onboarding: JWT_ONBOARDING_SECRET,
+                },
+            },
             ...(PENPOINT_INIT_EMAIL && PENPOINT_INIT_PASSWORD
                 ? { PENPOINT_INIT: { email: PENPOINT_INIT_EMAIL, password: PENPOINT_INIT_PASSWORD } }
                 : {}),
