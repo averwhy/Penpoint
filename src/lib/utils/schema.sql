@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS users (
     student_id VARCHAR(7) REFERENCES students(student_id),
     email TEXT UNIQUE NOT NULL,
     name TEXT,
-    role VARCHAR(10) NOT NULL DEFAULT 'unapproved', -- 'inactive', 'unapproved', 'club', 'sga', 'admin'
+    role VARCHAR(10) NOT NULL DEFAULT 'unapproved', -- 'inactive', 'unapproved', 'blocked', 'club', 'sga', 'admin'
+    pending BOOLEAN NOT NULL DEFAULT FALSE,
     request_reason TEXT,
     requested_at TIMESTAMPTZ DEFAULT now(),
     password_hash TEXT,

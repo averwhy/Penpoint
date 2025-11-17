@@ -49,13 +49,25 @@ export const User = z.object({
     student_id: StudentId,
     email: z.email().max(100),
     name: z.string().max(100),
-    role: z.enum(["inactive", "unapproved", "club", "sga", "admin"]),
+    role: z.enum(["inactive", "unapproved", "blocked", "club", "sga", "admin"]),
+    pending: z.boolean().default(false),
     request_reason: z.string().max(10000),
     last_login: z.coerce.date(),
     created_at: z.coerce.date(),
     updated_at: z.coerce.date(),
 });
 export type User = z.infer<typeof User>;
+
+export const NewUser = User.pick({
+    id: true,
+    student_id: true,
+    email: true,
+    name: true,
+    request_reason: true,
+    created_at: true,
+    updated_at: true,
+});
+export type NewUser = z.infer<typeof NewUser>;
 
 export const Semester = z.object({
     id: z.uuid(),

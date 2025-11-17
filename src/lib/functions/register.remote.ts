@@ -9,12 +9,10 @@ export const register = form(Registration, async register => {
         userExists(register.student_id, register.email),
     ]);
 
-    if (foundUser || foundStudent) error(409, { message: "A user with that email or student ID already exists." });
+    if (foundUser) error(409, { message: "A user with that email or student ID already exists." });
 
-    await Promise.all([
-        createStudent(register),
-        createUser(register.student_id, register.email, register.name, register.reason, "unapproved"),
-    ]);
+    if (!foundStudent) await createStudent(register);
+    await createUser(register.student_id, register.email, register.name, register.reason, "unapproved");
 
     return { success: true };
 });
