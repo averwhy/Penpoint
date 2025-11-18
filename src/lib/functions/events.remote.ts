@@ -46,9 +46,10 @@ export const createEvent = query(z.object({
     endDateTime: z.date(),
     specialRequests: z.string().optional()
 }), async ({ clubId, semesterId, eventTitle, building, roomNumber, startDateTime, endDateTime, specialRequests }) => {
+    const location = `${building} ${roomNumber ?? ""}`.trim();
     const result = await sql`
-        INSERT INTO events (club_id, semester_id, event_title, building, room_number, start_date_time, end_date_time, special_requests)
-        VALUES (${clubId}, ${semesterId}, ${eventTitle}, ${building}, ${roomNumber ?? ""}, ${startDateTime}, ${endDateTime}, ${specialRequests ?? ""})
+        INSERT INTO events (club_id, semester_id, name, location, starts_at, ends_at)
+        VALUES (${clubId}, ${semesterId}, ${eventTitle}, ${location}, ${startDateTime}, ${endDateTime})
         RETURNING *;
     `;
 

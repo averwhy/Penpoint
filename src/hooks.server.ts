@@ -1,9 +1,10 @@
 import { privateEnv } from "$lib/env/private";
 import { User } from "$lib/models";
 import { hashPassword, verifyToken } from "$lib/server/auth";
-import { sql } from "$lib/server/postgres";
+import { sql, db} from "$lib/server/postgres";
 import { type Handle, type ServerInit } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
+import fs from "fs";
 
 export const init: ServerInit = async () => {
     if (privateEnv.PENPOINT_INIT) {
@@ -23,7 +24,6 @@ export const init: ServerInit = async () => {
                     ${init_name}
                 )
                 ON CONFLICT DO NOTHING
-                RETURNING *
             `;
 
             const result = await sql`
@@ -40,10 +40,38 @@ export const init: ServerInit = async () => {
                 RETURNING *
             `;
 
-            if (result.length > 0)
+            if (result.length > 0){
                 console.log(
                     "Created an admin user with the email provided in the PENPOINT_INIT_EMAIL environment variable.",
                 );
+                // Create SGA
+                const clubResult = await sql`
+                    INSERT INTO clubs (id, name, acronym, governing_board)
+                    VALUES (
+                        '5f92e1a1-5be4-4cc3-8c96-0ff12dbf6e5a',
+                        'Student Government Association',
+                        'SGA',
+                        true
+                    )
+                    ON CONFLICT DO NOTHING
+                    RETURNING id
+                `;
+                // Assign our default user to SGA
+                await sql`
+                    INSERT INTO club_users (position, user_id, club_id)
+                    VALUES (
+                        'Pride Admin',
+                        ${result[0].id},
+                        ${clubResult[0].id}
+                    )
+                    ON CONFLICT DO NOTHING
+                `;
+                console.log("Created the SGA club and assigned the initial admin user.");
+                // Load test data
+                const file = fs.readFileSync("./src/lib/utils/testdata.sql", "utf8");
+                await db.unsafe(file);
+                console.log("Loaded test data");
+                }
             else
                 console.warn(
                     "A user with the email provided in the PENPOINT_INIT_EMAIL environment variable already exists.",

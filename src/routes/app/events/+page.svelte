@@ -38,7 +38,7 @@
 </script>
 
 <div class="flex pt-10 mx-10">
-    <SemesterSelector bind:value={semesterValue} bind:selected={selectedSemester} {semesters} />
+    <SemesterSelector bind:value={semesterValue} bind:selected={selectedSemester} {semesters} selectActive={true} variant="secondary" />
 
     <Button variant="success" class="ml-auto" href="/app/events/new">Create New Event</Button>
 </div>

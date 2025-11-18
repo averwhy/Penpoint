@@ -41,8 +41,11 @@
                         <Card.Content>You're not part of a club...</Card.Content>
                     {:else}
                         <Card.Content>
-                            {userClub.name} ({userClub.acronym}) <br />
-                            0 E-Board members (on Penmen Pride) Created at {userClub.created_at}
+                            {userClub.name} ({userClub.acronym}) 
+                            <br />
+                            0 E-Board members (on Penmen Pride)
+                            <br />
+                            Created at {userClub.created_at}
                         </Card.Content>
                     {/if}
                 </Card.Root>

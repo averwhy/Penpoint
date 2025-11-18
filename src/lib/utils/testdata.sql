@@ -14,7 +14,8 @@ INSERT INTO students(student_id, name) VALUES ('7777777', 'Debbie');
 INSERT INTO students(student_id, name) VALUES ('8888888', 'Nick');
 INSERT INTO students(student_id, name) VALUES ('9999999', 'Lisa');
 
-INSERT INTO clubs(id, name, acronym, governing_board) VALUES ('5f92e1a1-5be4-4cc3-8c96-0ff12dbf6e5a', 'Student Government Association', 'SGA', true);
+--INSERT INTO clubs(id, name, acronym, governing_board) VALUES ('5f92e1a1-5be4-4cc3-8c96-0ff12dbf6e5a', 'Student Government Association', 'SGA', true);
+-- ^ commented out because we do it in the init in hooks.server.ts now
 INSERT INTO clubs(id, name, acronym, governing_board) VALUES ('7ae20177-358d-43bc-8666-999973fe7424', 'Penmen Press', '', false);
 INSERT INTO clubs(id, name, acronym, governing_board) VALUES ('c518dacc-3bbe-4c52-bebe-9bdb409cd01c', 'Coordinators of Activies, Programs and Events', 'CAPE', true);
 

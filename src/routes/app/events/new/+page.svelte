@@ -68,7 +68,7 @@
         tick().then(() => dateTriggerRef?.focus());
     }
 
-    // Combine our specified time (from the inputs below) and the specified date
+    // combine our specified time (from the inputs below) and the specified date
     function convertToDate(
         time: string,
         date: DateValue | undefined,
@@ -81,7 +81,6 @@
 
         if (isNaN(hour) || isNaN(minute)) return undefined;
 
-        // Convert to 24-hour format if needed
         if (time.includes("PM") && hour < 12) {
             hour += 12;
         } else if (time.includes("AM") && hour === 12) {
@@ -112,7 +111,7 @@
             return;
         }
 
-        console.log({
+        const newEvent = await createEvent({
             clubId: userClub?.id,
             semesterId: selectedSemester?.id,
             eventTitle,
@@ -121,6 +120,15 @@
             startDateTime: startDate,
             endDateTime: endDate,
             specialRequests,
+        });
+
+        toast.success("Event created successfully!", {
+            action: {
+                label: "View new event",
+                onClick: () => {
+                    window.location.href = `/app/events/${newEvent.id}`;
+                },
+            },
         });
 
         pending = false;
@@ -138,8 +146,8 @@
         <Card.Content class="space-y-6">
             <!-- Event Title -->
             <div class="space-y-2">
-                <Label for="event-title">Event Title</Label>
-                <Input id="event-title" bind:value={eventTitle} required placeholder="Enter event title" />
+                <Label>Event Title</Label>
+                <Input bind:value={eventTitle} required placeholder="Enter event title" class="" />
             </div>
 
             <!-- Event Location -->

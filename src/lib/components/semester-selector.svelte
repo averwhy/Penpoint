@@ -28,7 +28,7 @@
         placeholder = $bindable("Select a semester..."),
         disabled = $bindable<boolean>(false),
         widthClass = $bindable("w-[200px]"),
-        variant = $bindable<ButtonVariant>("ghost"),
+        variant = $bindable<ButtonVariant>("outline"),
         class: className = "",
         selectActive = false,
     }: Props = $props();
