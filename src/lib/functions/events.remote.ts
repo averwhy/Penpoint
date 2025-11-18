@@ -37,6 +37,7 @@ export const getEvents = query(z.object({
 });
 
 export const createEvent = query(z.object({
+    id: z.string().optional(),
     clubId: z.string(),
     semesterId: z.string(),
     eventTitle: z.string(),
@@ -45,11 +46,12 @@ export const createEvent = query(z.object({
     startDateTime: z.date(),
     endDateTime: z.date(),
     specialRequests: z.string().optional()
-}), async ({ clubId, semesterId, eventTitle, building, roomNumber, startDateTime, endDateTime, specialRequests }) => {
+}), async ({ id, clubId, semesterId, eventTitle, building, roomNumber, startDateTime, endDateTime, specialRequests }) => {
     const location = `${building} ${roomNumber ?? ""}`.trim();
+    const eventID = id ?? crypto.randomUUID();
     const result = await sql`
-        INSERT INTO events (club_id, semester_id, name, location, starts_at, ends_at)
-        VALUES (${clubId}, ${semesterId}, ${eventTitle}, ${location}, ${startDateTime}, ${endDateTime})
+        INSERT INTO events (id, club_id, semester_id, name, location, starts_at, ends_at)
+        VALUES (${eventID}, ${clubId}, ${semesterId}, ${eventTitle}, ${location}, ${startDateTime}, ${endDateTime})
         RETURNING *;
     `;
 

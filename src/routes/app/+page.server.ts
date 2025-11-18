@@ -1,39 +1,39 @@
 import { getMostRecentSemesterIncludingActive, sql } from "$lib/server/postgres";
 import { redirect } from "@sveltejs/kit";
+import { getClubFromUser } from "$lib/functions/club.remote";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals }) => {
     if (!locals.user) redirect(303, "/login");
 
+    const userClub = await getClubFromUser(locals.user.id);
     const semester = await getMostRecentSemesterIncludingActive();
 
+    // Platform-wide statistics
     const [
         upcomingEventsResult,
         uniqueClubsHostingEventsResult,
-        eventsHostedSemResult,
-        pointsEarnedSemResult,
-        attendanceCountSemResult,
-        allEventsHostedResult,
-        allPointsEarnedResult,
-        allAttendanceCountResult,
+        platformSemesterEventsResult,
+        platformSemesterPointsResult,
+        platformSemesterAttendanceResult,
+        platformAllTimeEventsResult,
+        platformAllTimePointsResult,
+        platformAllTimeAttendanceResult,
     ] = await Promise.all([
-        // upcoming
         sql`
-            SELECT COUNT(*)
+            SELECT COUNT(*) as count
             FROM events
-            WHERE starts_at > now() AND starts_at < ${semester.ends}
+            WHERE semester_id = ${semester.id}
         `,
         sql`
-            SELECT COUNT(DISTINCT(club_id))
+            SELECT COUNT(DISTINCT club_id) as count
             FROM events
-            WHERE ends_at > now() AND starts_at < ${semester.ends}
+            WHERE semester_id = ${semester.id}
         `,
-
-        // semester specific
         sql`
-            SELECT COUNT(*)
+            SELECT COUNT(*) as count
             FROM events
-            WHERE starts_at < now() AND starts_at < ${semester.ends}
+            WHERE semester_id = ${semester.id}
         `,
         sql`
             SELECT SUM(e.point_value) as total_points
@@ -42,15 +42,13 @@ export const load: PageServerLoad = async ({ locals }) => {
             WHERE e.semester_id = ${semester.id}
         `,
         sql`
-            SELECT COUNT(t.id)
+            SELECT COUNT(t.id) as count
             FROM taps t
             JOIN events e ON t.event_id = e.id
             WHERE e.semester_id = ${semester.id}
         `,
-
-        //all time
         sql`
-            SELECT COUNT(*)
+            SELECT COUNT(*) as count
             FROM events
             WHERE starts_at < now()
         `,
@@ -60,26 +58,108 @@ export const load: PageServerLoad = async ({ locals }) => {
             JOIN events e ON t.event_id = e.id
         `,
         sql`
-            SELECT COUNT(t.id)
+            SELECT COUNT(t.id) as count
             FROM taps t
             JOIN events e ON t.event_id = e.id
         `,
     ]);
 
-    const upcomingEvents = Number(upcomingEventsResult[0]?.count ?? 0);
-    const uniqueClubsHostingEvents = Number(uniqueClubsHostingEventsResult[0]?.count ?? 0);
-    const eventsHostedSemester = Number(eventsHostedSemResult[0]?.count ?? 0);
-    const pointsEarnedSemester = Number(pointsEarnedSemResult[0]?.total_points ?? 0);
-    const attendanceCountSem = Number(attendanceCountSemResult[0]?.count ?? 0);
-    const allEventsHosted = Number(allEventsHostedResult[0]?.count ?? 0);
-    const allPointsEarned = Number(allPointsEarnedResult[0]?.total_points ?? 0);
-    const allAttendanceCount = Number(allAttendanceCountResult[0]?.count ?? 0);
+    let clubStats: {
+        semester: {
+            eventsHosted: number;
+            pointsEarned: number;
+            attendanceCount: number;
+            upcomingEvents: number;
+        };
+        allTime: {
+            eventsHosted: number;
+            pointsEarned: number;
+            attendanceCount: number;
+        };
+        members: number;
+    } | undefined;
+
+    if (userClub) {
+        const [
+            clubMembersResult,
+            clubSemesterEventsResult,
+            clubSemesterPointsResult,
+            clubSemesterAttendanceResult,
+            clubUpcomingEventsResult,
+            clubAllTimeEventsResult,
+            clubAllTimePointsResult,
+            clubAllTimeAttendanceResult,
+        ] = await Promise.all([
+            sql`
+                SELECT COUNT(*) as count
+                FROM club_users
+                WHERE club_id = ${userClub.id}
+                AND for_semester = ${semester.id}
+            `,
+            sql`
+                SELECT COUNT(*) as count
+                FROM events
+                WHERE club_id = ${userClub.id} AND semester_id = ${semester.id}
+            `,
+            sql`
+                SELECT SUM(e.point_value) as total_points
+                FROM taps t
+                JOIN events e ON t.event_id = e.id
+                WHERE e.club_id = ${userClub.id} AND e.semester_id = ${semester.id}
+            `,
+            sql`
+                SELECT COUNT(t.id) as count
+                FROM taps t
+                JOIN events e ON t.event_id = e.id
+                WHERE e.club_id = ${userClub.id} AND e.semester_id = ${semester.id}
+            `,
+            sql`
+                SELECT COUNT(*) as count
+                FROM events
+                WHERE club_id = ${userClub.id} 
+                AND starts_at > now() 
+                AND semester_id = ${semester.id}
+            `,
+            sql`
+                SELECT COUNT(*) as count
+                FROM events
+                WHERE club_id = ${userClub.id}
+            `,
+            sql`
+                SELECT SUM(e.point_value) as total_points
+                FROM taps t
+                JOIN events e ON t.event_id = e.id
+                WHERE e.club_id = ${userClub.id}
+            `,
+            sql`
+                SELECT COUNT(t.id) as count
+                FROM taps t
+                JOIN events e ON t.event_id = e.id
+                WHERE e.club_id = ${userClub.id}
+            `,
+        ]);
+
+        clubStats = {
+            semester: {
+                eventsHosted: Number(clubSemesterEventsResult[0]?.count ?? 0),
+                pointsEarned: Number(clubSemesterPointsResult[0]?.total_points ?? 0),
+                attendanceCount: Number(clubSemesterAttendanceResult[0]?.count ?? 0),
+                upcomingEvents: Number(clubUpcomingEventsResult[0]?.count ?? 0),
+            },
+            allTime: {
+                eventsHosted: Number(clubAllTimeEventsResult[0]?.count ?? 0),
+                pointsEarned: Number(clubAllTimePointsResult[0]?.total_points ?? 0),
+                attendanceCount: Number(clubAllTimeAttendanceResult[0]?.count ?? 0),
+            },
+            members: Number(clubMembersResult[0]?.count ?? 0),
+        };
+    }
 
     const nameGreetings = [
         "Hey there, ",
         "Welcome back, ",
         "Good to see you, ",
-        "Hello, ",
+        "Sup, ",
         "Hi there, ",
         "Howdy, ",
         "What's up, ",
@@ -87,15 +167,41 @@ export const load: PageServerLoad = async ({ locals }) => {
         "Today's a good day, ",
     ];
 
+    console.log({
+        greeting: nameGreetings[Math.floor(Math.random() * nameGreetings.length)],
+        club: clubStats,
+        platform: {
+            semester: {
+                eventsHosted: Number(platformSemesterEventsResult[0]?.count ?? 0),
+                pointsEarned: Number(platformSemesterPointsResult[0]?.total_points ?? 0),
+                attendanceCount: Number(platformSemesterAttendanceResult[0]?.count ?? 0),
+                upcomingEvents: Number(upcomingEventsResult[0]?.count ?? 0),
+                uniqueClubsHostingEvents: Number(uniqueClubsHostingEventsResult[0]?.count ?? 0),
+            },
+            allTime: {
+                eventsHosted: Number(platformAllTimeEventsResult[0]?.count ?? 0),
+                pointsEarned: Number(platformAllTimePointsResult[0]?.total_points ?? 0),
+                attendanceCount: Number(platformAllTimeAttendanceResult[0]?.count ?? 0),
+            },
+        },
+    });
+
     return {
         greeting: nameGreetings[Math.floor(Math.random() * nameGreetings.length)],
-        upcomingEvents,
-        uniqueClubsHostingEvents,
-        eventsHostedSemester,
-        pointsEarnedSemester,
-        attendanceCountSem,
-        allEventsHosted,
-        allPointsEarned,
-        allAttendanceCount,
+        club: clubStats,
+        platform: {
+            semester: {
+                eventsHosted: Number(platformSemesterEventsResult[0]?.count ?? 0),
+                pointsEarned: Number(platformSemesterPointsResult[0]?.total_points ?? 0),
+                attendanceCount: Number(platformSemesterAttendanceResult[0]?.count ?? 0),
+                upcomingEvents: Number(upcomingEventsResult[0]?.count ?? 0),
+                uniqueClubsHostingEvents: Number(uniqueClubsHostingEventsResult[0]?.count ?? 0),
+            },
+            allTime: {
+                eventsHosted: Number(platformAllTimeEventsResult[0]?.count ?? 0),
+                pointsEarned: Number(platformAllTimePointsResult[0]?.total_points ?? 0),
+                attendanceCount: Number(platformAllTimeAttendanceResult[0]?.count ?? 0),
+            },
+        },
     };
 };

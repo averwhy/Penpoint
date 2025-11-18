@@ -23,6 +23,9 @@
     const { data }: PageProps = $props();
     const { user, userClub, semesters } = data;
 
+    // generate a fresh UUID on refresh to prevent duplicate event submissions
+    const newEventId = crypto.randomUUID();
+
     let pending = $state(false);
 
     const df = new DateFormatter("en-US", {
@@ -112,6 +115,7 @@
         }
 
         const newEvent = await createEvent({
+            id: newEventId,
             clubId: userClub?.id,
             semesterId: selectedSemester?.id,
             eventTitle,

@@ -3,19 +3,7 @@
     import type { PageProps } from "./$types";
 
     const { data }: PageProps = $props();
-    const {
-        greeting,
-        user,
-        userClub,
-        upcomingEvents,
-        uniqueClubsHostingEvents,
-        eventsHostedSemester,
-        pointsEarnedSemester,
-        attendanceCountSem,
-        allEventsHosted,
-        allPointsEarned,
-        allAttendanceCount,
-    } = data;
+    const { greeting, club, platform, user, userClub } = data;
 
     const theDay: string = new Date().toLocaleDateString("en-US", { weekday: "long" });
 </script>
@@ -41,10 +29,10 @@
                         <Card.Content>You're not part of a club...</Card.Content>
                     {:else}
                         <Card.Content>
-                            {userClub.name} ({userClub.acronym}) 
+                            <span class="text-xl">{userClub.name} ({userClub.acronym})</span>
                             <br />
-                            0 E-Board members (on Penmen Pride)
-                            <br />
+                            {club?.members} E-Board members (on Penmen Pride)
+                            <br /> <br />
                             Created at {userClub.created_at}
                         </Card.Content>
                     {/if}
@@ -56,19 +44,19 @@
                         </Card.Header>
                         <Card.Content class="space-y-2">
                             <div class="flex items-center gap-3">
-                                <span class="text-3xl">0</span>
+                                <span class="text-3xl">{club?.semester.eventsHosted}</span>
                                 <span class="text-xl">events hosted</span>
                             </div>
                             <div class="flex items-center gap-3">
-                                <span class="text-3xl">0</span>
+                                <span class="text-3xl">{club?.semester.pointsEarned}</span>
                                 <span class="text-xl">points earned by students</span>
                             </div>
                             <div class="flex items-center gap-3">
-                                <span class="text-3xl">0</span>
+                                <span class="text-3xl">{club?.semester.attendanceCount}</span>
                                 <span class="text-xl">students attended your events</span>
                             </div>
                             <div class="flex items-center gap-3">
-                                <span class="text-3xl">0</span>
+                                <span class="text-3xl">{club?.semester.upcomingEvents}</span>
                                 <span class="text-xl">events upcoming</span>
                             </div>
                         </Card.Content>
@@ -79,15 +67,15 @@
                         </Card.Header>
                         <Card.Content class="space-y-2">
                             <div class="flex items-center gap-3">
-                                <span class="text-3xl">0</span>
+                                <span class="text-3xl">{club?.allTime.eventsHosted}</span>
                                 <span class="text-xl">events hosted</span>
                             </div>
                             <div class="flex items-center gap-3">
-                                <span class="text-3xl">0</span>
+                                <span class="text-3xl">{club?.allTime.pointsEarned}</span>
                                 <span class="text-xl">points earned by students</span>
                             </div>
                             <div class="flex items-center gap-3">
-                                <span class="text-3xl">0</span>
+                                <span class="text-3xl">{club?.allTime.attendanceCount}</span>
                                 <span class="text-xl">students attended your events</span>
                             </div>
                         </Card.Content>
@@ -108,11 +96,11 @@
                     </Card.Header>
                     <Card.Content class="space-y-2">
                         <div class="flex items-center gap-3">
-                            <span class="text-3xl">{upcomingEvents}</span>
-                            <span class="text-xl">events upcoming</span>
+                            <span class="text-3xl">{platform.semester.upcomingEvents}</span>
+                            <span class="text-xl">events upcoming, from</span>
                         </div>
                         <div class="flex items-center gap-3">
-                            <span class="text-3xl">{uniqueClubsHostingEvents}</span>
+                            <span class="text-3xl">{platform.semester.uniqueClubsHostingEvents}</span>
                             <span class="text-xl">different clubs</span>
                         </div>
                     </Card.Content>
@@ -123,15 +111,15 @@
                     </Card.Header>
                     <Card.Content class="space-y-2">
                         <div class="flex items-center gap-3">
-                            <span class="text-3xl">{eventsHostedSemester}</span>
+                            <span class="text-3xl">{platform.semester.eventsHosted}</span>
                             <span class="text-xl">events hosted</span>
                         </div>
                         <div class="flex items-center gap-3">
-                            <span class="text-3xl">{pointsEarnedSemester}</span>
+                            <span class="text-3xl">{platform.semester.pointsEarned}</span>
                             <span class="text-xl">points earned by students</span>
                         </div>
                         <div class="flex items-center gap-3">
-                            <span class="text-3xl">{attendanceCountSem}</span>
+                            <span class="text-3xl">{platform.semester.attendanceCount}</span>
                             <span class="text-xl">students attended events</span>
                         </div>
                     </Card.Content>
@@ -142,20 +130,22 @@
                     </Card.Header>
                     <Card.Content class="space-y-2">
                         <div class="flex items-center gap-3">
-                            <span class="text-3xl">{allEventsHosted}</span>
+                            <span class="text-3xl">{platform.allTime.eventsHosted}</span>
                             <span class="text-xl">events hosted</span>
                         </div>
                         <div class="flex items-center gap-3">
-                            <span class="text-3xl">{allPointsEarned}</span>
+                            <span class="text-3xl">{platform.allTime.pointsEarned}</span>
                             <span class="text-xl">points earned by students</span>
                         </div>
                         <div class="flex items-center gap-3">
-                            <span class="text-3xl">{allAttendanceCount}</span>
+                            <span class="text-3xl">{platform.allTime.attendanceCount}</span>
                             <span class="text-xl">students attended events</span>
                         </div>
                     </Card.Content>
                 </Card.Root>
             </div>
         </div>
+    </div>
+    <div class="h-5">
     </div>
 </div>
