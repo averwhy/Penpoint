@@ -1,6 +1,7 @@
-import { sql, db } from "$lib/server/postgres";
+import { sql } from "$lib/server/postgres";
 import { Event } from "$lib/models";
 import { query } from "$app/server";
+import { error } from "@sveltejs/kit";
 import z from "zod";
 
 export const getEvents = query(z.object({
@@ -36,6 +37,22 @@ export const getEvents = query(z.object({
     return result.map(row => Event.parse(row));
 });
 
+function validateFlyerFile(flyerFile: File, eventId: string): File {
+    const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+    
+    if (!allowedTypes.includes(flyerFile.type)) {
+        error(400, "Invalid flyer file type. Please upload a PNG, JPG, or JPEG image.");
+    }
+
+    if (flyerFile.size > maxSizeInBytes) {
+        error(400, "Flyer file size exceeds the maximum limit of 5MB.");
+    }
+
+    return new File([flyerFile], `${eventId}`, { type: flyerFile.type });
+}
+
+
 export const createEvent = query(z.object({
     id: z.string().optional(),
     clubId: z.string(),
@@ -45,10 +62,16 @@ export const createEvent = query(z.object({
     roomNumber: z.string().optional(),
     startDateTime: z.date(),
     endDateTime: z.date(),
+    flyerFile: z.instanceof(File),
     specialRequests: z.string().optional()
-}), async ({ id, clubId, semesterId, eventTitle, building, roomNumber, startDateTime, endDateTime, specialRequests }) => {
+}), async ({ id, clubId, semesterId, eventTitle, building, roomNumber, startDateTime, endDateTime, flyerFile, specialRequests }) => {
     const location = `${building} ${roomNumber ?? ""}`.trim();
     const eventID = id ?? crypto.randomUUID();
+
+    const finalFlyer = validateFlyerFile(flyerFile, eventID);
+    // save to /static/event/{eventID}.{type}
+
+
     const result = await sql`
         INSERT INTO events (id, club_id, semester_id, name, location, starts_at, ends_at)
         VALUES (${eventID}, ${clubId}, ${semesterId}, ${eventTitle}, ${location}, ${startDateTime}, ${endDateTime})

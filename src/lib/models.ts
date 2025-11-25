@@ -110,6 +110,7 @@ export const Event = z.object({
     point_value: z.int(),
     image_filename: z.string().max(64).nullable(),
     permalink: z.string().max(64).nullable(),
+    approval_status: z.enum(["unapproved", "accepted", "denied"]),
     starts_at: z.coerce.date(),
     ends_at: z.coerce.date(),
     created_at: z.coerce.date(),

@@ -47,6 +47,7 @@
     let eventDate = $state<DateValue | undefined>(undefined);
     let startsAt = $state("12:00");
     let endsAt = $state("13:00");
+    let eventFlyer = $state<File | null>(null);
     let specialRequests = $state("");
     let selectedSemester = $state<(typeof data.semesters)[number] | undefined>(undefined);
 
@@ -95,24 +96,42 @@
     }
 
     async function handleSubmit() {
-        pending = true;
         const startDate = convertToDate(startsAt, eventDate);
         const endDate = convertToDate(endsAt, eventDate);
 
         if (!startDate || !endDate) {
-            toast.error("Please select valid start and end times");
+            // In the case of either date being invalid, it would mean that no date was selected (since the times have default values)
+            toast.error("Please select a valid date for the event");
             return;
         }
 
         if (userClub === undefined) {
-            toast.error("You must be part of a club to create an event! Contact SGA for help.");
+            toast.error("You must be part of a club to create an event! Contact SGA for help");
             return;
         }
 
         if (selectedSemester === undefined) {
-            toast.error("Please select a semester for the event.");
+            toast.error("Please select a semester for the event");
             return;
         }
+
+        // Check flyer file type and size (will be checked on the server too, duh)
+        if (eventFlyer === null) {
+            toast.error("Please upload a flyer for the event");
+            return;
+        }
+
+        if (eventFlyer.size > 5 * 1024 * 1024) {
+            toast.error("Flyer file size exceeds the maximum limit of 5MB");
+            return;
+        }
+
+        if (!["image/png", "image/jpg", "image/jpeg"].includes(eventFlyer.type)) {
+            toast.error("Invalid flyer file type. Please upload a PNG, JPG, or JPEG image");
+            return;
+        }
+
+        pending = true;
 
         const newEvent = await createEvent({
             id: newEventId,
@@ -121,6 +140,7 @@
             eventTitle,
             building: selectedBuilding,
             roomNumber,
+            flyerFile: eventFlyer!,
             startDateTime: startDate,
             endDateTime: endDate,
             specialRequests,
@@ -276,6 +296,10 @@
                         class="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                     />
                 </div>
+            </div>
+            <div class="space-y-2">
+                <Label>Flyer Upload <span class="text-xs text-muted-foreground">png, jpg, jpeg only. max size of 5MB</span></Label>
+                <Input type="file" name="flyer" bind:value={eventFlyer} required accept="image/*"/>
             </div>
             <!-- Special Requests -->
             <div class="space-y-2">

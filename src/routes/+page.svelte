@@ -5,9 +5,14 @@
     import * as Tooltip from "$lib/components/ui/tooltip/index";
     import Countup from "$lib/components/countup.svelte";
     import type { PageProps } from "./$types";
+    import { toast } from "svelte-sonner";
 
     const { data }: PageProps = $props();
     const { pointEarners, pointsEarned, upcomingEvents, daysLeft } = data;
+
+    if (!pointEarners && !pointsEarned && !upcomingEvents && !daysLeft) {
+        toast.error("Failed to load Penmen Pride stats. Please try again later.");
+    }
 </script>
 
 <div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-4">

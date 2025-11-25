@@ -4,6 +4,7 @@
 	import { login } from "$lib/functions/login.remote";
 	import { Login } from "$lib/models";
 	import SGA from "$lib/assets/sga.svg";
+	import CampSNHU from "$lib/assets/CampSNHU.jpg";
 	import { toast } from "svelte-sonner";
 
 	let pending = $state(false);
@@ -45,8 +46,8 @@
 	</div>
 	<div class="bg-muted relative hidden lg:block">
 		<img
-			src="/placeholder.svg"
-			alt="placeholder"
+			src={CampSNHU}
+			alt="A shot of the SNHU green space during the Camp SNHU event"
 			class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
 		/>
 	</div>
