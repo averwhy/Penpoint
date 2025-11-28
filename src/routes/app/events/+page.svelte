@@ -6,6 +6,7 @@
     import { getEvents } from "$lib/functions/events.remote";
     import { Event } from "$lib/models";
     import SemesterSelector from "$lib/components/semester-selector.svelte";
+    import HelpFooter from "$lib/components/help-footer.svelte";
 
     const { data }: PageProps = $props();
     const { user, semesters } = data;
@@ -45,4 +46,5 @@
 
 <div class="justify-center mx-10">
     <EventsTable data={events} />
+    <HelpFooter class="mb-6" />
 </div>
