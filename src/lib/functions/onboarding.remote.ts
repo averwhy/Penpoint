@@ -1,12 +1,11 @@
 import { form } from "$app/server";
-import { Password, User } from "$lib/models";
+import { SetPassword, User } from "$lib/models";
 import { hashPassword, verifyToken } from "$lib/server/auth";
 import { sql } from "$lib/server/postgres";
 import { error, redirect } from "@sveltejs/kit";
-import z from "zod";
 
 // TODO this is untested
-export const setPassword = form(z.object({ password: Password, token: z.string() }), async ({ password, token }) => {
+export const setPassword = form(SetPassword, async ({ _password, token }) => {
     const payload = verifyToken(token, "onboarding");
     if (!payload) error(401, { message: "Invalid or expired onboarding token." });
 
@@ -27,7 +26,7 @@ export const setPassword = form(z.object({ password: Password, token: z.string()
     if (user.role === "inactive")
         error(401, { message: "Access denied. Your account has been marked as inactive. Contact SGA for assistance." });
 
-    const passwordHash = await hashPassword(password);
+    const passwordHash = await hashPassword(_password);
 
     await sql`
         UPDATE users

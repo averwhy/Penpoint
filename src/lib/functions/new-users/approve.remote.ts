@@ -1,5 +1,6 @@
 import { form, getRequestEvent } from "$app/server";
 import { User } from "$lib/models";
+import { generateOnboardingToken } from "$lib/server/auth";
 import { sql } from "$lib/server/postgres";
 import { error } from "@sveltejs/kit";
 import z from "zod";
@@ -33,6 +34,10 @@ export const approveUserRequest = form(
         `;
         if (updatedUser.count === 0) error(500, { message: "Failed to approve user." });
 
-        return User.parse(updatedUser[0]);
+        return {
+            // TODO remove this once onboarding emails are implemented
+            onboardingToken: generateOnboardingToken(targetUser.id),
+            user: User.parse(updatedUser[0]),
+        };
     },
 );

@@ -142,3 +142,7 @@ export const EventPageResponse = z.object({
     club_name: z.string(),
 });
 export type EventPageResponse = z.infer<typeof EventPageResponse>;
+
+// Other requests
+export const SetPassword = z.object({ _password: Password, token: z.string() });
+export type SetPassword = z.infer<typeof SetPassword>;

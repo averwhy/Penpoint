@@ -8,14 +8,41 @@
     import { denyUserRequest } from "$lib/functions/new-users/deny.remote";
     import { User } from "$lib/models";
     import EllipsisIcon from "@lucide/svelte/icons/ellipsis";
+    import { toast } from "svelte-sonner";
     import * as Dialog from "../ui/dialog";
 
     let { id, user }: { id: string; user: User } = $props();
     let role: "admin" | "sga" | "club" = $state("club");
-    let open = $state(false);
+    let approveDialogOpen = $state(false);
+    let approveSuccessDialogOpen = $state(false);
 </script>
 
-<Dialog.Root bind:open>
+<Dialog.Root bind:open={approveSuccessDialogOpen}>
+    <Dialog.Content>
+        <Dialog.Header>
+            <Dialog.Title>User approved successfully</Dialog.Title>
+            <Dialog.Description>
+                <span class="mb-2 block">Send them this link to set their password and get started:</span>
+                <Button
+                    onclick={() => {
+                        if (approveUserRequest.result?.onboardingToken) {
+                            navigator.clipboard
+                                .writeText(`${location.origin}/onboarding/${approveUserRequest.result.onboardingToken}`)
+                                .catch(() => {});
+                            toast.success("Onboarding link copied to clipboard");
+                        } else {
+                            toast.error("No onboarding link available to copy");
+                        }
+                    }}
+                >
+                    Copy Onboarding Link
+                </Button>
+            </Dialog.Description>
+        </Dialog.Header>
+    </Dialog.Content>
+</Dialog.Root>
+
+<Dialog.Root bind:open={approveDialogOpen}>
     <Dialog.Content>
         <Dialog.Header>
             <Dialog.Title>Approve User</Dialog.Title>
@@ -44,7 +71,21 @@
             {/if}
         </RadioGroup.Root>
         <Dialog.Footer>
-            <form {...approveUserRequest}>
+            <form
+                {...approveUserRequest.enhance(async ({ form, data, submit }) => {
+                    try {
+                        await submit();
+                        form.reset();
+                        approveDialogOpen = false;
+                        approveSuccessDialogOpen = true;
+                    } catch (error: any) {
+                        // ignore redirects
+                        console.error("approve failed", error);
+                        toast.error("Failed to approve user", { description: error?.body.message });
+                    } finally {
+                    }
+                })}
+            >
                 <input {...approveUserRequest.fields.userId.as("text")} value={id} hidden />
                 <input {...approveUserRequest.fields.role.as("text")} value={role} hidden />
                 <Button type="submit">Approve</Button>
@@ -65,7 +106,7 @@
     <DropdownMenu.Content>
         <DropdownMenu.Group>
             <DropdownMenu.Label>Approve</DropdownMenu.Label>
-            <DropdownMenu.Item onclick={() => (open = true)}>Approve User</DropdownMenu.Item>
+            <DropdownMenu.Item onclick={() => (approveDialogOpen = true)}>Approve User</DropdownMenu.Item>
         </DropdownMenu.Group>
         <DropdownMenu.Separator />
 
