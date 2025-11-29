@@ -4,6 +4,7 @@
     import { Separator } from "$lib/components/ui/separator/index.js";
     import { Badge } from "$lib/components/ui/badge/index.js";
     import HelpFooter from "$lib/components/help-footer.svelte";
+    import { logout } from "$lib/functions/logout.remote.js";
     const { data } = $props();
     const { user, userClub } = data;
 
@@ -59,15 +60,12 @@
                 <span>Account Role:</span>
                 <Badge variant="outline">{user.role ?? "member"}</Badge>
             </div>
-            <Button
-                type="button"
-                variant="outline"
-                class="w-full sm:w-auto"
-                aria-label="Reset your password"
-                disabled
-            >
-                Change Password
-            </Button>
+            <div class="flex items-center gap-2 sm:ml-auto justify-end">
+                <form {...logout.for('account')}>
+                    <Button type="submit" variant="ghost">Logout</Button>
+                </form>
+                <Button type="button" variant="outline" disabled>Change Password</Button>
+            </div>
         </Card.Footer>
     </Card.Root>
     <HelpFooter class="mt-6" />

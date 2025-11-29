@@ -58,7 +58,7 @@
     let adminItems = [
         {
             title: "Semesters",
-            url: "",
+            url: "/app/semesters",
             icon: CalendarCog,
         },
         {
@@ -159,7 +159,7 @@
                             <a href="/app/account" class="w-full h-full text-left">Account</a>
                         </DropdownMenu.Item>
 
-                        <form {...logout}>
+                        <form {...logout.for('sidebar')}>
                             <DropdownMenu.Item>
                                 <button class="w-full h-full text-left" type="submit">Sign out</button>
                             </DropdownMenu.Item>
