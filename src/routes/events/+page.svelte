@@ -5,7 +5,6 @@
     import { Separator } from "$lib/components/ui/separator/index";
     import humanizeDuration from "humanize-duration";
     import { Badge } from "$lib/components/ui/badge/index";
-    import { date } from "zod";
 
     const { data }: PageProps = $props();
     const events = data.data;
@@ -39,7 +38,7 @@
                 {#if index === 0 || !isSameDay(events[index - 1].event.starts_at, entry.event.starts_at)}
                     <div class="col-span-full">
                         <div class="flex items-center gap-4 my-1">
-                            <h2 class="text-lg font-semibold whitespace-nowrap pb-1">
+                            <h2 class="text-lg font-semibold whitespace-nowrap">
                                 {formatDate(entry.event.starts_at)}
                                 {#if isSameDay(entry.event.starts_at, new Date())}
                                 <Badge variant="outline" class="border-green-800 text-white">Today</Badge>

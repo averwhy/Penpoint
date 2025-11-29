@@ -1,27 +1,31 @@
 <script lang="ts">
-    import { Button } from "$lib/components/ui/button/index";
-    import * as Field from "$lib/components/ui/field/index.js";
-    import { Input } from "$lib/components/ui/input/index.js";
-    import { login } from "$lib/functions/login.remote";
-    import { Login } from "$lib/models";
-    import Disc from "@lucide/svelte/icons/disc-3";
-    import LoginIcon from "@lucide/svelte/icons/log-in";
-    import { toast } from "svelte-sonner";
+	import GalleryVerticalEndIcon from "@lucide/svelte/icons/gallery-vertical-end";
+	import LoginForm from "$lib/components/login-form.svelte";
+	import { login } from "$lib/functions/login.remote";
+	import { Login } from "$lib/models";
+	import SGA from "$lib/assets/sga.svg";
+	import CampSNHU from "$lib/assets/CampSNHU.jpg";
+	import { toast } from "svelte-sonner";
 
-    let pending = false;
+	let pending = $state(false);
 </script>
 
-<div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background">
-    <div class="grid grid-cols-2 gap-x-5">
-        <div class="">
-            <h1 class="text-4xl">Login</h1>
-            <h3>
-                SGA, OSI and Club<br />E-Board member login only.
-            </h3>
-        </div>
-        <div class="items-center gap-2 flex-1">
-            <form
-                {...login.preflight(Login).enhance(async ({ form, data, submit }) => {
+<div class="grid min-h-svh lg:grid-cols-2">
+	<div class="flex flex-col gap-4 p-6 md:p-10">
+		<div class="flex justify-center gap-2 md:justify-start">
+			<a href="##" class="flex items-center gap-2 font-medium">
+				<div
+					class="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md"
+				>
+					<img src={SGA} alt="SGA Logo" class="size-4" />
+				</div>
+				Penmen Pride
+				<span class="text-sm">By SNHU SGA</span>
+			</a>
+		</div>
+		<div class="flex flex-1 items-center justify-center">
+			<div class="w-full max-w-xs">
+				<LoginForm bind:pending {...login.preflight(Login).enhance(async ({ form, data, submit }) => {
                     pending = true;
                     try {
                         await submit();
@@ -36,29 +40,15 @@
                     } finally {
                         pending = false;
                     }
-                })}
-            >
-                <Field.Set class="w-full">
-                    <Field.Group>
-                        <Field.Field>
-                            <Input {...login.fields.email.as("email")} class="w-full" placeholder="Email" />
-                        </Field.Field>
-                        <Field.Field>
-                            <Input {...login.fields._password.as("password")} class="w-full" placeholder="Password" />
-                        </Field.Field>
-                    </Field.Group>
-                </Field.Set>
-
-                <Button class="mt-3" type="submit" disabled={pending} aria-disabled={pending}>
-                    {#if pending}
-                        <Disc class="h-4 w-4 mr-2 animate-spin" aria-hidden="true" />
-                        Logging in...
-                    {:else}
-                        <LoginIcon class="h-4 w-4 mr-2" />
-                        Login
-                    {/if}
-                </Button>
-            </form>
-        </div>
-    </div>
+                })}/>
+			</div>
+		</div>
+	</div>
+	<div class="bg-muted relative hidden lg:block">
+		<img
+			src={CampSNHU}
+			alt="A shot of the SNHU green space during the Camp SNHU event"
+			class="absolute inset-0 h-full w-full object-cover brightness-[0.75] dark:grayscale"
+		/>
+	</div>
 </div>

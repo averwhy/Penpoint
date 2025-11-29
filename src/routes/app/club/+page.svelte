@@ -4,8 +4,8 @@
     import type { PageProps } from "./$types";
 
     const { data }: PageProps = $props();
-    let open = $state(false);
     const { user, userClub } = data;
+    let open = $state(false);
 
     if (userClub === undefined) {
         open = true;

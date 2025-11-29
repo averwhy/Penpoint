@@ -1,8 +1,15 @@
+import type { Semester } from "$lib/models";
 import { getMostRecentSemesterIncludingActive, sql } from "$lib/server/postgres";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async () => {
-    const semester = await getMostRecentSemesterIncludingActive();
+    let semester: Semester;
+    try {
+        semester = await getMostRecentSemesterIncludingActive();
+    }
+    catch {
+        return { pointEarners: undefined, pointsEarned: undefined, upcomingEvents: undefined, daysLeft: undefined };
+    }
 
     const [pointEarnersResult, pointsEarnedResult, upcomingEventsResult] = await Promise.all([
         sql`

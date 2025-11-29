@@ -28,7 +28,7 @@
     import { Event } from "$lib/models";
 
     interface Props {
-      data: Event[];
+        data: Event[];
     }
 
     type EventColumn = {
@@ -42,14 +42,16 @@
 
     const { data }: Props = $props();
 
-    const eventsData: EventColumn[] = data.map(event => ({
-        id: event.id,
-        name: event.name,
-        points: event.point_value,
-        location: event.location,
-        starts_at: event.starts_at,
-        ends_at: event.ends_at,
-    }));
+    const eventsData = $derived(
+        data.map(event => ({
+            id: event.id,
+            name: event.name,
+            points: event.point_value,
+            location: event.location,
+            starts_at: event.starts_at,
+            ends_at: event.ends_at,
+        })),
+    );
 
     const columns: ColumnDef<EventColumn>[] = [
         {
@@ -126,12 +128,12 @@
                     };
                 });
                 return renderSnippet(startsAtSnippet, {
-                    starts_at: row.original.starts_at.toLocaleString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                        hour: 'numeric',
-                        minute: 'numeric',
+                    starts_at: row.original.starts_at.toLocaleString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
                         hour12: true,
                     }),
                 });
@@ -148,12 +150,12 @@
                     };
                 });
                 return renderSnippet(endsAtSnippet, {
-                    ends_at: row.original.ends_at.toLocaleString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                        hour: 'numeric',
-                        minute: 'numeric',
+                    ends_at: row.original.ends_at.toLocaleString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
                         hour12: true,
                     }),
                 });
@@ -239,11 +241,11 @@
 <div class="w-full">
     <div class="flex items-center py-4">
         <Input
-            placeholder="Filter emails..."
-            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-            oninput={e => table.getColumn("email")?.setFilterValue(e.currentTarget.value)}
+            placeholder="Filter events..."
+            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+            oninput={e => table.getColumn("name")?.setFilterValue(e.currentTarget.value)}
             onchange={e => {
-                table.getColumn("email")?.setFilterValue(e.currentTarget.value);
+                table.getColumn("name")?.setFilterValue(e.currentTarget.value);
             }}
             class="max-w-sm"
         />

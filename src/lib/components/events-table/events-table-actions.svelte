@@ -2,6 +2,7 @@
     import EllipsisIcon from "@lucide/svelte/icons/ellipsis";
     import { Button } from "$lib/components/ui/button/index.js";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
+    import { toast } from "svelte-sonner";
 
     let { id }: { id: string } = $props();
 </script>
@@ -18,7 +19,10 @@
     <DropdownMenu.Content>
         <DropdownMenu.Group>
             <DropdownMenu.Label>Actions</DropdownMenu.Label>
-            <DropdownMenu.Item onclick={() => navigator.clipboard.writeText(id)}>Copy payment ID</DropdownMenu.Item>
+            <DropdownMenu.Item onclick={() => {
+                navigator.clipboard.writeText(id);
+                toast.success("Event ID copied to clipboard");
+            }}>Copy event ID</DropdownMenu.Item>
         </DropdownMenu.Group>
         <DropdownMenu.Separator />
         <DropdownMenu.Item>View event</DropdownMenu.Item>

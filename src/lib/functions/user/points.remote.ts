@@ -6,12 +6,11 @@ export const getPoints = form(PointCheck, async check => {
     const semester = await getMostRecentSemesterIncludingActive();
 
     const points = await sql`
-        SELECT SUM(e.point_value) as total_points
+        SELECT COALESCE(SUM(e.point_value), 0) as total_points
         FROM taps t
         JOIN events e ON t.event_id = e.id
-        AND t.student_id = ${check.student_id}
-        WHERE t.semester_id = ${semester.id}
+        WHERE t.student_id = ${check.student_id}
+        AND e.semester_id = ${semester.id}
     `;
-
-    return { points: points.at(0) };
+    return { points: Number.parseInt(points.at(0)?.total_points) };
 });

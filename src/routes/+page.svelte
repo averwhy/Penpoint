@@ -5,12 +5,25 @@
     import * as Tooltip from "$lib/components/ui/tooltip/index";
     import Countup from "$lib/components/countup.svelte";
     import type { PageProps } from "./$types";
+    import { toast } from "svelte-sonner";
+    import CampSNHU from "$lib/assets/CampSNHU.jpg";
 
     const { data }: PageProps = $props();
     const { pointEarners, pointsEarned, upcomingEvents, daysLeft } = data;
+
+    if (!pointEarners && !pointsEarned && !upcomingEvents && !daysLeft) {
+        toast.error("Failed to load Penmen Pride stats. Please try again later.");
+    }
 </script>
 
-<div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-4">
+<div class="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-4">
+    <img
+        src={CampSNHU}
+        alt="Camp SNHU event space background"
+        class="pointer-events-none absolute inset-0 -z-20 h-full w-full object-cover brightness-[0.55]"
+        loading="lazy"
+    />
+    <div class="absolute inset-0 -z-10 bg-background/70 backdrop-blur-[2px]"></div>
     <h1 class="mb-8 text-center text-7xl font-semibold text-foreground tracking-wide">Penmen Pride</h1>
     <div class="grid grid-cols-2 gap-x-3 gap-y-3">
         <Card.Root>
@@ -33,7 +46,7 @@
         <Card.Root>
             <Card.Content class="text-5xl">
                 {#if pointsEarned !== undefined}
-                    <Countup target={pointsEarned} duration={3}/>
+                    <Countup target={pointsEarned} duration={3} />
                 {:else}
                     <Tooltip.Provider>
                         <Tooltip.Root>
@@ -50,7 +63,7 @@
         <Card.Root>
             <Card.Content class="text-5xl">
                 {#if upcomingEvents !== undefined}
-                    <Countup target={upcomingEvents} duration={3}/>
+                    <Countup target={upcomingEvents} duration={3} />
                 {:else}
                     <Tooltip.Provider>
                         <Tooltip.Root>
@@ -67,7 +80,7 @@
         <Card.Root>
             <Card.Content class="text-5xl">
                 {#if daysLeft !== undefined}
-                    <Countup target={daysLeft} duration={3}/>
+                    <Countup target={daysLeft} duration={3} />
                 {:else}
                     <Tooltip.Provider>
                         <Tooltip.Root>
