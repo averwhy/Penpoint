@@ -1,7 +1,8 @@
 import { sql } from "$lib/server/postgres";
 import { Event } from "$lib/models";
-import { query } from "$app/server";
+import { getRequestEvent, query } from "$app/server";
 import { error } from "@sveltejs/kit";
+import { clubOrAbove } from "$lib/utils/permissions";
 import z from "zod";
 
 export const getEvents = query(z.object({
@@ -9,6 +10,15 @@ export const getEvents = query(z.object({
     semesterId: z.string().optional(),
     limit: z.number().default(1000)
 }), async ({ clubId, semesterId, limit }) => {
+    const event = getRequestEvent();
+    if (!event.locals.user) {
+        error(401, "Unauthorized");
+    }
+
+    if (!clubOrAbove(event.locals.user.role)) {
+        error(403, "Forbidden");
+    }
+
     let result;
 
     if (clubId && semesterId) {
@@ -65,11 +75,20 @@ export const createEvent = query(z.object({
     flyerFile: z.instanceof(File),
     specialRequests: z.string().optional()
 }), async ({ id, clubId, semesterId, eventTitle, building, roomNumber, startDateTime, endDateTime, flyerFile, specialRequests }) => {
+    const event = getRequestEvent();
+    if (!event.locals.user) {
+        error(401, "Unauthorized");
+    }
+
+    if (!clubOrAbove(event.locals.user.role)) {
+        error(403, "Forbidden");
+    }
+
     const location = `${building} ${roomNumber ?? ""}`.trim();
     const eventID = id ?? crypto.randomUUID();
 
     const finalFlyer = validateFlyerFile(flyerFile, eventID);
-    // save to /static/event/{eventID}.{type}
+    // TODO: save to /static/event/{eventID}.{type}
 
 
     const result = await sql`
