@@ -1,9 +1,20 @@
 import { sql } from "$lib/server/postgres";
 import { Club } from "$lib/models";
 import { query } from "$app/server";
+import { getRequestEvent } from "$app/server";
+import { error } from "@sveltejs/kit";
+import { clubOrAbove } from "$lib/utils/permissions";
 import z from "zod";
 
 export const getClub = query(z.string(), async (clubId) => {
+    const event = getRequestEvent();
+    if (!event.locals.user) {
+        error(401, "Unauthorized");
+    }
+
+    if (!clubOrAbove(event.locals.user.role)) {
+        error(403, "Forbidden");
+    }
     const result = await sql`
             SELECT *
             FROM clubs
@@ -15,6 +26,14 @@ export const getClub = query(z.string(), async (clubId) => {
 });
 
 export const getClubFromUser = query(z.string(), async (userId) => {
+    const event = getRequestEvent();
+    if (!event.locals.user) {
+        error(401, "Unauthorized");
+    }
+
+    if (!clubOrAbove(event.locals.user.role)) {
+        error(403, "Forbidden");
+    }
     const result = await sql`
             SELECT c.*
             FROM clubs c
