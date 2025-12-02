@@ -37,13 +37,15 @@
 
     const { data, user }: Props = $props();
 
-    const newUsersData: NewUserColumn[] = data.map(user => ({
-        id: user.id,
-        student_id: user.student_id,
-        name: user.name,
-        email: user.email,
-        request_reason: user.request_reason,
-    }));
+    const newUsersData: NewUserColumn[] = $derived(
+        data.map(user => ({
+            id: user.id,
+            student_id: user.student_id,
+            name: user.name,
+            email: user.email,
+            request_reason: user.request_reason,
+        })),
+    );
 
     const columns: ColumnDef<NewUserColumn>[] = [
         {
@@ -242,7 +244,9 @@
                     </Table.Row>
                 {:else}
                     <Table.Row>
-                        <Table.Cell colspan={columns.length} class="h-24 text-center">No results... maybe you can relax?</Table.Cell>
+                        <Table.Cell colspan={columns.length} class="h-24 text-center"
+                            >No results... maybe you can relax?</Table.Cell
+                        >
                     </Table.Row>
                 {/each}
             </Table.Body>

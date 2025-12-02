@@ -1,7 +1,7 @@
 import { privateEnv } from "$lib/env/private";
 import { User } from "$lib/models";
 import { hashPassword, verifyToken } from "$lib/server/auth";
-import { sql, db} from "$lib/server/postgres";
+import { db, sql } from "$lib/server/postgres";
 import { type Handle, type ServerInit } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 import fs from "fs";
@@ -40,7 +40,7 @@ export const init: ServerInit = async () => {
                 RETURNING *
             `;
 
-            if (result.length > 0){
+            if (result.length > 0) {
                 console.log(
                     "Created an admin user with the email provided in the PENPOINT_INIT_EMAIL environment variable.",
                 );
@@ -71,8 +71,7 @@ export const init: ServerInit = async () => {
                 const file = fs.readFileSync("./src/lib/utils/testdata.sql", "utf8");
                 await db.unsafe(file);
                 console.log("Loaded test data");
-                }
-            else
+            } else
                 console.warn(
                     "A user with the email provided in the PENPOINT_INIT_EMAIL environment variable already exists.",
                 );
@@ -80,6 +79,9 @@ export const init: ServerInit = async () => {
 
         init().catch(console.error);
     }
+
+    if (privateEnv.smtp) console.log("SMTP is configured for outgoing emails.");
+    else console.warn("SMTP is not fully configured. Outgoing emails will not be sent.");
 };
 
 export const auth = (async ({ event, resolve }) => {

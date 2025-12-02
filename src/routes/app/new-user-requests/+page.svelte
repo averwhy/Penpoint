@@ -3,9 +3,8 @@
     import type { PageProps } from "./$types";
 
     const { data }: PageProps = $props();
-    const { newUserRequests, user } = data;
 </script>
 
 <div class="flex justify-center pt-10 mx-10">
-    <NewUsersTable data={newUserRequests} {user} />
+    <NewUsersTable data={data.newUserRequests} user={data.user} />
 </div>

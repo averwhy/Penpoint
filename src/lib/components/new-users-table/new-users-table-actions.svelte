@@ -14,33 +14,7 @@
     let { id, user }: { id: string; user: User } = $props();
     let role: "admin" | "sga" | "club" = $state("club");
     let approveDialogOpen = $state(false);
-    let approveSuccessDialogOpen = $state(false);
 </script>
-
-<Dialog.Root bind:open={approveSuccessDialogOpen}>
-    <Dialog.Content>
-        <Dialog.Header>
-            <Dialog.Title>User approved successfully</Dialog.Title>
-            <Dialog.Description>
-                <span class="mb-2 block">Send them this link to set their password and get started:</span>
-                <Button
-                    onclick={() => {
-                        if (approveUserRequest.result?.onboardingToken) {
-                            navigator.clipboard
-                                .writeText(`${location.origin}/onboarding/${approveUserRequest.result.onboardingToken}`)
-                                .catch(() => {});
-                            toast.success("Onboarding link copied to clipboard");
-                        } else {
-                            toast.error("No onboarding link available to copy");
-                        }
-                    }}
-                >
-                    Copy Onboarding Link
-                </Button>
-            </Dialog.Description>
-        </Dialog.Header>
-    </Dialog.Content>
-</Dialog.Root>
 
 <Dialog.Root bind:open={approveDialogOpen}>
     <Dialog.Content>
@@ -77,7 +51,9 @@
                         await submit();
                         form.reset();
                         approveDialogOpen = false;
-                        approveSuccessDialogOpen = true;
+                        toast.success("User approved successfully", {
+                            description: "They've received an email to set their password and activate their account.",
+                        });
                     } catch (error: any) {
                         // ignore redirects
                         console.error("approve failed", error);
@@ -110,14 +86,42 @@
         </DropdownMenu.Group>
         <DropdownMenu.Separator />
 
-        <form {...denyUserRequest}>
+        <form
+            {...denyUserRequest.enhance(async ({ form, data, submit }) => {
+                try {
+                    await submit();
+                    form.reset();
+                    approveDialogOpen = false;
+                    toast.success("User denied successfully");
+                } catch (error: any) {
+                    // ignore redirects
+                    console.error("deny failed", error);
+                    toast.error("Failed to deny user", { description: error?.body.message });
+                } finally {
+                }
+            })}
+        >
             <DropdownMenu.Item>
                 <input {...denyUserRequest.fields.userId.as("text")} value={id} hidden />
                 <button class="w-full h-full text-left" type="submit">Deny</button>
             </DropdownMenu.Item>
         </form>
 
-        <form {...blockUser}>
+        <form
+            {...blockUser.enhance(async ({ form, data, submit }) => {
+                try {
+                    await submit();
+                    form.reset();
+                    approveDialogOpen = false;
+                    toast.success("User blocked successfully");
+                } catch (error: any) {
+                    // ignore redirects
+                    console.error("block failed", error);
+                    toast.error("Failed to block user", { description: error?.body.message });
+                } finally {
+                }
+            })}
+        >
             <DropdownMenu.Item class="text-destructive">
                 <input {...blockUser.fields.userId.as("text")} value={id} hidden />
                 <button class="w-full h-full text-left" type="submit">Deny & Block</button>
