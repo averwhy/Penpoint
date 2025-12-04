@@ -54,7 +54,7 @@ export async function createStudent({
 }: Pick<Student, "student_id" | "email" | "name">): Promise<Student> {
     const result = await sql`
         INSERT INTO students (student_id, email, name)
-        VALUES (${student_id}, ${email}, ${name})
+        VALUES (${student_id}, ${email ?? null}, ${name ?? null})
         RETURNING *
 	`;
 
