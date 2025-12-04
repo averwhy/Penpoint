@@ -5,6 +5,7 @@ import { User } from "$lib/models";
 import { generateOnboardingToken } from "$lib/server/auth";
 import { sendEmail } from "$lib/server/email";
 import { sql } from "$lib/server/postgres";
+import { sgaOrAbove } from "$lib/utils/permissions";
 import { error } from "@sveltejs/kit";
 import z from "zod";
 
@@ -13,7 +14,7 @@ export const approveUserRequest = form(
     async ({ userId, role }) => {
         const { locals } = getRequestEvent();
         if (!locals.user) error(401, { message: "Unauthorized" });
-        if (!["admin", "sga"].includes(locals.user.role)) error(403, { message: "Forbidden" });
+        if (!sgaOrAbove(locals.user.role)) error(403, { message: "Forbidden" });
 
         if (role === "admin" && locals.user.role !== "admin")
             error(403, { message: "Only admins can approve other admins." });

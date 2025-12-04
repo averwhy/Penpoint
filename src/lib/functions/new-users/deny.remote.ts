@@ -1,13 +1,14 @@
 import { form, getRequestEvent } from "$app/server";
 import { User } from "$lib/models";
 import { sql } from "$lib/server/postgres";
+import { sgaOrAbove } from "$lib/utils/permissions";
 import { error } from "@sveltejs/kit";
 import z from "zod";
 
 export const denyUserRequest = form(z.object({ userId: z.string() }), async ({ userId }) => {
     const { locals } = getRequestEvent();
     if (!locals.user) error(401, { message: "Unauthorized" });
-    if (!["admin", "sga"].includes(locals.user.role)) error(403, { message: "Forbidden" });
+    if (!sgaOrAbove(locals.user.role)) error(403, { message: "Forbidden" });
 
     const users = await sql`
         SELECT *
