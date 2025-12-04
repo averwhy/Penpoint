@@ -1,5 +1,5 @@
 import { form, getRequestEvent } from "$app/server";
-import { Student, Tap } from "$lib/models";
+import { Event, Student, Tap } from "$lib/models";
 import { sql } from "$lib/server/postgres";
 import { sgaOrAbove } from "$lib/utils/permissions";
 import { error } from "@sveltejs/kit";
@@ -20,6 +20,18 @@ export const tap = form(Tap.omit({ id: true }), async ({ event_id, student_id })
 
     const student = Student.parse(_student);
 
+    const [_event] = await sql`
+        SELECT *
+        FROM events
+        WHERE id = ${event_id}
+        LIMIT 1
+    `;
+    if (!_event) error(404, { message: "Event not found." });
+
+    const event = Event.parse(_event);
+
+    if (event.approval_status !== "accepted") error(403, { message: "Cannot tap into an event that is not accepted." });
+
     const result = await sql`
         INSERT INTO taps (student_id, event_id)
         VALUES (${student_id}, ${event_id})
@@ -27,7 +39,7 @@ export const tap = form(Tap.omit({ id: true }), async ({ event_id, student_id })
         RETURNING *
     `;
     if (result.length === 0)
-        error(500, { message: `${student.name ?? student.student_id} has already been tapped for this event.` });
+        error(500, { message: `${student.name ?? student.student_id} has already been tapped for ${event.name}.` });
 
     return { student, tap: Tap.parse(result[0]) };
 });

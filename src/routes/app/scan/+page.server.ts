@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ locals }) => {
     const upcomingEvents = await sql`
         SELECT * FROM events
         WHERE semester_id = ${semester.id}
-        AND ends_at > NOW()
+        AND approval_status = 'accepted'
         ORDER BY starts_at ASC
     `;
 
