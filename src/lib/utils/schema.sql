@@ -75,3 +75,5 @@ CREATE TABLE IF NOT EXISTS taps (
     student_id VARCHAR(7) REFERENCES students(student_id),
     event_id UUID REFERENCES events(id)
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_taps_student_event ON taps(student_id, event_id);
