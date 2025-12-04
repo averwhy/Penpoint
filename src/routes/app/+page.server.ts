@@ -1,6 +1,6 @@
+import { getClubFromUser } from "$lib/functions/club.remote";
 import { getMostRecentSemesterIncludingActive, sql } from "$lib/server/postgres";
 import { redirect } from "@sveltejs/kit";
-import { getClubFromUser } from "$lib/functions/club.remote";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -64,20 +64,22 @@ export const load: PageServerLoad = async ({ locals }) => {
         `,
     ]);
 
-    let clubStats: {
-        semester: {
-            eventsHosted: number;
-            pointsEarned: number;
-            attendanceCount: number;
-            upcomingEvents: number;
-        };
-        allTime: {
-            eventsHosted: number;
-            pointsEarned: number;
-            attendanceCount: number;
-        };
-        members: number;
-    } | undefined;
+    let clubStats:
+        | {
+              semester: {
+                  eventsHosted: number;
+                  pointsEarned: number;
+                  attendanceCount: number;
+                  upcomingEvents: number;
+              };
+              allTime: {
+                  eventsHosted: number;
+                  pointsEarned: number;
+                  attendanceCount: number;
+              };
+              members: number;
+          }
+        | undefined;
 
     if (userClub) {
         const [
@@ -166,25 +168,6 @@ export const load: PageServerLoad = async ({ locals }) => {
         "Ahoy, ",
         "Today's a good day, ",
     ];
-
-    console.log({
-        greeting: nameGreetings[Math.floor(Math.random() * nameGreetings.length)],
-        club: clubStats,
-        platform: {
-            semester: {
-                eventsHosted: Number(platformSemesterEventsResult[0]?.count ?? 0),
-                pointsEarned: Number(platformSemesterPointsResult[0]?.total_points ?? 0),
-                attendanceCount: Number(platformSemesterAttendanceResult[0]?.count ?? 0),
-                upcomingEvents: Number(upcomingEventsResult[0]?.count ?? 0),
-                uniqueClubsHostingEvents: Number(uniqueClubsHostingEventsResult[0]?.count ?? 0),
-            },
-            allTime: {
-                eventsHosted: Number(platformAllTimeEventsResult[0]?.count ?? 0),
-                pointsEarned: Number(platformAllTimePointsResult[0]?.total_points ?? 0),
-                attendanceCount: Number(platformAllTimeAttendanceResult[0]?.count ?? 0),
-            },
-        },
-    });
 
     return {
         greeting: nameGreetings[Math.floor(Math.random() * nameGreetings.length)],
