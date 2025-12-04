@@ -1,8 +1,12 @@
-import { sql } from "$lib/server/postgres";
 import { Semester } from "$lib/models";
+import { sql } from "$lib/server/postgres";
+import { redirect } from "@sveltejs/kit";
 import type { LayoutServerLoad } from "./$types";
 
-export const load: LayoutServerLoad = async () => {
+export const load: LayoutServerLoad = async ({ locals }) => {
+    if (!locals.user) redirect(303, "/app/login");
+    if (locals.user.role !== "admin") redirect(303, "/app");
+
     const result = await sql`
             SELECT *
             FROM semesters
@@ -10,6 +14,6 @@ export const load: LayoutServerLoad = async () => {
         `;
 
     // return the list of parsed Semester's
-    const semesters = result.map((row) => Semester.parse(row));
+    const semesters = result.map(row => Semester.parse(row));
     return { semesters };
 };
