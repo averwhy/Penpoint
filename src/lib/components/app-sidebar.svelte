@@ -40,7 +40,7 @@
     let sgaItems = [
         {
             title: "Event Scanning",
-            url: "",
+            url: "/app/scan",
             icon: IdCard,
         },
         {
@@ -159,7 +159,7 @@
                             <a href="/app/account" class="w-full h-full text-left">Account</a>
                         </DropdownMenu.Item>
 
-                        <form {...logout.for('sidebar')}>
+                        <form {...logout.for("sidebar")}>
                             <DropdownMenu.Item>
                                 <button class="w-full h-full text-left" type="submit">Sign out</button>
                             </DropdownMenu.Item>

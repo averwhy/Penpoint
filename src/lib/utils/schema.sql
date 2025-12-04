@@ -73,7 +73,8 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE TABLE IF NOT EXISTS taps (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     student_id VARCHAR(7) REFERENCES students(student_id),
-    event_id UUID REFERENCES events(id)
+    event_id UUID REFERENCES events(id),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_taps_student_event ON taps(student_id, event_id);
