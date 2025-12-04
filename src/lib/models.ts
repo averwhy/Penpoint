@@ -37,8 +37,8 @@ export type Registration = z.infer<typeof Registration>;
 
 export const Student = z.object({
     student_id: StudentId,
-    email: z.email().max(100).optional(),
-    name: z.string().max(100).optional(),
+    email: z.email().max(100).nullable(),
+    name: z.string().max(100).nullable(),
     created_at: z.coerce.date(),
     updated_at: z.coerce.date(),
 });
