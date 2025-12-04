@@ -40,14 +40,14 @@ export const approveUserRequest = form(
 
         sendEmail({
             html: `
-                <img src="${PenmenPride}" alt="Penmen Pride Logo" style="display:block; width:120px; height:auto;">
-                <h1>Your Penmen Pride Account has been approved!</h1>
-                <p>Congratulations! Your account has been approved by the Student Government Association.</p>
-                <p>Please click the link below to activate your account and set your password:</p>
-                <a href="${publicEnv.BASE_URL}/onboarding/${generateOnboardingToken(targetUser.id)}">Activate Account</a>
-                <p>If you did not request this account, please ignore this email.</p>
-            `,
-            subject: "Activate your Penmen Pride Account",
+<img src="${PenmenPride}" alt="Penmen Pride Logo" style="display:block; width:120px; height:auto;">
+<h1>Your Penmen Pride Account has been approved!</h1>
+<p>Congratulations! Your account has been approved by the Student Government Association.</p>
+<p>Please click the link below to activate your account and set your password:</p>
+<a href="${publicEnv.BASE_URL}/onboarding/${generateOnboardingToken(targetUser.id)}">Activate Account</a>
+<p>If you did not request this account, please ignore this email.</p>
+<p>This link will expire in 3 days. If you do not activate your account within this time, you can request a password reset from the login page.</p>`,
+            subject: "Activate your Penmen Pride account",
             to: targetUser.email,
         })
             .then(() => {

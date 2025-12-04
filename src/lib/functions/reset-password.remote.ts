@@ -4,9 +4,9 @@ import { hashPassword, verifyToken } from "$lib/server/auth";
 import { sql } from "$lib/server/postgres";
 import { error, redirect } from "@sveltejs/kit";
 
-export const setPassword = form(SetPassword, async ({ _password, token }) => {
-    const payload = verifyToken(token, "onboarding");
-    if (!payload) error(401, { message: "Invalid or expired onboarding token." });
+export const resetPassword = form(SetPassword, async ({ _password, token }) => {
+    const payload = verifyToken(token, "resetPassword");
+    if (!payload) error(401, { message: "Invalid or expired password reset token." });
 
     const users = await sql`
         SELECT *
@@ -17,7 +17,6 @@ export const setPassword = form(SetPassword, async ({ _password, token }) => {
     if (users.length === 0) error(401, { message: "Invalid credentials" });
 
     const user = User.parse(users[0]);
-    if (!user.pending) error(403, { message: "This account has already been activated." });
 
     if (user.role === "unapproved")
         error(403, { message: "Access denied. Please wait for approval email from SGA before logging in." });
@@ -33,5 +32,5 @@ export const setPassword = form(SetPassword, async ({ _password, token }) => {
         WHERE id = ${user.id}
     `;
 
-    redirect(303, "/login?onboarding_success=true");
+    redirect(303, "/login?reset_password_success=true");
 });
