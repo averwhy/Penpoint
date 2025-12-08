@@ -1,36 +1,57 @@
 <script lang="ts">
+    import { Badge } from "$lib/components/ui/badge/index";
     import { Button } from "$lib/components/ui/button/index";
-    import * as Dialog from "$lib/components/ui/dialog/index";
-    import type { PageProps } from "./$types";
+    import { Card, CardContent, CardTitle } from "$lib/components/ui/card/index";
+    import type { PageData } from "./$types";
 
-    const { data }: PageProps = $props();
-    const { user, userClub } = data;
-    let open = $state(false);
-
-    if (userClub === undefined) {
-        open = true;
-    }
+    const { data }: { data: PageData } = $props();
+    const { userClubs } = data;
 </script>
 
-<div class="">
-    <Dialog.Root bind:open>
-        <Dialog.Content>
-            <Dialog.Header>
-                <Dialog.Title>One small problem...</Dialog.Title>
-                <Dialog.Description>
-                    You're not part of a club. Chances are, you should not be here. Contact SGA to get this fixed.
-                </Dialog.Description>
-            </Dialog.Header>
-            <Dialog.Footer>
-                <Button href="/app">Go back</Button>
-            </Dialog.Footer>
-        </Dialog.Content>
-    </Dialog.Root>
-</div>
+<section class="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-10">
+    <header class="space-y-1">
+        <h1 class="text-2xl font-semibold">Your Clubs</h1>
+    </header>
 
-<div class="flex items-center justify-center min-h-screen">
-    {#if userClub !== undefined}
-        <!-- Your club content will go here -->
-        <p>Club content</p>
-    {/if}
-</div>
+    <div class="grid gap-4">
+        {#if userClubs.length === 0}
+            <Card>
+                <CardContent class="py-6 text-sm text-muted-foreground">You are not in any clubs yet.</CardContent>
+            </Card>
+        {:else}
+            {#each userClubs as club}
+                {#if club}
+                    <Card class="flex items-start gap-4 px-4 py-3">
+                        <div class="flex items-center gap-3">
+                            {#if club.image_filename}
+                                <img
+                                    src={`/uploads/clubs/${club.image_filename}`}
+                                    alt={`${club.name} logo`}
+                                    class="h-10 w-10 rounded-md object-cover border"
+                                />
+                            {:else}
+                                <div
+                                    class="flex h-10 w-10 items-center justify-center rounded-md border bg-card text-xs font-semibold uppercase"
+                                >
+                                    {club.acronym?.slice(0, 3) || "?"}
+                                </div>
+                            {/if}
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2">
+                                    <CardTitle class="text-base font-semibold leading-tight">
+                                        <a href="/app/club/{club.acronym.toLowerCase()}" class="hover:underline">
+                                            {club.name} ({club.acronym})
+                                        </a>
+                                    </CardTitle>
+                                </div>
+                                <p class="text-xs text-muted-foreground">
+                                    Created {new Date(club.created_at).toLocaleDateString()}
+                                </p>
+                            </div>
+                        </div>
+                    </Card>
+                {/if}
+            {/each}
+        {/if}
+    </div>
+</section>

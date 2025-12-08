@@ -11,11 +11,10 @@ export const load: LayoutServerLoad = async ({ locals }) => {
         FROM clubs
         INNER JOIN club_users ON clubs.id = club_users.club_id
         WHERE club_users.user_id = ${locals.user.id}
-        LIMIT 1
     `;
 
     return {
         user: locals.user!,
-        userClub: userClub[0] ? Club.safeParse(userClub[0]).data : undefined,
+        userClubs: userClub.map((club) => Club.parse(club)),
     };
 };

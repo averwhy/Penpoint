@@ -5,6 +5,7 @@
     import { Separator } from "$lib/components/ui/separator/index";
     import humanizeDuration from "humanize-duration";
     import { Badge } from "$lib/components/ui/badge/index";
+    import FlyerViewer from "$lib/components/flyer-viewer.svelte";
 
     const { data }: PageProps = $props();
     const events = data.data;
@@ -41,35 +42,44 @@
                             <h2 class="text-lg font-semibold whitespace-nowrap">
                                 {formatDate(entry.event.starts_at)}
                                 {#if isSameDay(entry.event.starts_at, new Date())}
-                                <Badge variant="outline" class="border-green-800 text-white">Today</Badge>
+                                    <Badge variant="outline" class="border-green-800 text-white">Today</Badge>
                                 {/if}
                             </h2>
                             <Separator class="bg-foreground max-w-dvh" />
                         </div>
                     </div>
                 {/if}
-                <Card.Root>
-                    <Card.Header>
-                        <Card.Title class="text-lg">
-                            {entry.event.name}
-                        </Card.Title>
-                        <Card.Description>
-                            <ClubCard title={entry.club_name} id={entry.event.club_id} />
-                        </Card.Description>
-                    </Card.Header>
-                    <Card.Content class="text-sm">
-                        {formatTime(entry.event.starts_at)} to {formatTime(entry.event.ends_at)} ({humanizeDuration(
-                            entry.event.ends_at.getTime() - entry.event.starts_at.getTime(),
-                        )})
-                        {#if Date.now() >= entry.event.starts_at.getTime() && Date.now() <= entry.event.ends_at.getTime()}
-                            <Badge variant="secondary" class="bg-green-800 text-white">Happening Now</Badge>
-                        {/if}
-                    </Card.Content>
-                    <Card.Footer>
-                        <Card.Description>
-                            {entry.event.point_value} points
-                        </Card.Description>
-                    </Card.Footer>
+                <Card.Root class="flex flex-row overflow-hidden">
+                    <div class="flex-1">
+                        <Card.Header>
+                            <Card.Title class="text-lg">
+                                {entry.event.name}
+                            </Card.Title>
+                            <ClubCard title={entry.club_acronym ?? entry.club_name} id={entry.event.club_id} />
+                        </Card.Header>
+                        <Card.Content class="text-sm">
+                            {formatTime(entry.event.starts_at)} to {formatTime(entry.event.ends_at)} ({humanizeDuration(
+                                entry.event.ends_at.getTime() - entry.event.starts_at.getTime(),
+                            )})
+                            {#if Date.now() >= entry.event.starts_at.getTime() && Date.now() <= entry.event.ends_at.getTime()}
+                                <Badge variant="secondary" class="bg-green-800 text-white">Happening Now</Badge>
+                            {/if}
+                        </Card.Content>
+                        <Card.Footer>
+                            <Card.Description>
+                                {entry.event.point_value} points
+                            </Card.Description>
+                        </Card.Footer>
+                    </div>
+                    {#if entry.hasFlyer && entry.event.image_filename}
+                        <div class="w-24 h-full flex-shrink-0 pr-5">
+                            <FlyerViewer
+                                src="/uploads/events/{entry.event.image_filename}"
+                                alt="Flyer for {entry.event.name}"
+                                class="w-full h-full object-cover"
+                            />
+                        </div>
+                    {/if}
                 </Card.Root>
             {/each}
         </div>

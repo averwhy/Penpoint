@@ -6,7 +6,7 @@
     import HelpFooter from "$lib/components/help-footer.svelte";
     import { logout } from "$lib/functions/logout.remote.js";
     const { data } = $props();
-    const { user, userClub } = data;
+    const { user, userClubs } = data;
 
     const initial = user.name?.[0]?.toUpperCase() ?? user.email?.[0]?.toUpperCase() ?? "?";
 </script>
@@ -39,17 +39,19 @@
             </div>
             <Separator />
             <div class="space-y-2">
-                <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">Club</p>
-                {#if userClub}
+                <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">Club(s)</p>
+                {#if userClubs.length > 0}
+                    {#each userClubs as club}
                     <div class="flex flex-wrap items-center gap-2">
-                        <span class="text-lg font-semibold">{userClub.name}</span>
-                        <Badge variant="outline">{userClub.acronym}</Badge>
-                        {#if userClub.created_at}
+                        <span class="text-lg font-semibold">{club.name}</span>
+                        <Badge variant="outline">{club.acronym}</Badge>
+                        {#if club.created_at}
                             <span class="text-xs text-muted-foreground"
-                                >Joined {new Date(userClub.created_at).toLocaleDateString()}</span
+                                >Joined {new Date(userClubs[0].created_at).toLocaleDateString()}</span
                             >
                         {/if}
                     </div>
+                    {/each}
                 {:else}
                     <p class="italic text-muted-foreground">Not currently part of a club.</p>
                 {/if}
@@ -61,7 +63,7 @@
                 <Badge variant="outline">{user.role ?? "member"}</Badge>
             </div>
             <div class="flex items-center gap-2 sm:ml-auto justify-end">
-                <form {...logout.for('account')}>
+                <form {...logout.for("account")}>
                     <Button type="submit" variant="ghost">Logout</Button>
                 </form>
                 <Button type="button" variant="outline" disabled>Change Password</Button>

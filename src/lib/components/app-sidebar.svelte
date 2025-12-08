@@ -87,7 +87,15 @@
                 <Sidebar.Menu>
                     {#each items as item (item.title)}
                         <Sidebar.MenuItem>
-                            <Sidebar.MenuButton class={page.url.pathname === item.url ? "bg-background" : ""}>
+                            <Sidebar.MenuButton
+                                class={item.url === "/app"
+                                    ? page.url.pathname === "/app"
+                                        ? "bg-background"
+                                        : ""
+                                    : page.url.pathname.startsWith(item.url)
+                                      ? "bg-background"
+                                      : ""}
+                            >
                                 {#snippet child({ props })}
                                     <a href={item.url} {...props}>
                                         <item.icon />
