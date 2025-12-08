@@ -9,6 +9,8 @@ export const privateEnv = z
         JWT_ACCESS_SECRET: z.string(),
         /** JWT onboarding token secrets. */
         JWT_ONBOARDING_SECRET: z.string(),
+        /** JWT reset password token secrets. */
+        JWT_RESET_PASSWORD_SECRET: z.string(),
         /** Runtime environment. Currently only changes whether secure cookies are used. */
         NODE_ENV: z.enum(["development", "production", "test"]),
         /** If the specified user does not exist on startup, it will be created with the specified email and `PENPOINT_INIT_PASSWORD`. */
@@ -30,6 +32,7 @@ export const privateEnv = z
         const {
             JWT_ACCESS_SECRET,
             JWT_ONBOARDING_SECRET,
+            JWT_RESET_PASSWORD_SECRET,
             PENPOINT_INIT_EMAIL,
             PENPOINT_INIT_PASSWORD,
             SMTP_FROM_ADDRESS,
@@ -46,6 +49,7 @@ export const privateEnv = z
                 jwtSecrets: {
                     access: JWT_ACCESS_SECRET,
                     onboarding: JWT_ONBOARDING_SECRET,
+                    resetPassword: JWT_RESET_PASSWORD_SECRET,
                 },
             },
             ...(PENPOINT_INIT_EMAIL && PENPOINT_INIT_PASSWORD

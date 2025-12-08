@@ -22,12 +22,18 @@ export function generateOnboardingToken(userId: string): string {
     });
 }
 
+export function generateResetPasswordToken(userId: string): string {
+    return jwt.sign({ sub: userId, type: "resetPassword" }, privateEnv.jwtSecrets.resetPassword, {
+        expiresIn: "15m",
+    });
+}
+
 export function verifyToken(
     token: string,
-    tokenType: "access" | "onboarding",
+    tokenType: "access" | "onboarding" | "resetPassword",
     deleteCookie?: () => void,
 ): (JwtPayload & { sub: string }) | null {
-    if (tokenType !== "access" && tokenType !== "onboarding") return null;
+    if (tokenType !== "access" && tokenType !== "onboarding" && tokenType !== "resetPassword") return null;
 
     const secret = privateEnv.jwtSecrets[tokenType];
 

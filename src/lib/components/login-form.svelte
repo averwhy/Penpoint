@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { FieldGroup, Field, FieldLabel, FieldDescription, FieldSeparator } from "$lib/components/ui/field/index.js";
-    import { Input } from "$lib/components/ui/input/index.js";
     import { Button } from "$lib/components/ui/button/index.js";
+    import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSeparator } from "$lib/components/ui/field/index.js";
+    import { Input } from "$lib/components/ui/input/index.js";
     import { cn, type WithElementRef } from "$lib/utils.js";
-    import type { HTMLFormAttributes } from "svelte/elements";
     import Eye from "@lucide/svelte/icons/eye";
     import EyeOff from "@lucide/svelte/icons/eye-closed";
+    import type { HTMLFormAttributes } from "svelte/elements";
 
     let {
         ref = $bindable(null),
@@ -35,7 +35,7 @@
         <Field>
             <div class="flex items-center">
                 <FieldLabel for="password-{id}">Password</FieldLabel>
-                <a href="##" class="ml-auto text-xs underline-offset-4 hover:underline"> Forgot your password? </a>
+                <a href="/forgot" class="ml-auto text-xs underline-offset-4 hover:underline">Forgot your password?</a>
             </div>
             <div class="relative">
                 <Input

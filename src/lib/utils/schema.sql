@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash TEXT,
     last_login TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    password_reset_last_requested_at TIMESTAMPTZ DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS semesters (
