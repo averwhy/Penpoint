@@ -13,8 +13,9 @@
         getSortedRowModel,
     } from "@tanstack/table-core";
     import { createRawSnippet } from "svelte";
-    import DataTableCheckbox from "$lib/components/events-table/events-table-checkbox.svelte";
-    import DataTableActions from "$lib/components/events-table/events-table-actions.svelte";
+    import DataTableCheckbox from "$lib/components/users-table/users-table-checkbox.svelte";
+    import DataTableActions from "$lib/components/users-table/users-table-actions.svelte";
+    import DateWithRelativeTooltip from "$lib/components/date-with-relative-tooltip.svelte";
     import * as Table from "$lib/components/ui/table/index.js";
     import { Button } from "$lib/components/ui/button/index.js";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
@@ -25,36 +26,36 @@
         renderComponent,
         renderSnippet,
     } from "$lib/components/ui/data-table/index.js";
-    import { Event } from "$lib/models";
-    import DateWithRelativeTooltip from "$lib/components/date-with-relative-tooltip.svelte";
+    import { User } from "$lib/models";
+    import { email } from "zod";
 
     interface Props {
-        data: Event[];
+        data: User[];
     }
 
-    type EventColumn = {
+    type UserColumn = {
         id: string;
         name: string;
-        points: number;
-        location: string;
-        starts_at: Date;
-        ends_at: Date;
+        email: string;
+        role: string;
+        last_login: Date;
+        created_at: Date;
     };
 
     const { data }: Props = $props();
 
-    const eventsData = $derived(
-        data.map(event => ({
-            id: event.id,
-            name: event.name,
-            points: event.point_value,
-            location: event.location,
-            starts_at: event.starts_at,
-            ends_at: event.ends_at,
+    const usersData = $derived(
+        data.map(user => ({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            last_login: user.last_login,
+            created_at: user.created_at,
         })),
     );
 
-    const columns: ColumnDef<EventColumn>[] = [
+    const columns: ColumnDef<UserColumn>[] = [
         {
             id: "select",
             header: ({ table }) =>
@@ -80,7 +81,7 @@
                 const nameSnippet = createRawSnippet<[{ name: string }]>(getName => {
                     const { name } = getName();
                     return {
-                        render: () => `<div class="capitalize hover:underline"><a href="/app/events/${row.original.id}">${name}</a></div>`,
+                        render: () => `<div class="capitalize">${name}</div>`,
                     };
                 });
                 return renderSnippet(nameSnippet, {
@@ -89,55 +90,41 @@
             },
         },
         {
-            accessorKey: "points",
-            header: "Points",
+            accessorKey: "role",
+            header: "Role",
             cell: ({ row }) => {
-                const pointsSnippet = createRawSnippet<[{ points: number }]>(getPoints => {
-                    const { points } = getPoints();
+                const roleSnippet = createRawSnippet<[{ role: string }]>(getRole => {
+                    const { role } = getRole();
                     return {
-                        render: () => `<div class="capitalize">${points}</div>`,
+                        render: () => `<div class="capitalize">${role}</div>`,
                     };
                 });
-                return renderSnippet(pointsSnippet, {
-                    points: row.original.points,
+                return renderSnippet(roleSnippet, {
+                    role: row.original.role,
                 });
             },
         },
         {
-            accessorKey: "location",
-            header: "Location",
-            cell: ({ row }) => {
-                const locationSnippet = createRawSnippet<[{ location: string }]>(getLocation => {
-                    const { location } = getLocation();
-                    return {
-                        render: () => `<div class="capitalize">${location}</div>`,
-                    };
-                });
-                return renderSnippet(locationSnippet, {
-                    location: row.original.location,
-                });
-            },
-        },
-        {
-            accessorKey: "starts_at",
-            header: "Starts At",
+            accessorKey: "last_login",
+            header: "Last Login",
             cell: ({ row }) =>
                 renderComponent(DateWithRelativeTooltip, {
-                    date: row.original.starts_at,
+                    date: row.original.last_login,
+                    reverse: true,
                 }),
         },
         {
-            accessorKey: "ends_at",
-            header: "Ends At",
+            accessorKey: "created_at",
+            header: "Created At",
             cell: ({ row }) =>
                 renderComponent(DateWithRelativeTooltip, {
-                    date: row.original.ends_at,
+                    date: row.original.created_at,
                 }),
         },
         {
             id: "actions",
             enableHiding: false,
-            cell: ({ row }) => renderComponent(DataTableActions, { id: row.original.id }),
+            cell: ({ row }) => renderComponent(DataTableActions, { id: row.original.id, email: row.original.email }),
         },
     ];
 
@@ -149,7 +136,7 @@
 
     const table = createSvelteTable({
         get data() {
-            return eventsData;
+            return usersData;
         },
         columns,
         state: {
@@ -214,7 +201,7 @@
 <div class="w-full">
     <div class="flex items-center py-4">
         <Input
-            placeholder="Filter events..."
+            placeholder="Filter users..."
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
             oninput={e => table.getColumn("name")?.setFilterValue(e.currentTarget.value)}
             onchange={e => {
@@ -271,7 +258,7 @@
                     </Table.Row>
                 {:else}
                     <Table.Row>
-                        <Table.Cell colspan={columns.length} class="h-24 text-center">No results.</Table.Cell>
+                        <Table.Cell colspan={columns.length} class="h-24 text-center">No results... gulp.</Table.Cell>
                     </Table.Row>
                 {/each}
             </Table.Body>

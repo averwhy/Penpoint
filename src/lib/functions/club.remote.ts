@@ -25,7 +25,7 @@ export const getClub = query(z.string(), async (clubId) => {
     return Club.parse(result.at(0));
 });
 
-export const getClubFromUser = query(z.string(), async (userId) => {
+export const getFirstClubFromUser = query(z.string(), async (userId) => {
     const event = getRequestEvent();
     if (!event.locals.user) {
         error(401, "Unauthorized");

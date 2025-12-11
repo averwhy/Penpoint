@@ -6,7 +6,6 @@
     import { getEvents } from "$lib/functions/events.remote";
     import { Event } from "$lib/models";
     import HelpFooter from "$lib/components/help-footer.svelte";
-    import SemesterSelector from "$lib/components/semester-selector.svelte";
 
     const { data }: PageProps = $props();
     const { user, semesters } = data;

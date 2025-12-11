@@ -1,9 +1,10 @@
 <script lang="ts">
     import * as Card from "$lib/components/ui/card/index";
     import type { PageProps } from "./$types";
+    import DateWithRelativeTooltip from "$lib/components/date-with-relative-tooltip.svelte";
 
     const { data }: PageProps = $props();
-    const { greeting, club, platform, user, userClub } = data;
+    const { greeting, club, platform, user, userClubs } = data;
 
     const theDay: string = new Date().toLocaleDateString("en-US", { weekday: "long" });
 </script>
@@ -25,19 +26,28 @@
                     <Card.Header>
                         <Card.Title>Club Info</Card.Title>
                     </Card.Header>
-                    {#if userClub === undefined}
+                    {#if userClubs.length === 0}
                         <Card.Content>You're not part of a club...</Card.Content>
-                    {:else}
+                    {:else if userClubs.length === 1}
                         <Card.Content>
-                            <span class="text-xl">{userClub.name} ({userClub.acronym})</span>
-                            <br />
+                            <span class="text-xl">{userClubs[0].name} ({userClubs[0].acronym})</span>
+                            <br /> <br />
                             {club?.members} E-Board members (on Penmen Pride)
                             <br /> <br />
-                            Created at {userClub.created_at}
+                            Created <DateWithRelativeTooltip
+                                date={userClubs[0].created_at}
+                                reverse={true}
+                                underline={false}
+                            />
+                        </Card.Content>
+                    {:else if userClubs.length > 1}
+                        <Card.Content>
+                            You are in {userClubs.length} clubs. <br />
+                            Statistics on the left are all your clubs combined.
                         </Card.Content>
                     {/if}
                 </Card.Root>
-                {#if userClub !== undefined}
+                {#if userClubs.length !== 0}
                     <Card.Root class="flex-1">
                         <Card.Header>
                             <Card.Title>Semester Stats</Card.Title>
@@ -146,6 +156,5 @@
             </div>
         </div>
     </div>
-    <div class="h-5">
-    </div>
+    <div class="h-5"></div>
 </div>

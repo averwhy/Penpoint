@@ -2,6 +2,7 @@
     import * as HoverCard from "$lib/components/ui/hover-card/index";
     import { Club } from "$lib/models";
     import { getClub } from "$lib/functions/club.remote";
+    import { Badge } from "$lib/components/ui/badge/index.js";
 
     interface Props {
         title: string;
@@ -33,7 +34,9 @@
                     <h4 class="text-sm font-semibold">{clubData?.name}</h4>
                     <p class="text-sm">{clubData?.acronym}</p>
                     <div class="flex items-center pt-2">
-                        <span class="text-muted-foreground text-xs"> {clubData?.governing_board} </span>
+                        {#if clubData?.governing_board}
+                        <Badge variant="default" class="text-xs"> Governing Board </Badge>
+                        {/if}
                     </div>
                 </div>
             </div>

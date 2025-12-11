@@ -1,4 +1,4 @@
-import { getClubFromUser } from "$lib/functions/club.remote";
+import { getFirstClubFromUser } from "$lib/functions/club.remote";
 import { getMostRecentSemesterIncludingActive, sql } from "$lib/server/postgres";
 import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
@@ -6,7 +6,7 @@ import type { PageServerLoad } from "./$types";
 export const load: PageServerLoad = async ({ locals }) => {
     if (!locals.user) redirect(303, "/login");
 
-    const userClub = await getClubFromUser(locals.user.id);
+    const userClub = await getFirstClubFromUser(locals.user.id);
     const semester = await getMostRecentSemesterIncludingActive();
 
     // Platform-wide statistics
@@ -100,44 +100,51 @@ export const load: PageServerLoad = async ({ locals }) => {
             `,
             sql`
                 SELECT COUNT(*) as count
-                FROM events
-                WHERE club_id = ${userClub.id} AND semester_id = ${semester.id}
+                FROM events e
+                JOIN club_users cu ON e.club_id = cu.club_id
+                WHERE cu.user_id = ${locals.user.id} AND e.semester_id = ${semester.id}
             `,
             sql`
                 SELECT SUM(e.point_value) as total_points
                 FROM taps t
                 JOIN events e ON t.event_id = e.id
-                WHERE e.club_id = ${userClub.id} AND e.semester_id = ${semester.id}
+                JOIN club_users cu ON e.club_id = cu.club_id
+                WHERE cu.user_id = ${locals.user.id} AND e.semester_id = ${semester.id}
             `,
             sql`
                 SELECT COUNT(t.id) as count
                 FROM taps t
                 JOIN events e ON t.event_id = e.id
-                WHERE e.club_id = ${userClub.id} AND e.semester_id = ${semester.id}
+                JOIN club_users cu ON e.club_id = cu.club_id
+                WHERE cu.user_id = ${locals.user.id} AND e.semester_id = ${semester.id}
             `,
             sql`
                 SELECT COUNT(*) as count
-                FROM events
-                WHERE club_id = ${userClub.id} 
-                AND starts_at > now() 
-                AND semester_id = ${semester.id}
+                FROM events e
+                JOIN club_users cu ON e.club_id = cu.club_id
+                WHERE cu.user_id = ${locals.user.id}
+                AND e.starts_at > now() 
+                AND e.semester_id = ${semester.id}
             `,
             sql`
                 SELECT COUNT(*) as count
-                FROM events
-                WHERE club_id = ${userClub.id}
+                FROM events e
+                JOIN club_users cu ON e.club_id = cu.club_id
+                WHERE cu.user_id = ${locals.user.id}
             `,
             sql`
                 SELECT SUM(e.point_value) as total_points
                 FROM taps t
                 JOIN events e ON t.event_id = e.id
-                WHERE e.club_id = ${userClub.id}
+                JOIN club_users cu ON e.club_id = cu.club_id
+                WHERE cu.user_id = ${locals.user.id}
             `,
             sql`
                 SELECT COUNT(t.id) as count
                 FROM taps t
                 JOIN events e ON t.event_id = e.id
-                WHERE e.club_id = ${userClub.id}
+                JOIN club_users cu ON e.club_id = cu.club_id
+                WHERE cu.user_id = ${locals.user.id}
             `,
         ]);
 

@@ -1,19 +1,18 @@
-import { Semester } from "$lib/models";
+import { User } from "$lib/models";
 import { sql } from "$lib/server/postgres";
 import { redirect } from "@sveltejs/kit";
 import type { LayoutServerLoad } from "./$types";
 
 export const load: LayoutServerLoad = async ({ locals }) => {
     if (!locals.user) redirect(303, "/app/login");
-    if (locals.user.role !== "admin") redirect(303, "/app");
 
     const result = await sql`
             SELECT *
-            FROM semesters
-            ORDER BY starts DESC;
+            FROM users
+            ORDER BY name DESC;
         `;
 
-    // return the list of parsed Semester's
-    const semesters = result.map(row => Semester.parse(row));
-    return { semesters };
+    // return the list of parsed Users's
+    const users = result.map(row => User.parse(row));
+    return { users };
 };

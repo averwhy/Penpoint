@@ -16,6 +16,12 @@
     } = $props();
 
     let open = $state(false);
+
+    // Preload image
+    $effect(() => {
+        const img = new Image();
+        img.src = src;
+    });
 </script>
 
 <Dialog.Root bind:open>
@@ -23,7 +29,7 @@
         type="button"
         class={cn(
             "group relative block w-full overflow-hidden rounded-lg border bg-card shadow-sm transition focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-ring",
-            "cursor-zoom-in",
+            "cursor-zoom-in aspect-video",
             className,
         )}
         onclick={() => (open = true)}
@@ -41,9 +47,7 @@
         </div>
     </button>
 
-    <Dialog.Content
-        class="p-0 bg-transparent border-none shadow-none w-auto max-w-[calc(100%-2rem)] sm:max-w-5xl mt-5"
-    >
+    <Dialog.Content class="p-0 bg-transparent border-none shadow-none w-auto max-w-[calc(100%-2rem)] sm:max-w-5xl mt-5">
         <Dialog.Header class="sr-only">
             <Dialog.Title>{alt}</Dialog.Title>
         </Dialog.Header>

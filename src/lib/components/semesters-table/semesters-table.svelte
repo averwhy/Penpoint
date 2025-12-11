@@ -26,6 +26,7 @@
         renderSnippet,
     } from "$lib/components/ui/data-table/index.js";
     import { Semester } from "$lib/models";
+    import DateWithRelativeTooltip from "$lib/components/date-with-relative-tooltip.svelte";
 
     interface Props {
         data: Semester[];
@@ -86,46 +87,18 @@
         {
             accessorKey: "starts_at",
             header: "Starts At",
-            cell: ({ row }) => {
-                const startsAtSnippet = createRawSnippet<[{ starts_at: string }]>(getStartsAt => {
-                    const { starts_at } = getStartsAt();
-                    return {
-                        render: () => `<div class="capitalize">${starts_at}</div>`,
-                    };
-                });
-                return renderSnippet(startsAtSnippet, {
-                    starts_at: row.original.starts_at.toLocaleString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                        hour: "numeric",
-                        minute: "numeric",
-                        hour12: true,
-                    }),
-                });
-            },
+            cell: ({ row }) =>
+                renderComponent(DateWithRelativeTooltip, {
+                    date: row.original.starts_at,
+                }),
         },
         {
             accessorKey: "ends_at",
             header: "Ends At",
-            cell: ({ row }) => {
-                const endsAtSnippet = createRawSnippet<[{ ends_at: string }]>(getEndsAt => {
-                    const { ends_at } = getEndsAt();
-                    return {
-                        render: () => `<div class="capitalize">${ends_at}</div>`,
-                    };
-                });
-                return renderSnippet(endsAtSnippet, {
-                    ends_at: row.original.ends_at.toLocaleString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                        hour: "numeric",
-                        minute: "numeric",
-                        hour12: true,
-                    }),
-                });
-            },
+            cell: ({ row }) =>
+                renderComponent(DateWithRelativeTooltip, {
+                    date: row.original.ends_at,
+                }),
         },
         {
             id: "actions",
@@ -264,7 +237,9 @@
                     </Table.Row>
                 {:else}
                     <Table.Row>
-                        <Table.Cell colspan={columns.length} class="h-24 text-center">No results. That might be bad.</Table.Cell>
+                        <Table.Cell colspan={columns.length} class="h-24 text-center"
+                            >No results. That might be bad.</Table.Cell
+                        >
                     </Table.Row>
                 {/each}
             </Table.Body>

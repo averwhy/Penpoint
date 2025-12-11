@@ -31,7 +31,7 @@
             icon: CalendarIcon,
         },
         {
-            title: "Your Club",
+            title: "Your Clubs",
             url: "/app/club",
             icon: SearchIcon,
         },
@@ -58,12 +58,12 @@
     let adminItems = [
         {
             title: "Semesters",
-            url: "/app/semesters",
+            url: "/app/manage/semesters",
             icon: CalendarCog,
         },
         {
             title: "User Management",
-            url: "",
+            url: "/app/manage/users",
             icon: UserCog,
         },
         {

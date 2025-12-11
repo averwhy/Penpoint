@@ -55,9 +55,11 @@
                             <Card.Title class="text-lg">
                                 {entry.event.name}
                             </Card.Title>
-                            <ClubCard title={entry.club_acronym ?? entry.club_name} id={entry.event.club_id} />
+                            <span class="text-md">
+                            <ClubCard title={entry.club_acronym ?? entry.club_name} id={entry.event.club_id}/>
+                            </span>
                         </Card.Header>
-                        <Card.Content class="text-sm">
+                        <Card.Content class="text-sm pt-1">
                             {formatTime(entry.event.starts_at)} to {formatTime(entry.event.ends_at)} ({humanizeDuration(
                                 entry.event.ends_at.getTime() - entry.event.starts_at.getTime(),
                             )})
