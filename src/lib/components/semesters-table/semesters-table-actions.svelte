@@ -1,7 +1,8 @@
 <script lang="ts">
     import EllipsisIcon from "@lucide/svelte/icons/ellipsis";
-    import { Button } from "$lib/components/ui/button/index.js";
-    import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
+    import { Button } from "$lib/components/ui/button/index";
+    import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index";
+    import * as Dialog from "$lib/components/ui/dialog/index";
     import { toast } from "svelte-sonner";
 
     let { id }: { id: string } = $props();
@@ -26,6 +27,5 @@
         </DropdownMenu.Group>
         <DropdownMenu.Separator />
         <DropdownMenu.Item>View semester</DropdownMenu.Item>
-        <DropdownMenu.Item class="text-destructive">Delete semester</DropdownMenu.Item>
     </DropdownMenu.Content>
 </DropdownMenu.Root>

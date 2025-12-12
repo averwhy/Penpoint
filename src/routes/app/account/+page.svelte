@@ -47,7 +47,7 @@
                         <Badge variant="outline">{club.acronym}</Badge>
                         {#if club.created_at}
                             <span class="text-xs text-muted-foreground"
-                                >Joined {new Date(userClubs[0].created_at).toLocaleDateString()}</span
+                                >Created {new Date(userClubs[0].created_at).toLocaleDateString()}</span
                             >
                         {/if}
                     </div>
@@ -60,7 +60,7 @@
         <Card.Footer class="flex flex-col gap-4 sm:flex-row sm:justify-between">
             <div class="flex items-center gap-2 text-xs text-muted-foreground">
                 <span>Account Role:</span>
-                <Badge variant="outline">{user.role ?? "member"}</Badge>
+                <Badge variant="outline">{user.role ?? "club"}</Badge>
             </div>
             <div class="flex items-center gap-2 sm:ml-auto justify-end">
                 <form {...logout.for("account")}>

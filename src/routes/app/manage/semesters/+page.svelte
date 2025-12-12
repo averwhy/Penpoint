@@ -38,7 +38,7 @@
 </script>
 
 <div class="flex pt-10 mx-10">
-    <Button variant="success" class="ml-auto" href="/app/semesters/new">Create New Semester</Button>
+    <Button variant="success" class="ml-auto" href="/app/manage/semesters/new">Create New Semester</Button>
 </div>
 
 <div class="justify-center mx-10">

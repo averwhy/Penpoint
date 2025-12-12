@@ -25,7 +25,9 @@
             }}>Copy event ID</DropdownMenu.Item>
         </DropdownMenu.Group>
         <DropdownMenu.Separator />
-        <DropdownMenu.Item>View event</DropdownMenu.Item>
+        <DropdownMenu.Item onclick={() => {
+            window.location.href = `/app/events/${id}`;
+        }}>View event</DropdownMenu.Item>
         <DropdownMenu.Item class="text-destructive">Delete event</DropdownMenu.Item>
     </DropdownMenu.Content>
 </DropdownMenu.Root>
