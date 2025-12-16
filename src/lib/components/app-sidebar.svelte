@@ -50,7 +50,7 @@
         },
         {
             title: "Event Requests",
-            url: "",
+            url: "/app/event-requests",
             icon: CalendarCheck,
         },
     ];
@@ -68,15 +68,25 @@
         },
         {
             title: "Club Management",
-            url: "",
+            url: "/app/manage/clubs",
             icon: UsersIcon,
         },
         {
             title: "Event Management",
-            url: "",
+            url: "/app/manage/events",
             icon: CalendarCog,
         },
     ];
+
+    function pageMatchesItem(itemUrl: string, pathname: string) {
+        return itemUrl === "/app"
+            ? page.url.pathname === "/app"
+                ? "bg-background"
+                : ""
+            : page.url.pathname.startsWith(itemUrl)
+              ? "bg-background"
+              : "";
+    }
 </script>
 
 <Sidebar.Root variant="floating" collapsible="icon" class="pt-19">
@@ -87,15 +97,7 @@
                 <Sidebar.Menu>
                     {#each items as item (item.title)}
                         <Sidebar.MenuItem>
-                            <Sidebar.MenuButton
-                                class={item.url === "/app"
-                                    ? page.url.pathname === "/app"
-                                        ? "bg-background"
-                                        : ""
-                                    : page.url.pathname.startsWith(item.url)
-                                      ? "bg-background"
-                                      : ""}
-                            >
+                            <Sidebar.MenuButton class={pageMatchesItem(item.url, page.url.pathname)}>
                                 {#snippet child({ props })}
                                     <a href={item.url} {...props}>
                                         <item.icon />
@@ -113,7 +115,7 @@
                     <Sidebar.Menu>
                         {#each sgaItems as item (item.title)}
                             <Sidebar.MenuItem>
-                                <Sidebar.MenuButton>
+                                <Sidebar.MenuButton class={pageMatchesItem(item.url, page.url.pathname)}>
                                     {#snippet child({ props })}
                                         <a href={item.url} {...props}>
                                             <item.icon />
@@ -132,7 +134,7 @@
                     <Sidebar.Menu>
                         {#each adminItems as item (item.title)}
                             <Sidebar.MenuItem>
-                                <Sidebar.MenuButton>
+                                <Sidebar.MenuButton class={pageMatchesItem(item.url, page.url.pathname)}>
                                     {#snippet child({ props })}
                                         <a href={item.url} {...props}>
                                             <item.icon />

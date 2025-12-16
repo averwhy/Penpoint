@@ -1,7 +1,7 @@
 <script lang="ts">
     import EllipsisIcon from "@lucide/svelte/icons/ellipsis";
-    import { Button } from "$lib/components/ui/button/index.js";
-    import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
+    import { Button } from "$lib/components/ui/button/index";
+    import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index";
     import { toast } from "svelte-sonner";
 
     let { id }: { id: string } = $props();
@@ -29,8 +29,14 @@
         <DropdownMenu.Separator />
         <DropdownMenu.Item
             onclick={() => {
-                window.location.href = `/app/events/${id}`;
+                window.location.href = `/app/manage/events/${id}`;
             }}>View event</DropdownMenu.Item
+        >
+        <DropdownMenu.Item
+            variant="destructive"
+            onclick={() => {
+                window.location.href = `/app/manage/events/${id}`;
+            }}>Delete event</DropdownMenu.Item
         >
     </DropdownMenu.Content>
 </DropdownMenu.Root>

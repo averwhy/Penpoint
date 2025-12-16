@@ -15,10 +15,11 @@
     import { createRawSnippet } from "svelte";
     import DataTableCheckbox from "$lib/components/events-table/events-table-checkbox.svelte";
     import DataTableActions from "$lib/components/events-table/events-table-actions.svelte";
-    import * as Table from "$lib/components/ui/table/index.js";
-    import { Button } from "$lib/components/ui/button/index.js";
-    import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
-    import { Input } from "$lib/components/ui/input/index.js";
+    import ManageableDataTableActions from "$lib/components/events-table/manageable-events-table-actions.svelte";
+    import * as Table from "$lib/components/ui/table/index";
+    import { Button } from "$lib/components/ui/button/index";
+    import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index";
+    import { Input } from "$lib/components/ui/input/index";
     import {
         FlexRender,
         createSvelteTable,
@@ -30,6 +31,7 @@
 
     interface Props {
         data: Event[];
+        toggleAdmin?: boolean;
     }
 
     type EventColumn = {
@@ -41,7 +43,7 @@
         ends_at: Date;
     };
 
-    const { data }: Props = $props();
+    const { data, toggleAdmin: showAdminActions }: Props = $props();
 
     const eventsData = $derived(
         data.map(event => ({
@@ -80,7 +82,8 @@
                 const nameSnippet = createRawSnippet<[{ name: string }]>(getName => {
                     const { name } = getName();
                     return {
-                        render: () => `<div class="capitalize hover:underline"><a href="/app/events/${row.original.id}">${name}</a></div>`,
+                        render: () =>
+                            `<div class="capitalize hover:underline"><a href="/app/${showAdminActions ? 'manage/' : ''}events/${row.original.id}">${name}</a></div>`,
                     };
                 });
                 return renderSnippet(nameSnippet, {
@@ -137,7 +140,11 @@
         {
             id: "actions",
             enableHiding: false,
-            cell: ({ row }) => renderComponent(DataTableActions, { id: row.original.id }),
+            // if showAdminActions is true, use ManageableDataTableActions, else use DataTableActions
+            cell: ({ row }) =>
+                renderComponent(showAdminActions ? ManageableDataTableActions : DataTableActions, {
+                    id: row.original.id,
+                }),
         },
     ];
 

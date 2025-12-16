@@ -75,7 +75,7 @@
                                 {/if}
                             </div>
                             <div class="text-foreground">
-                                <ClubCard title={club.acronym ?? club.name} club={club} />
+                                <ClubCard title={club.acronym ?? club.name} {club} />
                             </div>
                         </div>
 
@@ -95,7 +95,7 @@
                                     <ClockIcon class="h-5 w-5 text-muted-foreground" />
                                     <div>
                                         <p class="font-medium">
-                                            {formatTime(event.starts_at)} – {formatTime(event.ends_at)}
+                                            {formatTime(event.starts_at)} to {formatTime(event.ends_at)}
                                         </p>
                                         <p class="text-sm text-muted-foreground">{duration}</p>
                                     </div>
@@ -114,17 +114,21 @@
                                 </div>
                             </Card.Content>
                         </Card.Root>
-
                         <div class="text-sm text-muted-foreground">
                             Created <DateWithRelativeTooltip date={event.created_at} />
                         </div>
-                        <!-- If they have perms to edit then we'll show the edit button -->
-                        {#if data.userClubs.some((c => c.id === event.club_id))}
-                            <div class="flex justify-end gap-4">
-                                <!-- TODO: implement the button -->
-                                <Button variant="secondary">Edit Event</Button>
-                            </div>
-                        {/if}
+                        <div class="flex justify-end gap-4">
+                            <Button variant="secondary">Change Date</Button>
+                            <Button variant="secondary">Change Times</Button>
+                            <Button variant="secondary">Change Points</Button>
+                            <Button variant="secondary">Change Location</Button>
+                            {#if hasFlyer && event.image_filename}
+                                <Button variant="secondary">Change Flyer</Button>
+                            {:else}
+                                <Button variant="secondary">Add Flyer</Button>
+                            {/if}
+                            <Button variant="destructive">Delete Event</Button>
+                        </div>
                     </div>
                 </div>
             </Tabs.Content>

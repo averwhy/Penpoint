@@ -10,7 +10,13 @@
         <h1>
             Something went wrong.<br />
             {page.error?.message} <br />
-            Try going <a href="/" class="text-blue-400 hover:text-blue-600">home</a>.
+            <!-- if we're not at the top level, offer the ability to go back one level -->
+            {#if page.url.pathname !== '/'}
+                Try going <a href="." class="text-blue-400 hover:text-blue-600">back</a>
+                (or, <a href="/" class="text-blue-400 hover:text-blue-600">home</a>).
+            {:else}
+                Try going <a href="/" class="text-blue-400 hover:text-blue-600">home</a>.
+            {/if}
         </h1>
     </div>
 </div>

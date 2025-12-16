@@ -45,12 +45,10 @@
         const start = new Date(startDate.year, startDate.month - 1, startDate.day);
         const end = new Date(endDate.year, endDate.month - 1, endDate.day);
 
-        // Start date should never be after end date
         if (start > end) {
             return "Start date cannot be after end date";
         }
 
-        // Duration should never be negative
         if (end.getTime() - start.getTime() < 0) {
             return "Duration cannot be negative";
         }
@@ -62,11 +60,9 @@
 
         // Fall semester (A3) validation
         if (semesterCode === "A3") {
-            // Start date should be in August (8) or September (9)
             if (startDate.month !== 8 && startDate.month !== 9) {
                 return "Fall semester start date should be in August or September";
             }
-            // End date should be in December (12)
             if (endDate.month !== 12) {
                 return "Fall semester end date should be in December";
             }
@@ -74,11 +70,9 @@
 
         // Spring semester (A1) validation
         if (semesterCode === "A1") {
-            // Start date should be in January (1)
             if (startDate.month !== 1) {
                 return "Spring semester start date should be in January";
             }
-            // End date should be in April (4) or May (5)
             if (endDate.month !== 4 && endDate.month !== 5) {
                 return "Spring semester end date should be in April or May";
             }
@@ -87,7 +81,6 @@
         return "";
     });
 
-    // Calculate duration
     let durationText = $derived.by(() => {
         if (!startDate || !endDate) return "";
         const start = new Date(startDate.year, startDate.month - 1, startDate.day);
