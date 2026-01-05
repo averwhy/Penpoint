@@ -1,5 +1,5 @@
 import { getFirstClubFromUser } from "$lib/functions/club.remote";
-import { getMostRecentSemesterIncludingActive, sql } from "$lib/server/postgres";
+import { getActiveSemester, getLastSemester, sql } from "$lib/server/postgres";
 import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
@@ -7,7 +7,21 @@ export const load: PageServerLoad = async ({ locals }) => {
     if (!locals.user) redirect(303, "/login");
 
     const userClub = await getFirstClubFromUser(locals.user.id);
-    const semester = await getMostRecentSemesterIncludingActive();
+
+    // Get active semester, or fall back to last semester if none active
+    const semester = await getActiveSemester(false).catch(() => undefined) ?? await getLastSemester();
+
+    if (!semester) {
+        // No semester at all - return minimal data
+        return {
+            greeting: "Welcome, ",
+            club: undefined,
+            platform: {
+                semester: { eventsHosted: 0, pointsEarned: 0, attendanceCount: 0, upcomingEvents: 0, uniqueClubsHostingEvents: 0 },
+                allTime: { eventsHosted: 0, pointsEarned: 0, attendanceCount: 0 },
+            },
+        };
+    }
 
     // Platform-wide statistics
     const [
@@ -66,19 +80,19 @@ export const load: PageServerLoad = async ({ locals }) => {
 
     let clubStats:
         | {
-              semester: {
-                  eventsHosted: number;
-                  pointsEarned: number;
-                  attendanceCount: number;
-                  upcomingEvents: number;
-              };
-              allTime: {
-                  eventsHosted: number;
-                  pointsEarned: number;
-                  attendanceCount: number;
-              };
-              members: number;
-          }
+            semester: {
+                eventsHosted: number;
+                pointsEarned: number;
+                attendanceCount: number;
+                upcomingEvents: number;
+            };
+            allTime: {
+                eventsHosted: number;
+                pointsEarned: number;
+                attendanceCount: number;
+            };
+            members: number;
+        }
         | undefined;
 
     if (userClub) {

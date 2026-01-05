@@ -56,7 +56,7 @@
                                 {entry.event.name}
                             </Card.Title>
                             <span class="text-md">
-                            <ClubCard title={entry.club_acronym ?? entry.club_name} id={entry.event.club_id}/>
+                            <ClubCard title={entry.club_acronym ?? entry.club_name} club={entry.event.club_id}/>
                             </span>
                         </Card.Header>
                         <Card.Content class="text-sm pt-1">

@@ -23,7 +23,7 @@ export const sql = async (...args: Parameters<typeof db>) => {
     }
 };
 
-export async function getMostRecentSemesterIncludingActive(): Promise<Semester> {
+export async function getActiveSemester(getNextIfNone = false): Promise<Semester | undefined> {
     const result = await sql`
         SELECT *
         FROM semesters
@@ -32,16 +32,54 @@ export async function getMostRecentSemesterIncludingActive(): Promise<Semester> 
         LIMIT 1
     `;
 
-    if (result.count === 0) {
-        // No active semester, get the most recently ended one
+    if (result.count === 0 && getNextIfNone) {
+        // No active semester, get the next one
         const fallback = await sql`
             SELECT *
             FROM semesters
-            WHERE ends < NOW()
-            ORDER BY ends DESC
+            WHERE starts > NOW()
+            ORDER BY starts ASC
             LIMIT 1
         `;
         return Semester.parse(fallback[0]);
+    }
+    else if (result.count !== 0) {
+        console.log("\n\n\n\n\nhi");
+        return Semester.parse(result[0]);
+    }
+    else {
+        return undefined;
+    }
+}
+
+export async function getNextSemester(): Promise<Semester | undefined> {
+    const result = await sql`
+        SELECT *
+        FROM semesters
+        WHERE starts > NOW()
+        ORDER BY starts ASC
+        LIMIT 1
+    `;
+
+    if (result.count === 0) {
+        return undefined;
+    }
+
+    return Semester.parse(result[0]);
+}
+
+export async function getLastSemester(): Promise<Semester | undefined> {
+    // Get the most recent semester that has ended
+    const result = await sql`
+        SELECT *
+        FROM semesters
+        WHERE ends < NOW()
+        ORDER BY ends DESC
+        LIMIT 1
+    `;
+
+    if (result.count === 0) {
+        return undefined;
     }
 
     return Semester.parse(result[0]);

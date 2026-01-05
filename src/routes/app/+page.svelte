@@ -19,7 +19,7 @@
     <div class="flex items-center justify-start gap-4 pt-20 mx-[10%]">
         <div class="flex justify-between">
             <div class="self-center w-40">
-                <h1 class="text-3xl font-semibold pr-15 self-center">Club</h1>
+                <h1 class="text-3xl font-semibold pr-15 self-center"><a href="/app/club">Club</a></h1>
             </div>
             <div class="flex gap-4 flex-1">
                 <Card.Root class="flex-1">
@@ -97,7 +97,7 @@
     <div class="flex items-center justify-start gap-4 pt-10 mx-[10%]">
         <div class="flex justify-between">
             <div class="self-center w-40">
-                <h1 class="text-3xl font-semibold pr-15 self-center">Events</h1>
+                <h1 class="text-3xl font-semibold pr-15 self-center"><a href="/app/events">Events</a></h1>
             </div>
             <div class="flex gap-4 flex-1">
                 <Card.Root class="flex-1">

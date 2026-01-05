@@ -1,17 +1,60 @@
 import type { Semester } from "$lib/models";
-import { getMostRecentSemesterIncludingActive, sql } from "$lib/server/postgres";
+import { getActiveSemester, getNextSemester, getLastSemester, sql } from "$lib/server/postgres";
 import type { PageServerLoad } from "./$types";
 
+type SemesterType = "active" | "awaiting" | "past";
+
 export const load: PageServerLoad = async () => {
-    let semester: Semester;
-    try {
-        semester = await getMostRecentSemesterIncludingActive();
-    }
-    catch {
-        return { pointEarners: undefined, pointsEarned: undefined, upcomingEvents: undefined, daysLeft: undefined };
+    const now = new Date();
+
+    // Check for active semester first
+    const active = await getActiveSemester(false).catch(() => undefined);
+    if (active) {
+        const stats = await getSemesterStats(active);
+        return {
+            stats: {
+                type: "active" as SemesterType,
+                ...stats,
+                daysLeft: Math.ceil((new Date(active.ends).getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
+            },
+        };
     }
 
-    const [pointEarnersResult, pointsEarnedResult, upcomingEventsResult] = await Promise.all([
+    // No active semester - check for future semester
+    const future = await getNextSemester();
+    if (future) {
+        // Show past semester stats with countdown to future semester
+        const past = await getLastSemester();
+        if (past) {
+            const stats = await getSemesterStats(past);
+            return {
+                stats: {
+                    type: "awaiting" as SemesterType,
+                    ...stats,
+                    daysLeft: Math.ceil((new Date(future.starts).getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
+                },
+            };
+        }
+    }
+
+    // Fallback to past semester only (no future semester exists)
+    const past = await getLastSemester();
+    if (past) {
+        const stats = await getSemesterStats(past);
+        return {
+            stats: {
+                type: "past" as SemesterType,
+                ...stats,
+                daysLeft: 0,
+            },
+        };
+    }
+
+    return { stats: null };
+};
+
+async function getSemesterStats(semester: Semester) {
+    const [pointEarnersResult, pointsEarnedResult, upcomingEventsResult, totalEventsResult] = await Promise.all([
         sql`
             SELECT COUNT(DISTINCT t.student_id)
             FROM taps t
@@ -27,17 +70,20 @@ export const load: PageServerLoad = async () => {
         sql`
             SELECT COUNT(*)
             FROM events
-            WHERE starts_at > now() AND starts_at < ${semester.ends}
+            WHERE starts_at > now() AND semester_id = ${semester.id}
+        `,
+        sql`
+            SELECT COUNT(*)
+            FROM events
+            WHERE semester_id = ${semester.id}
         `,
     ]);
 
-    const pointEarners = Number(pointEarnersResult[0]?.count ?? 0);
-    const pointsEarned = Number(pointsEarnedResult[0]?.total_points ?? 0);
-    const upcomingEvents = Number(upcomingEventsResult[0]?.count ?? 0);
-
-    const now = new Date();
-    const semesterEnd = new Date(semester.ends);
-    const daysLeft = Math.ceil((semesterEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-
-    return { pointEarners, pointsEarned, upcomingEvents, daysLeft };
-};
+    return {
+        semesterName: semester.code,
+        pointEarners: Number(pointEarnersResult[0]?.count ?? 0),
+        pointsEarned: Number(pointsEarnedResult[0]?.total_points ?? 0),
+        upcomingEvents: Number(upcomingEventsResult[0]?.count ?? 0),
+        totalEvents: Number(totalEventsResult[0]?.count ?? 0),
+    };
+}

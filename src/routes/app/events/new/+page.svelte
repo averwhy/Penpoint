@@ -21,7 +21,7 @@
     import { enhance } from "$app/forms";
 
     const { data }: PageProps = $props();
-    const { user, userClub, semesters } = data;
+    const { user, userClubs, semesters } = data;
 
     // generate a fresh UUID on refresh to prevent duplicate event submissions
     const newEventId = crypto.randomUUID();
@@ -39,6 +39,8 @@
         { label: "Green Center", value: "Green Center" },
         { label: "Paul Hall", value: "Paul Hall" },
         { label: "ACC", value: "ACC" },
+        { label: "Robert Frost Green Space", value: "Robert Frost Green Space" },
+        { label: "Other", value: "Other" },
     ];
 
     // Form state
@@ -102,7 +104,7 @@
             return false;
         }
 
-        if (userClub === undefined) {
+        if (userClubs.length === 0) {
             toast.error("You must be part of a club to create an event! Contact SGA for help");
             return false;
         }
@@ -115,16 +117,17 @@
         if (eventFlyer === null) {
             toast.error("Please upload a flyer for the event");
             return false;
-        }
+        } 
+        else {
+            if (eventFlyer.size > 5 * 1024 * 1024) {
+                toast.error("Flyer file size exceeds the maximum limit of 5MB");
+                return false;
+            }
 
-        if (eventFlyer.size > 5 * 1024 * 1024) {
-            toast.error("Flyer file size exceeds the maximum limit of 5MB");
-            return false;
-        }
-
-        if (!["image/png", "image/jpg", "image/jpeg"].includes(eventFlyer.type)) {
-            toast.error("Invalid flyer file type. Please upload a PNG, JPG, or JPEG image");
-            return false;
+            if (!["image/png", "image/jpg", "image/jpeg"].includes(eventFlyer.type)) {
+                toast.error("Invalid flyer file type. Please upload a PNG, JPG, or JPEG image");
+                return false;
+            }
         }
 
         return true;
@@ -163,7 +166,7 @@
         >
             <!-- Hidden fields for form data -->
             <input type="hidden" name="id" value={newEventId} />
-            <input type="hidden" name="clubId" value={userClub?.id ?? ""} />
+            <input type="hidden" name="clubId" value={userClubs[0]?.id ?? ""} />
             <input type="hidden" name="semesterId" value={selectedSemester?.id ?? ""} />
             <input type="hidden" name="building" value={selectedBuilding} />
             <input type="hidden" name="startDateTime" value={convertToDate(startsAt, eventDate)?.toISOString() ?? ""} />
@@ -319,7 +322,6 @@
                     <Input
                         type="file"
                         name="flyer"
-                        required
                         accept="image/png,image/jpg,image/jpeg"
                         onchange={e => {
                             const input = e.currentTarget as HTMLInputElement;

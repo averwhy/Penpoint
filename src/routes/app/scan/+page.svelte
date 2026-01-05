@@ -146,16 +146,26 @@
         >
             <div class="flex flex-col gap-4">
                 <div>
-                    <Select.Root type="single" bind:value={selectedEvent}>
+                    <Select.Root type="single" bind:value={selectedEvent} disabled={data.noActiveSemester}>
                         <Select.Trigger class="w-full bg-primary">
-                            {eventName}
+                            {data.noActiveSemester ? "No semester active" : eventName}
                         </Select.Trigger>
                         <Select.Content>
-                            {#each data.events as event (event.id)}
-                                <Select.Item value={event.id} label={event.name}>
-                                    {event.name}
+                            {#if data.noActiveSemester}
+                                <Select.Item value="" label="No semester active" disabled>
+                                    No semester active
                                 </Select.Item>
-                            {/each}
+                            {:else if data.events.length === 0}
+                                <Select.Item value="" label="No events available" disabled>
+                                    No events available
+                                </Select.Item>
+                            {:else}
+                                {#each data.events as event (event.id)}
+                                    <Select.Item value={event.id} label={event.name}>
+                                        {event.name}
+                                    </Select.Item>
+                                {/each}
+                            {/if}
                         </Select.Content>
                     </Select.Root>
                     <input {...tap.fields.event_id.as("text")} value={selectedEvent} hidden />

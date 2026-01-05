@@ -9,11 +9,25 @@
     import CampSNHU from "$lib/assets/CampSNHU.jpg";
 
     const { data }: PageProps = $props();
-    const { pointEarners, pointsEarned, upcomingEvents, daysLeft } = data;
+    const { stats } = data;
 
-    if (!pointEarners && !pointsEarned && !upcomingEvents && !daysLeft) {
+    if (!stats) {
         toast.error("Failed to load Penmen Pride stats. Please try again later.");
     }
+
+    // Dynamic labels based on semester type
+    const isActive = $derived(stats?.type === "active");
+    const studentsLabel = $derived(isActive ? "Students earning points" : "Students who earned points last semester");
+    const eventsLabel = $derived(isActive ? "Upcoming events" : "Events last semester");
+    const eventsValue = $derived(isActive ? stats?.upcomingEvents : stats?.totalEvents);
+    const pointsLabel = $derived(isActive ? "Points earned" : "Points earned last semester");
+    const daysLabel = $derived(
+        stats?.type === "active"
+            ? "Days left to earn points"
+            : stats?.type === "awaiting"
+              ? "Days until next semester"
+              : "Semester has ended",
+    );
 </script>
 
 <div class="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-4">
@@ -28,8 +42,8 @@
     <div class="grid grid-cols-2 gap-x-3 gap-y-3">
         <Card.Root>
             <Card.Content class="text-5xl">
-                {#if pointEarners !== undefined}
-                    <Countup target={pointEarners} duration={2} />
+                {#if stats}
+                    <Countup target={stats.pointEarners} duration={2} />
                 {:else}
                     <Tooltip.Provider>
                         <Tooltip.Root>
@@ -41,12 +55,12 @@
                     </Tooltip.Provider>
                 {/if}
             </Card.Content>
-            <Card.Footer class="text-xl">Students earning points</Card.Footer>
+            <Card.Footer class="text-xl">{studentsLabel}</Card.Footer>
         </Card.Root>
         <Card.Root>
             <Card.Content class="text-5xl">
-                {#if pointsEarned !== undefined}
-                    <Countup target={pointsEarned} duration={3} />
+                {#if stats}
+                    <Countup target={stats.pointsEarned} duration={3} />
                 {:else}
                     <Tooltip.Provider>
                         <Tooltip.Root>
@@ -58,12 +72,12 @@
                     </Tooltip.Provider>
                 {/if}
             </Card.Content>
-            <Card.Footer class="text-xl">Points earned</Card.Footer>
+            <Card.Footer class="text-xl">{pointsLabel}</Card.Footer>
         </Card.Root>
         <Card.Root>
             <Card.Content class="text-5xl">
-                {#if upcomingEvents !== undefined}
-                    <Countup target={upcomingEvents} duration={3} />
+                {#if stats}
+                    <Countup target={eventsValue ?? 0} duration={3} />
                 {:else}
                     <Tooltip.Provider>
                         <Tooltip.Root>
@@ -75,12 +89,12 @@
                     </Tooltip.Provider>
                 {/if}
             </Card.Content>
-            <Card.Footer class="text-xl">Upcoming events</Card.Footer>
+            <Card.Footer class="text-xl">{eventsLabel}</Card.Footer>
         </Card.Root>
         <Card.Root>
             <Card.Content class="text-5xl">
-                {#if daysLeft !== undefined}
-                    <Countup target={daysLeft} duration={3} />
+                {#if stats}
+                    <Countup target={stats.daysLeft} duration={3} />
                 {:else}
                     <Tooltip.Provider>
                         <Tooltip.Root>
@@ -92,7 +106,7 @@
                     </Tooltip.Provider>
                 {/if}
             </Card.Content>
-            <Card.Footer class="text-xl">Days left to earn points</Card.Footer>
+            <Card.Footer class="text-xl">{daysLabel}</Card.Footer>
         </Card.Root>
     </div>
     <Accordion.Root type="multiple">

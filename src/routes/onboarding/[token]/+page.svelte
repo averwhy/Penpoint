@@ -48,7 +48,7 @@
                 <Field.Set class="w-full">
                     <Field.Group>
                         <Field.Field>
-                            {#each setPassword.fields._password.issues() as issue}
+                            {#each setPassword.fields._password.issues() ?? [] as issue}
                                 <p class="text-red-500">{issue.message}</p>
                             {/each}
                             <Input

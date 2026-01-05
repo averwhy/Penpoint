@@ -1,13 +1,15 @@
 import type { PageServerLoad } from "./$types";
 import type { Semester, Event } from "$lib/models";
-import { getMostRecentSemesterIncludingActive, sql } from "$lib/server/postgres";
+import { getActiveSemester, sql } from "$lib/server/postgres";
+import { error } from "@sveltejs/kit";
 import { existsSync } from "fs";
 import path from "path";
 
 const uploadsDir = path.join(process.cwd(), "uploads", "events");
 
-export const load: PageServerLoad = async () => {    
-    const semester: Semester = await getMostRecentSemesterIncludingActive();
+export const load: PageServerLoad = async () => {
+    const semester = await getActiveSemester(true);
+    if (!semester) { error(404, "No active semester or future semester found"); }
     const semesterEnd = new Date(semester.ends);
 
     const result = await sql`
@@ -32,7 +34,7 @@ export const load: PageServerLoad = async () => {
         AND e.starts_at < ${semesterEnd}
         ORDER BY e.starts_at
     `;
-    
+
     const events = result.map(row => {
         // Check if flyer file exists
         let hasFlyer = false;

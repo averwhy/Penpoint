@@ -45,12 +45,12 @@
         },
         {
             title: "New User Requests",
-            url: "/app/new-user-requests",
+            url: "/app/requests/users",
             icon: AddUser,
         },
         {
             title: "Event Requests",
-            url: "/app/event-requests",
+            url: "/app/requests/events",
             icon: CalendarCheck,
         },
     ];

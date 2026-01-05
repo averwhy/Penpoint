@@ -118,6 +118,13 @@ export const Event = z.object({
 });
 export type Event = z.infer<typeof Event>;
 
+export const EventRequest = z.object({
+    id: z.uuid(),
+    event_id: z.uuid(),
+    special_requests: z.string().max(2000).nullable(),
+});
+export type EventRequest = z.infer<typeof EventRequest>;
+
 export const Tap = z.object({
     id: z.uuid(),
     student_id: StudentId,

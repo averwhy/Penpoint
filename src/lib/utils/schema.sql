@@ -71,6 +71,12 @@ CREATE TABLE IF NOT EXISTS events (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE TABLE event_requests (
+    id UUID PRIMARY KEY default uuid_generate_v4(),
+    event_id UUID REFERENCES events(id),
+    special_requests TEXT
+)
+
 CREATE TABLE IF NOT EXISTS taps (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     student_id VARCHAR(7) REFERENCES students(student_id),
