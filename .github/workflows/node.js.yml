@@ -28,3 +28,9 @@ jobs:
     
     - name: Build project
       run: bun run build
+      env:
+        DATABASE_URL: postgres://placeholder:placeholder@localhost:5432/placeholder
+        JWT_ACCESS_SECRET: placeholder_access_secret_min_32_chars_long
+        JWT_ONBOARDING_SECRET: placeholder_onboarding_secret_min_32_chars
+        JWT_RESET_PASSWORD_SECRET: placeholder_reset_password_secret_min_32
+        NODE_ENV: production
