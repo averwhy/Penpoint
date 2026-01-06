@@ -7,6 +7,7 @@
     import { Tap } from "$lib/models";
     import { toast } from "svelte-sonner";
     import type { PageProps } from "./$types";
+    import EventSelector from "$lib/components/event-selector.svelte";
 
     interface SwipeRecord {
         studentId: string;
@@ -146,28 +147,13 @@
         >
             <div class="flex flex-col gap-4">
                 <div>
-                    <Select.Root type="single" bind:value={selectedEvent} disabled={data.noActiveSemester}>
-                        <Select.Trigger class="w-full bg-primary">
-                            {data.noActiveSemester ? "No semester active" : eventName}
-                        </Select.Trigger>
-                        <Select.Content>
-                            {#if data.noActiveSemester}
-                                <Select.Item value="" label="No semester active" disabled>
-                                    No semester active
-                                </Select.Item>
-                            {:else if data.events.length === 0}
-                                <Select.Item value="" label="No events available" disabled>
-                                    No events available
-                                </Select.Item>
-                            {:else}
-                                {#each data.events as event (event.id)}
-                                    <Select.Item value={event.id} label={event.name}>
-                                        {event.name}
-                                    </Select.Item>
-                                {/each}
-                            {/if}
-                        </Select.Content>
-                    </Select.Root>
+                    <EventSelector
+                        bind:value={selectedEvent}
+                        events={data.events}
+                        placeholder="Select an event…"
+                        widthClass="w-full bg-secondary text-muted-foreground"
+                        selectActive={true}
+                    />
                     <input {...tap.fields.event_id.as("text")} value={selectedEvent} hidden />
                 </div>
                 <Input class="w-full bg-primary" placeholder="Student ID" {...tap.fields.student_id.as("text")} />

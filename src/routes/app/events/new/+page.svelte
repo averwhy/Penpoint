@@ -53,6 +53,11 @@
     let specialRequests = $state("");
     let selectedSemester = $state<(typeof data.semesters)[number] | undefined>(undefined);
 
+    // we don't want people to create events for semesters that have ended
+    let canCreateNewEvents = $derived(
+        !selectedSemester || new Date(selectedSemester.ends) >= new Date()
+    );
+
     // Popover states
     let buildingOpen = $state(false);
     let dateOpen = $state(false);
@@ -132,6 +137,12 @@
 
         return true;
     }
+
+    $effect(() => {
+        if (!canCreateNewEvents) {
+            toast.error("The selected semester has ended. You cannot create new events for it.");
+        }
+    });
 </script>
 
 <div class="flex justify-center pt-10 px-4">
@@ -182,6 +193,7 @@
                         required
                         placeholder="Enter event title"
                         class=""
+                        disabled={!canCreateNewEvents}
                     />
                 </div>
 
@@ -200,6 +212,7 @@
                                             role="combobox"
                                             aria-expanded={buildingOpen}
                                             class="w-full justify-between"
+                                            disabled={!canCreateNewEvents}
                                         >
                                             {selectedBuildingLabel ?? "Select building"}
                                             <ChevronsUpDownIcon class="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -244,6 +257,7 @@
                                             name="roomNumber"
                                             bind:value={roomNumber}
                                             placeholder="Room"
+                                            disabled={!canCreateNewEvents}
                                         />
                                     </Tooltip.Trigger>
                                     <Tooltip.Content>
@@ -269,6 +283,7 @@
                                         "w-full justify-start text-left font-normal",
                                         !eventDate && "text-muted-foreground",
                                     )}
+                                    disabled={!canCreateNewEvents}
                                 >
                                     <CalendarIcon class="mr-2 h-4 w-4" />
                                     {eventDate ? df.format(eventDate.toDate(getLocalTimeZone())) : "Pick a date"}
@@ -301,6 +316,7 @@
                             bind:value={startsAt}
                             step={60}
                             class="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                            disabled={!canCreateNewEvents}
                         />
                     </div>
                     <div class="space-y-2">
@@ -310,6 +326,7 @@
                             bind:value={endsAt}
                             step={60}
                             class="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                            disabled={!canCreateNewEvents}
                         />
                     </div>
                 </div>
@@ -327,6 +344,7 @@
                             const input = e.currentTarget as HTMLInputElement;
                             eventFlyer = input.files?.[0] ?? null;
                         }}
+                        disabled={!canCreateNewEvents}
                     />
                 </div>
                 <!-- Special Requests -->
@@ -338,12 +356,13 @@
                         bind:value={specialRequests}
                         placeholder="Different point value request? Specific location for senators scanning?"
                         rows={4}
+                        disabled={!canCreateNewEvents}
                     />
                 </div>
             </Card.Content>
             <Card.Footer class="flex justify-end gap-2">
                 <Button variant="default" href="/app/events">Cancel</Button>
-                <Button type="submit" variant="outline" disabled={pending}>
+                <Button type="submit" variant="outline" disabled={pending || !canCreateNewEvents}>
                     {pending ? "Creating..." : "Create Event"}
                 </Button>
             </Card.Footer>

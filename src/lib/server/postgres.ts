@@ -44,7 +44,6 @@ export async function getActiveSemester(getNextIfNone = false): Promise<Semester
         return Semester.parse(fallback[0]);
     }
     else if (result.count !== 0) {
-        console.log("\n\n\n\n\nhi");
         return Semester.parse(result[0]);
     }
     else {

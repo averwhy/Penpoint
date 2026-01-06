@@ -15,7 +15,7 @@
         toast.error("Failed to load Penmen Pride stats. Please try again later.");
     }
 
-    // Dynamic labels based on semester type
+    // dynamic labels based on semester status
     const isActive = $derived(stats?.type === "active");
     const studentsLabel = $derived(isActive ? "Students earning points" : "Students who earned points last semester");
     const eventsLabel = $derived(isActive ? "Upcoming events" : "Events last semester");
@@ -111,7 +111,7 @@
             <Card.Footer class="text-xl">{daysLabel}</Card.Footer>
         </Card.Root>
     </div>
-    <Accordion.Root type="multiple">
+    <Accordion.Root type="multiple" class="relative z-10 w-full max-w-2xl mt-8">
         <Accordion.Item value="item-1">
             <Accordion.Trigger>What's Penmen Pride?</Accordion.Trigger>
             <Accordion.Content>
@@ -128,6 +128,31 @@
                 <br />
                 a certain amount of points (usually 3). Just look for the Penmen Pride table or<br />SGA Senator with an
                 iPad to claim your points!
+            </Accordion.Content>
+        </Accordion.Item>
+        <Accordion.Item value="item-3">
+            <Accordion.Trigger>What can I do with my points?</Accordion.Trigger>
+            <Accordion.Content>
+                When the semester ends, the students with the most points will win prizes!<br />
+                Learn more about the point tiers and their prizes
+                <a href="https://snhusga.org/penmen-pride" class="text-blue-400 hover:text-blue-600">here.</a>
+            </Accordion.Content>
+        </Accordion.Item>
+        <Accordion.Item value="item-4">
+            <Accordion.Trigger>How can I check my points?</Accordion.Trigger>
+            <Accordion.Content>
+                Head to the points checking page
+                <a href="/points" class="text-blue-400 hover:text-blue-600">here</a>, and enter your student ID.
+            </Accordion.Content>
+        </Accordion.Item>
+        <Accordion.Item value="item-5">
+            <Accordion.Trigger>I have an event I want Penmen Pride to be at! How do I request it?</Accordion.Trigger>
+            <Accordion.Content>
+                As a club E-Board member, you can request an account
+                <a href="/register" class="text-blue-400 hover:text-blue-600">here</a>. After approval from SGA, you can
+                login
+                <a href="/login" class="text-blue-400 hover:text-blue-600">here</a> and create a new event. <br />
+                If you already have an account, just login and create a new event!
             </Accordion.Content>
         </Accordion.Item>
     </Accordion.Root>
