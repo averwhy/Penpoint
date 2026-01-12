@@ -13,11 +13,11 @@ CREATE TABLE IF NOT EXISTS students (
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     student_id VARCHAR(7) REFERENCES students(student_id),
-    email TEXT UNIQUE NOT NULL,
-    name TEXT,
+    email VARCHAR(64) UNIQUE NOT NULL,
+    name VARCHAR(64),
     role VARCHAR(10) NOT NULL DEFAULT 'unapproved', -- 'inactive', 'unapproved', 'blocked', 'club', 'sga', 'admin'
     pending BOOLEAN NOT NULL DEFAULT FALSE,
-    request_reason TEXT,
+    request_reason VARCHAR(256),
     requested_at TIMESTAMPTZ DEFAULT now(),
     password_hash TEXT,
     last_login TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -65,17 +65,12 @@ CREATE TABLE IF NOT EXISTS events (
     image_filename VARCHAR(64) UNIQUE,
     permalink VARCHAR(64) UNIQUE,
     approval_status VARCHAR(16) NOT NULL DEFAULT 'unapproved', -- 'unapproved', 'accepted', 'denied'
+    special_requests TEXT,
     starts_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     ends_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
-
-CREATE TABLE event_requests (
-    id UUID PRIMARY KEY default uuid_generate_v4(),
-    event_id UUID REFERENCES events(id),
-    special_requests TEXT
-)
 
 CREATE TABLE IF NOT EXISTS taps (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

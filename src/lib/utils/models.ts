@@ -44,13 +44,16 @@ export type Student = z.infer<typeof Student>;
 export const User = z.object({
     id: z.uuid(),
     student_id: z.string().length(7),
-    email: z.email(),
-    name: z.string(),
-    role: z.enum(["unapproved", "club", "sga", "admin"]),
-    request_reason: z.string(),
+    email: z.email().max(64),
+    name: z.string().max(64),
+    role: z.enum(["inactive", "unapproved", "blocked", "club", "sga", "admin"]),
+    pending: z.boolean(),
+    request_reason: z.string().max(256).nullable(),
+    requested_at: z.coerce.date(),
     last_login: z.coerce.date(),
     created_at: z.coerce.date(),
     updated_at: z.coerce.date(),
+    password_reset_last_requested_at: z.coerce.date().nullable(),
 });
 export type User = z.infer<typeof User>;
 
@@ -69,6 +72,7 @@ export const Club = z.object({
     name: z.string(),
     acronym: z.string(),
     governing_board: z.boolean(),
+    image_filename: z.string().max(64),
     created_at: z.coerce.date(),
     updated_at: z.coerce.date(),
 });
@@ -87,9 +91,15 @@ export type ClubUser = z.infer<typeof ClubUser>;
 
 export const Event = z.object({
     id: z.uuid(),
+    club_id: z.uuid(),
+    semester_id: z.uuid(),
     name: z.string(),
     location: z.string(),
     point_value: z.int(),
+    image_filename: z.string().max(64),
+    permalink: z.string().max(64),
+    approval_status: z.enum(["unapproved", "accepted", "denied"]),
+    special_requests: z.string().nullable(),
     starts_at: z.coerce.date(),
     ends_at: z.coerce.date(),
     created_at: z.coerce.date(),
@@ -99,9 +109,9 @@ export type Event = z.infer<typeof Event>;
 
 export const Tap = z.object({
     id: z.uuid(),
-    semester_id: z.uuid(),
     student_id: z.string().length(7),
     event_id: z.uuid(),
+    created_at: z.coerce.date()
 });
 export type Tap = z.infer<typeof Tap>;
 
