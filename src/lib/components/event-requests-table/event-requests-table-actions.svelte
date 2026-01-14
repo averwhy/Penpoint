@@ -47,15 +47,23 @@
             <DropdownMenu.Label>Actions</DropdownMenu.Label>
             <DropdownMenu.Item
                 onclick={() => {
-                    navigator.clipboard.writeText(requestId);
-                    toast.success("Request ID copied to clipboard");
-                }}>Copy request ID</DropdownMenu.Item
-            >
-            <DropdownMenu.Item
-                onclick={() => {
                     navigator.clipboard.writeText(eventId);
                     toast.success("Event ID copied to clipboard");
                 }}>Copy event ID</DropdownMenu.Item
+            >
+            <DropdownMenu.Item
+                variant="success"
+                onclick={() => {
+                    navigator.clipboard.writeText(eventId);
+                    toast.success("Event marked as accepted successfully");
+                }}>Quick accept</DropdownMenu.Item
+            >
+            <DropdownMenu.Item
+                variant="destructive"
+                onclick={() => {
+                    navigator.clipboard.writeText(eventId);
+                    toast.success("Event marked as denied successfully");
+                }}>Quick deny</DropdownMenu.Item
             >
         </DropdownMenu.Group>
         {#if specialRequests}

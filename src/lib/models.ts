@@ -47,14 +47,16 @@ export type Student = z.infer<typeof Student>;
 export const User = z.object({
     id: z.uuid(),
     student_id: StudentId,
-    email: z.email().max(100),
-    name: z.string().max(100),
+    email: z.email().max(64),
+    name: z.string().max(64),
     role: z.enum(["inactive", "unapproved", "blocked", "club", "sga", "admin"]),
     pending: z.boolean().default(false),
     request_reason: z.string().max(10000),
+    requested_at: z.coerce.date(),
     last_login: z.coerce.date(),
     created_at: z.coerce.date(),
     updated_at: z.coerce.date(),
+    password_reset_last_requested_at: z.coerce.date().nullable(),
 });
 export type User = z.infer<typeof User>;
 
@@ -83,7 +85,9 @@ export const Club = z.object({
     id: z.uuid(),
     name: z.string().max(100),
     acronym: z.string().max(100),
+    bio: z.string().max(300).nullable(),
     governing_board: z.boolean(),
+    university_office: z.boolean(),
     image_filename: z.string().max(64).nullable(),
     created_at: z.coerce.date(),
     updated_at: z.coerce.date(),
@@ -103,14 +107,15 @@ export type ClubUser = z.infer<typeof ClubUser>;
 
 export const Event = z.object({
     id: z.uuid(),
-    name: z.string().max(100),
-    location: z.string().max(100),
     club_id: z.uuid(),
     semester_id: z.uuid(),
+    name: z.string().max(64),
+    location: z.string(),
     point_value: z.int(),
     image_filename: z.string().max(64).nullable(),
     permalink: z.string().max(64).nullable(),
     approval_status: z.enum(["unapproved", "accepted", "denied"]),
+    special_requests: z.string().max(1024).nullable(),
     starts_at: z.coerce.date(),
     ends_at: z.coerce.date(),
     created_at: z.coerce.date(),
@@ -118,19 +123,22 @@ export const Event = z.object({
 });
 export type Event = z.infer<typeof Event>;
 
-export const EventRequest = z.object({
-    id: z.uuid(),
-    event_id: z.uuid(),
-    special_requests: z.string().max(2000).nullable(),
-});
-export type EventRequest = z.infer<typeof EventRequest>;
-
 export const Tap = z.object({
     id: z.uuid(),
     student_id: StudentId,
     event_id: z.uuid(),
 });
 export type Tap = z.infer<typeof Tap>;
+
+export const Location = z.object({
+    id: z.uuid(),
+    location: z.string().max(64),
+    created_at: z.coerce.date(),
+    updated_at: z.coerce.date(),
+});
+export type Location = z.infer<typeof Location>;
+
+// API Request schemas
 
 export const PointCheck = z.object({
     student_id: StudentId,

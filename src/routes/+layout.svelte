@@ -37,6 +37,9 @@
                             <NavigationMenu.Link href="/events">Events</NavigationMenu.Link>
                         </NavigationMenu.Item>
                         <NavigationMenu.Item>
+                            <NavigationMenu.Link href="/clubs">Clubs</NavigationMenu.Link>
+                        </NavigationMenu.Item>
+                        <NavigationMenu.Item>
                             <NavigationMenu.Trigger class="bg-primary">Students</NavigationMenu.Trigger>
                             <NavigationMenu.Content>
                                 <ul class="grid w-[200px] gap-4 p-2">

@@ -9,7 +9,7 @@
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
     import { Input } from "$lib/components/ui/input/index.js";
     import * as Table from "$lib/components/ui/table/index.js";
-    import { EventRequest, Event } from "$lib/models";
+    import { Event } from "$lib/models";
     import ChevronDownIcon from "@lucide/svelte/icons/chevron-down";
     import {
         type ColumnDef,
@@ -28,7 +28,7 @@
     import DataTableCheckbox from "./event-requests-table-checkbox.svelte";
 
     interface Props {
-        data: Array<{ eventRequest: EventRequest; event: Event }>;
+        data: Event[];
     }
 
     type EventRequestsColumn = {
@@ -37,19 +37,19 @@
         eventName: string;
         location: string;
         points: number;
-        specialRequests: string | null;
+        special_requests: string | null;
     };
 
     const { data }: Props = $props();
 
     const eventRequestsData: EventRequestsColumn[] = $derived(
-        data.map(({ eventRequest, event }) => ({
-            id: eventRequest.id,
+        data.map(event => ({
+            id: event.id,
             eventId: event.id,
             eventName: event.name,
             location: event.location,
             points: event.point_value,
-            specialRequests: eventRequest.special_requests,
+            special_requests: event.special_requests,
         })),
     );
 
@@ -129,7 +129,7 @@
                     };
                 });
                 return renderSnippet(requestsSnippet, {
-                    hasRequests: !!row.original.specialRequests,
+                    hasRequests: !!row.original.special_requests,
                 });
             },
         },
@@ -140,7 +140,7 @@
                 renderComponent(DataTableActions, {
                     requestId: row.original.id,
                     eventId: row.original.eventId,
-                    specialRequests: row.original.specialRequests,
+                    specialRequests: row.original.special_requests,
                 }),
         },
     ];

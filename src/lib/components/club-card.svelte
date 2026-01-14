@@ -6,14 +6,15 @@
     interface Props {
         title: string;
         club: Club;
+        from?: string | undefined;
     }
 
-    let { title, club }: Props = $props();
+    let { title, club, from = undefined }: Props = $props();
 </script>
 
 <div>
     <HoverCard.Root>
-        <HoverCard.Trigger class="hover:underline">
+        <HoverCard.Trigger class="hover:underline" href={`/club/${club.acronym}${from ? `?from=${from}` : ""}`}>
             {title}
         </HoverCard.Trigger>
         <HoverCard.Content class="w-80">

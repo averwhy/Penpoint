@@ -41,6 +41,9 @@ export async function getActiveSemester(getNextIfNone = false): Promise<Semester
             ORDER BY starts ASC
             LIMIT 1
         `;
+        if (fallback.count === 0) {
+            return undefined;
+        }
         return Semester.parse(fallback[0]);
     }
     else if (result.count !== 0) {

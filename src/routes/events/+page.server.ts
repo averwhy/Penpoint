@@ -9,7 +9,7 @@ const uploadsDir = path.join(process.cwd(), "uploads", "events");
 
 export const load: PageServerLoad = async () => {
     const semester = await getActiveSemester(true);
-    if (!semester) { error(404, "No active semester or future semester found"); }
+    if (!semester) { return {data: undefined } }
     const semesterEnd = new Date(semester.ends);
 
     const result = await sql`
