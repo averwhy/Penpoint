@@ -9,15 +9,20 @@ export const load: PageServerLoad = async ({ locals }) => {
     const userClub = await getFirstClubFromUser(locals.user.id);
 
     // Get active semester, or fall back to last semester if none active
-    const semester = await getActiveSemester(false).catch(() => undefined) ?? await getLastSemester();
+    const semester = (await getActiveSemester(false).catch(() => undefined)) ?? (await getLastSemester());
 
     if (!semester) {
         // No semester at all - return minimal data
         return {
-            greeting: "Welcome, ",
             club: undefined,
             platform: {
-                semester: { eventsHosted: 0, pointsEarned: 0, attendanceCount: 0, upcomingEvents: 0, uniqueClubsHostingEvents: 0 },
+                semester: {
+                    eventsHosted: 0,
+                    pointsEarned: 0,
+                    attendanceCount: 0,
+                    upcomingEvents: 0,
+                    uniqueClubsHostingEvents: 0,
+                },
                 allTime: { eventsHosted: 0, pointsEarned: 0, attendanceCount: 0 },
             },
         };
@@ -80,19 +85,19 @@ export const load: PageServerLoad = async ({ locals }) => {
 
     let clubStats:
         | {
-            semester: {
-                eventsHosted: number;
-                pointsEarned: number;
-                attendanceCount: number;
-                upcomingEvents: number;
-            };
-            allTime: {
-                eventsHosted: number;
-                pointsEarned: number;
-                attendanceCount: number;
-            };
-            members: number;
-        }
+              semester: {
+                  eventsHosted: number;
+                  pointsEarned: number;
+                  attendanceCount: number;
+                  upcomingEvents: number;
+              };
+              allTime: {
+                  eventsHosted: number;
+                  pointsEarned: number;
+                  attendanceCount: number;
+              };
+              members: number;
+          }
         | undefined;
 
     if (userClub) {
@@ -178,20 +183,7 @@ export const load: PageServerLoad = async ({ locals }) => {
         };
     }
 
-    const nameGreetings = [
-        "Hey there, ",
-        "Welcome back, ",
-        "Good to see you, ",
-        "Sup, ",
-        "Hi there, ",
-        "Howdy, ",
-        "What's up, ",
-        "Ahoy, ",
-        "Today's a good day, ",
-    ];
-
     return {
-        greeting: nameGreetings[Math.floor(Math.random() * nameGreetings.length)],
         club: clubStats,
         platform: {
             semester: {

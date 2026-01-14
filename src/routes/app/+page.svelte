@@ -1,10 +1,25 @@
 <script lang="ts">
-    import * as Card from "$lib/components/ui/card/index";
-    import type { PageProps } from "./$types";
     import DateWithRelativeTooltip from "$lib/components/date-with-relative-tooltip.svelte";
+    import * as Card from "$lib/components/ui/card/index";
+    import { hydratable } from "svelte";
+    import type { PageProps } from "./$types";
 
     const { data }: PageProps = $props();
-    const { greeting, club, platform, user, userClubs } = data;
+    const { club, platform, user, userClubs } = data;
+
+    const nameGreetings = [
+        "Hey there, ",
+        "Welcome back, ",
+        "Good to see you, ",
+        "Sup, ",
+        "Hi there, ",
+        "Howdy, ",
+        "What's up, ",
+        "Ahoy, ",
+        "Today's a good day, ",
+    ];
+
+    const greeting = hydratable("greeting", () => nameGreetings[Math.floor(Math.random() * nameGreetings.length)]);
 
     const theDay: string = new Date().toLocaleDateString("en-US", { weekday: "long" });
 </script>
