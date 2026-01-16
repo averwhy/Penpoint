@@ -7,7 +7,7 @@
     const { eventRequests } = data;
 </script>
 
-<div class="justify-center mx-10">
+<div class="justify-center pt-10 mx-10">
     <EventRequestsTable data={eventRequests} />
     <HelpFooter />
 </div>

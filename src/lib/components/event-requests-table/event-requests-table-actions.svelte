@@ -4,6 +4,9 @@
     import * as Dialog from "../ui/dialog/index.js";
     import EllipsisIcon from "@lucide/svelte/icons/ellipsis";
     import { toast } from "svelte-sonner";
+    import Separator from "../ui/separator/separator.svelte";
+    import { edit, editPoints } from "$lib/functions/events/edit.remote.js";
+    import { update } from "$lib/functions/events/status.remote.js";
 
     let {
         requestId,
@@ -16,7 +19,7 @@
 <Dialog.Root bind:open={dialogOpen}>
     <Dialog.Content class="max-w-2xl">
         <Dialog.Header>
-            <Dialog.Title>Special Requests</Dialog.Title>
+            <Dialog.Title>Accept/Deny Event</Dialog.Title>
         </Dialog.Header>
         <div class="space-y-4">
             {#if specialRequests}
@@ -46,24 +49,31 @@
         <DropdownMenu.Group>
             <DropdownMenu.Label>Actions</DropdownMenu.Label>
             <DropdownMenu.Item
+                variant="default"
                 onclick={() => {
-                    navigator.clipboard.writeText(eventId);
-                    toast.success("Event ID copied to clipboard");
-                }}>Copy event ID</DropdownMenu.Item
+                    dialogOpen = true;
+                }}>Review event</DropdownMenu.Item
             >
+            <Separator />
             <DropdownMenu.Item
                 variant="success"
-                onclick={() => {
-                    navigator.clipboard.writeText(eventId);
+                onclick={async () => {
+                    await update({ event_id: eventId, approval_status: "accepted" });
                     toast.success("Event marked as accepted successfully");
                 }}>Quick accept</DropdownMenu.Item
             >
             <DropdownMenu.Item
                 variant="destructive"
-                onclick={() => {
-                    navigator.clipboard.writeText(eventId);
+                onclick={async () => {
+                    await update({ event_id: eventId, approval_status: "denied" });
                     toast.success("Event marked as denied successfully");
                 }}>Quick deny</DropdownMenu.Item
+            >
+            <DropdownMenu.Item
+                onclick={() => {
+                    navigator.clipboard.writeText(eventId);
+                    toast.success("Event ID copied to clipboard");
+                }}>Copy event ID</DropdownMenu.Item
             >
         </DropdownMenu.Group>
         {#if specialRequests}

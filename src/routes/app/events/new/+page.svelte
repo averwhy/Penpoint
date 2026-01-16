@@ -360,7 +360,7 @@
                     />
                 </div>
             </Card.Content>
-            <Card.Footer class="flex justify-end gap-2">
+            <Card.Footer class="flex justify-end gap-2 mt-4">
                 <Button variant="default" href="/app/events">Cancel</Button>
                 <Button type="submit" variant="outline" disabled={pending || !canCreateNewEvents}>
                     {pending ? "Creating..." : "Create Event"}

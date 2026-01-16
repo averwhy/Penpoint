@@ -2,6 +2,9 @@
     import type { PageProps } from "./$types";
     import * as Tabs from "$lib/components/ui/tabs/index";
     import * as Card from "$lib/components/ui/card/index";
+    import * as Dialog from "$lib/components/ui/dialog/index";
+    import { Label } from "$lib/components/ui/label/index.js";
+    import { Input } from "$lib/components/ui/input/index.js";
     import { Badge } from "$lib/components/ui/badge/index";
     import FlyerViewer from "$lib/components/flyer-viewer.svelte";
     import ClubCard from "$lib/components/club-card.svelte";
@@ -37,6 +40,10 @@
     const hasEnded = $derived(Date.now() > event.ends_at.getTime());
 
     const duration = $derived(humanizeDuration(event.ends_at.getTime() - event.starts_at.getTime(), { largest: 2 }));
+
+    let deleteDialogOpen = $state(false);
+    let detailsDialogOpen = $state(false);
+    let editDialogOpen = $state(false);
 </script>
 
 <div class="flex flex-col items-center w-full px-4 py-8">
@@ -66,7 +73,7 @@
 
                     <div class="flex-1 space-y-6">
                         <div>
-                            <div class="flex items-center gap-3 flex-wrap mb-2">
+                            <div class="flex items-center gap-3 flex-wrap mb-1">
                                 <h1 class="text-3xl font-bold">{event.name}</h1>
                                 {#if isHappeningNow}
                                     <Badge variant="default" class="bg-green-800 text-white">Happening Now</Badge>
@@ -75,12 +82,12 @@
                                 {/if}
                             </div>
                             <div class="text-foreground">
-                                <ClubCard title={club.acronym ?? club.name} club={club} />
+                                <ClubCard title={club.acronym ?? club.name} {club} />
                             </div>
                         </div>
 
                         <Card.Root>
-                            <Card.Content class="pt-6 space-y-4">
+                            <Card.Content class="space-y-4">
                                 <div class="flex items-center gap-3">
                                     <CalendarIcon class="h-5 w-5 text-muted-foreground" />
                                     <div>
@@ -119,10 +126,13 @@
                             Created <DateWithRelativeTooltip date={event.created_at} />
                         </div>
                         <!-- If they have perms to edit then we'll show the edit button -->
-                        {#if data.userClubs.some((c => c.id === event.club_id))}
+                        {#if data.userClubs.some(c => c.id === event.club_id)}
                             <div class="flex justify-end gap-4">
                                 <!-- TODO: implement the button -->
-                                <Button variant="secondary">Edit Event</Button>
+                                <Button variant="secondary" onclick={() => (editDialogOpen = true)}>Edit Event</Button>
+                                <Button variant="destructive" onclick={() => (deleteDialogOpen = true)}
+                                    >Cancel Event</Button
+                                >
                             </div>
                         {/if}
                     </div>
@@ -137,3 +147,68 @@
         </Tabs.Root>
     </div>
 </div>
+
+<Dialog.Root bind:open={deleteDialogOpen}>
+    <Dialog.Content>
+        <Dialog.Header>
+            <Dialog.Title>Are you sure you want to delete '{event.name}'?</Dialog.Title>
+            <Dialog.Description>
+                This will cancel the event and remove it from the calendar. This action can't be undone.
+            </Dialog.Description>
+        </Dialog.Header>
+        <Dialog.Footer>
+            <Button variant="outline" onclick={() => (deleteDialogOpen = false)}>Cancel</Button>
+            <Button variant="destructive" onclick={() => {}}>Delete Event</Button>
+        </Dialog.Footer>
+    </Dialog.Content>
+</Dialog.Root>
+
+<Dialog.Root bind:open={editDialogOpen}>
+    <Dialog.Content>
+        <Dialog.Header>
+            <Dialog.Title>Edit {event.name}</Dialog.Title>
+            <Dialog.Description>
+                <Label for="name" class="my-2">Name</Label>
+                <Input id="name" type="text" class="text-white" />
+                <Label for="start_time" class=" my-2">Start time</Label>
+                <Input
+                    id="start_time"
+                    type="time"
+                    step={60}
+                    class="bg-background text-white appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                />
+                <Label for="end_time" class=" my-2">End time</Label>
+                <Input
+                    id="end_time"
+                    type="time"
+                    step={60}
+                    class="bg-background text-white appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                />
+                <Label for="flyer" class="my-2">Flyer</Label>
+                <Input id="flyer" type="file" class="text-white"/>
+            </Dialog.Description>
+            <Dialog.Footer>
+                <h1 class="text-sm text-muted-foreground">If you want to change the date of the event, please cancel and create a new event.</h1>
+            </Dialog.Footer>
+        </Dialog.Header>
+        <Dialog.Footer>
+            <Button variant="outline" onclick={() => (editDialogOpen = false)}>Cancel</Button>
+            <Button variant="default" onclick={() => {}}>Save changes</Button>
+        </Dialog.Footer>
+    </Dialog.Content>
+</Dialog.Root>
+
+<Dialog.Root bind:open={detailsDialogOpen}>
+    <Dialog.Content>
+        <Dialog.Header>
+            <Dialog.Title>Edit {event.name}</Dialog.Title>
+            <Dialog.Description>
+                This will cancel the event and remove it from the calendar. This action can't be undone.
+            </Dialog.Description>
+        </Dialog.Header>
+        <Dialog.Footer>
+            <Button variant="outline" onclick={() => (detailsDialogOpen = false)}>Cancel</Button>
+            <Button variant="default" onclick={() => {}}>Save changes</Button>
+        </Dialog.Footer>
+    </Dialog.Content>
+</Dialog.Root>

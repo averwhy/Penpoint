@@ -26,22 +26,25 @@ export const getEvents = query(z.object({
             SELECT * FROM events 
             WHERE club_id = ${clubId} 
             AND semester_id = ${semesterId}
+            AND approval_status = 'accepted'
             LIMIT ${limit}
         `;
     } else if (clubId) {
         result = await sql`
             SELECT * FROM events 
             WHERE club_id = ${clubId}
+            AND approval_status = 'accepted'
             LIMIT ${limit}
         `;
     } else if (semesterId) {
         result = await sql`
             SELECT * FROM events 
             WHERE semester_id = ${semesterId}
+            AND approval_status = 'accepted'
             LIMIT ${limit}
         `;
     } else {
-        result = await sql`SELECT * FROM events LIMIT ${limit}`;
+        result = await sql`SELECT * FROM events WHERE approval_status = 'accepted' LIMIT ${limit}`;
     }
 
     return result.map(row => Event.parse(row));

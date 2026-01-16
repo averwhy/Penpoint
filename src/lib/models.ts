@@ -145,6 +145,21 @@ export const PointCheck = z.object({
 });
 export type PointCheck = z.infer<typeof PointCheck>;
 
+export const EventStatusUpdate = z.object({
+    event_id: z.uuid(),
+    approval_status: z.enum(["accepted", "denied"]),
+});
+export type EventStatusUpdate = z.infer<typeof EventStatusUpdate>;
+
+export const EventEdit = z.object({
+    event_id: z.uuid(),
+    name: z.string().max(64).optional(),
+    location: z.string().optional(),
+    starts_at: z.coerce.date().optional(),
+    ends_at: z.coerce.date().optional(),
+});
+export type EventEdit = z.infer<typeof EventEdit>;
+
 // API Response schemas
 
 export const LoginResponse = z.object({

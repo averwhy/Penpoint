@@ -6,7 +6,7 @@
     const { data }: PageProps = $props();
 </script>
 
-<div class="flex justify-center pt-10 mx-10">
+<div class="justify-center pt-10 mx-10">
     <NewUsersTable data={data.newUserRequests} user={data.user} />
     <HelpFooter />
 </div>
