@@ -5,11 +5,13 @@ import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params }) => {
   const slug = params.slug;
+  console.log(slug);
 
   const clubResult = await sql`
     SELECT *
     FROM clubs
     WHERE LOWER(acronym) = LOWER(${slug})
+    OR LOWER(name) = LOWER(${slug})
     LIMIT 1
   `;
   if (clubResult.length === 0) {

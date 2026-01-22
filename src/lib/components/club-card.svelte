@@ -2,19 +2,22 @@
     import * as HoverCard from "$lib/components/ui/hover-card/index";
     import { Club } from "$lib/models";
     import { Badge } from "$lib/components/ui/badge/index.js";
+    import { getClub } from "$lib/functions/club.remote";
 
     interface Props {
         title: string;
-        club: Club;
+        clubId: string;
         from?: string | undefined;
     }
 
-    let { title, club, from = undefined }: Props = $props();
+    let { title, clubId, from = undefined }: Props = $props();
+
+    const club = await getClub(clubId);
 </script>
 
 <div>
     <HoverCard.Root>
-        <HoverCard.Trigger class="hover:underline" href={`/club/${club.acronym}${from ? `?from=${from}` : ""}`}>
+        <HoverCard.Trigger class="hover:underline" href={`/clubs/${club.acronym}${from ? `?from=${from}` : ""}`}>
             {title}
         </HoverCard.Trigger>
         <HoverCard.Content class="w-80">

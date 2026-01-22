@@ -39,7 +39,7 @@
                             <div class="space-y-1">
                                 <div class="flex items-center gap-2">
                                     <CardTitle class="text-base font-semibold leading-tight">
-                                        <a href="/clubs/{club.acronym.toLowerCase()}?from=clubs" class="hover:underline">
+                                        <a href="/clubs/{(club.acronym?.toLowerCase() ?? club.name.toLowerCase())}?from=clubs" class="hover:underline">
                                             {club.name} {club.acronym ? `(${club.acronym})` : ""}
                                         </a>
                                     </CardTitle>

@@ -59,7 +59,7 @@
                                 <span class="text-md">
                                     <ClubCard
                                         title={entry.club_acronym ?? entry.club_name}
-                                        club={entry.event.club_id}
+                                        clubId={entry.event.club_id}
                                         from="events"
                                     />
                                 </span>
@@ -91,9 +91,7 @@
                 {/each}
             </div>
         {:else}
-            <div class="text-3xl mt-20">
-                There's no semester that's currently active or upcoming. Check back later!
-            </div>
+            <div class="text-3xl mt-20">There's no semester that's currently active or upcoming. Check back later!</div>
         {/if}
     </div>
 </div>

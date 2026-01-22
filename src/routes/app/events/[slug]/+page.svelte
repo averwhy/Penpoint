@@ -82,7 +82,7 @@
                                 {/if}
                             </div>
                             <div class="text-foreground">
-                                <ClubCard title={club.acronym ?? club.name} {club} />
+                                <ClubCard title={club.acronym ?? club.name} clubId={club} />
                             </div>
                         </div>
 
@@ -185,10 +185,12 @@
                     class="bg-background text-white appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                 />
                 <Label for="flyer" class="my-2">Flyer</Label>
-                <Input id="flyer" type="file" class="text-white"/>
+                <Input id="flyer" type="file" class="text-white" />
             </Dialog.Description>
             <Dialog.Footer>
-                <h1 class="text-sm text-muted-foreground">If you want to change the date of the event, please cancel and create a new event.</h1>
+                <h1 class="text-sm text-muted-foreground">
+                    If you want to change the date of the event, please cancel and create a new event.
+                </h1>
             </Dialog.Footer>
         </Dialog.Header>
         <Dialog.Footer>

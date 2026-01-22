@@ -7,14 +7,6 @@ import { clubOrAbove } from "$lib/utils/permissions";
 import z from "zod";
 
 export const getClub = query(z.string(), async (clubId) => {
-    const event = getRequestEvent();
-    if (!event.locals.user) {
-        error(401, "Unauthorized");
-    }
-
-    if (!clubOrAbove(event.locals.user.role)) {
-        error(403, "Forbidden");
-    }
     const result = await sql`
             SELECT *
             FROM clubs

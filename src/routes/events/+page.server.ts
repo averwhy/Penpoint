@@ -10,7 +10,6 @@ const uploadsDir = path.join(process.cwd(), "uploads", "events");
 export const load: PageServerLoad = async () => {
     const semester = await getActiveSemester(true);
     if (!semester) { return {data: undefined } }
-    const semesterEnd = new Date(semester.ends);
 
     const result = await sql`
         SELECT 
@@ -30,8 +29,8 @@ export const load: PageServerLoad = async () => {
             c.acronym AS club_acronym
         FROM events e
         JOIN clubs c ON e.club_id = c.id
-        WHERE e.ends_at > now()
-        AND e.starts_at < ${semesterEnd}
+        WHERE e.semester_id = ${semester.id}
+        AND approval_status = 'accepted'
         ORDER BY e.starts_at
     `;
 

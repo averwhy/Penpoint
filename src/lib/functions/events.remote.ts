@@ -8,8 +8,9 @@ import z from "zod";
 export const getEvents = query(z.object({
     clubId: z.string().optional(),
     semesterId: z.string().optional(),
-    limit: z.number().default(1000)
-}), async ({ clubId, semesterId, limit }) => {
+    limit: z.number().default(1000),
+    status: z.enum(["pending", "accepted", "rejected"]).optional()
+}), async ({ clubId, semesterId, limit, status }) => {
     const event = getRequestEvent();
     if (!event.locals.user) {
         error(401, "Unauthorized");
@@ -22,29 +23,50 @@ export const getEvents = query(z.object({
     let result;
 
     if (clubId && semesterId) {
-        result = await sql`
-            SELECT * FROM events 
-            WHERE club_id = ${clubId} 
-            AND semester_id = ${semesterId}
-            AND approval_status = 'accepted'
-            LIMIT ${limit}
-        `;
+        result = status
+            ? await sql`
+                SELECT * FROM events 
+                WHERE club_id = ${clubId} 
+                AND semester_id = ${semesterId}
+                AND approval_status = ${status}
+                LIMIT ${limit}
+            `
+            : await sql`
+                SELECT * FROM events 
+                WHERE club_id = ${clubId} 
+                AND semester_id = ${semesterId}
+                LIMIT ${limit}
+            `;
     } else if (clubId) {
-        result = await sql`
-            SELECT * FROM events 
-            WHERE club_id = ${clubId}
-            AND approval_status = 'accepted'
-            LIMIT ${limit}
-        `;
+        result = status
+            ? await sql`
+                SELECT * FROM events 
+                WHERE club_id = ${clubId}
+                AND approval_status = ${status}
+                LIMIT ${limit}
+            `
+            : await sql`
+                SELECT * FROM events 
+                WHERE club_id = ${clubId}
+                LIMIT ${limit}
+            `;
     } else if (semesterId) {
-        result = await sql`
-            SELECT * FROM events 
-            WHERE semester_id = ${semesterId}
-            AND approval_status = 'accepted'
-            LIMIT ${limit}
-        `;
+        result = status
+            ? await sql`
+                SELECT * FROM events 
+                WHERE semester_id = ${semesterId}
+                AND approval_status = ${status}
+                LIMIT ${limit}
+            `
+            : await sql`
+                SELECT * FROM events 
+                WHERE semester_id = ${semesterId}
+                LIMIT ${limit}
+            `;
     } else {
-        result = await sql`SELECT * FROM events WHERE approval_status = 'accepted' LIMIT ${limit}`;
+        result = status
+            ? await sql`SELECT * FROM events WHERE approval_status = ${status} LIMIT ${limit}`
+            : await sql`SELECT * FROM events LIMIT ${limit}`;
     }
 
     return result.map(row => Event.parse(row));
