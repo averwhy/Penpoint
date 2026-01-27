@@ -42,7 +42,7 @@ export const approveUserRequest = form(
             html: `
 <img src="${PenmenPride}" alt="Penmen Pride Logo" style="display:block; width:120px; height:auto;">
 <h1>Your Penmen Pride Account has been approved!</h1>
-<p>Congratulations! Your account has been approved by the Student Government Association.</p>
+<p>Good news! Your account has been approved by the Student Government Association.</p>
 <p>Please click the link below to activate your account and set your password:</p>
 <a href="${publicEnv.BASE_URL}/onboarding/${generateOnboardingToken(targetUser.id)}">Activate Account</a>
 <p>If you did not request this account, please ignore this email.</p>

@@ -28,6 +28,7 @@
     } from "$lib/components/ui/data-table/index.js";
     import { Event } from "$lib/models";
     import DateWithRelativeTooltip from "$lib/components/date-with-relative-tooltip.svelte";
+    import EventName from "./event-name.svelte";
 
     interface Props {
         data: Event[];
@@ -39,6 +40,7 @@
         name: string;
         points: number;
         location: string;
+        approval_status: string;
         starts_at: Date;
         ends_at: Date;
     };
@@ -51,6 +53,7 @@
             name: event.name,
             points: event.point_value,
             location: event.location,
+            approval_status: event.approval_status,
             starts_at: event.starts_at,
             ends_at: event.ends_at,
         })),
@@ -78,18 +81,13 @@
         {
             accessorKey: "name",
             header: "Name",
-            cell: ({ row }) => {
-                const nameSnippet = createRawSnippet<[{ name: string }]>(getName => {
-                    const { name } = getName();
-                    return {
-                        render: () =>
-                            `<div class="capitalize hover:underline"><a href="/app/${showAdminActions ? 'manage/' : ''}events/${row.original.id}">${name}</a></div>`,
-                    };
-                });
-                return renderSnippet(nameSnippet, {
+            cell: ({ row }) =>
+                renderComponent(EventName, {
                     name: row.original.name,
-                });
-            },
+                    id: row.original.id,
+                    approval_status: row.original.approval_status,
+                    showAdminActions: showAdminActions || false,
+                }),
         },
         {
             accessorKey: "points",

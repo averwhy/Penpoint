@@ -3,7 +3,7 @@
     import { Input } from "$lib/components/ui/input";
     import * as Card from "$lib/components/ui/card";
     import * as Select from "$lib/components/ui/select";
-    import { tap } from "$lib/functions/tap.remote";
+    import { tap, manualTap } from "$lib/functions/tap.remote";
     import { Tap } from "$lib/models";
     import { toast } from "svelte-sonner";
     import type { PageProps } from "./$types";
@@ -39,7 +39,7 @@
         }, 300);
     }
 
-    function handleKeydown(event: KeyboardEvent) {
+    async function handleKeydown(event: KeyboardEvent) {
         if (cardTimeout) clearTimeout(cardTimeout);
 
         if (event.key.length === 1) {
@@ -71,7 +71,7 @@
                     toast.error("Select an event before scanning a card.");
                     return;
                 }
-                parseCardData(cardData);
+                await parseCardData(cardData);
                 return;
             }
 
@@ -83,10 +83,27 @@
         }
     }
 
-    function parseCardData(raw: string) {
-        const match = raw.match(/^;77(\d+)=/);
+    async function parseCardData(raw: string) {
+        let match = raw.match(/^;77(\d+)=/);
         if (match) {
             const studentId = match[1];
+            if (
+                swipeHistory.find(r => {
+                    return r.studentId === studentId;
+                })
+            ) {
+                flash("error");
+                toast.error("Duplicate swipe", { description: "That student has already swiped for this event!" });
+            }
+
+            try {
+                await manualTap({ student_id: studentId, event_id: selectedEvent });
+            } catch (error: any) {
+                flash("error");
+                toast.error("Failed to tap student", { description: error?.body.message });
+                return;
+            }
+
             flash("success");
             toast.success("Card scanned", { description: `Scanned student ID: ${studentId}` });
 

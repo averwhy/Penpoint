@@ -59,7 +59,7 @@
                                 <span class="text-md">
                                     <ClubCard
                                         title={entry.club_acronym ?? entry.club_name}
-                                        clubId={entry.event.club_id}
+                                        club={entry.event.club_id}
                                         from="events"
                                     />
                                 </span>

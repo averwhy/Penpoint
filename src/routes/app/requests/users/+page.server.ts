@@ -5,9 +5,6 @@ import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals }) => {
-    if (!locals.user) redirect(303, "/login");
-    if (!sgaOrAbove(locals.user.role)) redirect(303, "/app");
-
     const result = await sql`
         SELECT * FROM users
         WHERE users.role = 'unapproved'

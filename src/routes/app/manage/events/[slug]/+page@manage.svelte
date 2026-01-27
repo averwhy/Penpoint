@@ -75,7 +75,7 @@
                                 {/if}
                             </div>
                             <div class="text-foreground">
-                                <ClubCard title={club.acronym ?? club.name} clubId={club} />
+                                <ClubCard title={club.acronym ?? club.name} {club} />
                             </div>
                         </div>
 

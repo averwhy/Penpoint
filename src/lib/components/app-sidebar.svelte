@@ -13,6 +13,8 @@
     import AddUser from "@lucide/svelte/icons/user-plus";
     import UserCog from "@lucide/svelte/icons/user-round-cog";
     import UsersIcon from "@lucide/svelte/icons/users";
+    import DocQuestion from "@lucide/svelte/icons/file-question-mark";
+    import CircleQuestion from "@lucide/svelte/icons/circle-question-mark";
 
     const { user }: { user: User } = $props();
 
@@ -76,6 +78,19 @@
             url: "/app/manage/events",
             icon: CalendarCog,
         },
+    ];
+
+    let docItems = [
+        {
+            title: "Usage Guide",
+            url: "/app/docs",
+            icon: DocQuestion,
+        },
+        {
+            title: "Get Help",
+            url: "/app/help",
+            icon: CircleQuestion,
+        }
     ];
 
     function pageMatchesItem(itemUrl: string, pathname: string) {
@@ -147,6 +162,23 @@
                     </Sidebar.Menu>
                 </Sidebar.GroupContent>
             {/if}
+            <Sidebar.GroupLabel>Docs & Help</Sidebar.GroupLabel>
+                <Sidebar.GroupContent>
+                    <Sidebar.Menu>
+                        {#each docItems as item (item.title)}
+                            <Sidebar.MenuItem>
+                                <Sidebar.MenuButton class={pageMatchesItem(item.url, page.url.pathname)}>
+                                    {#snippet child({ props })}
+                                        <a href={item.url} {...props}>
+                                            <item.icon />
+                                            <span>{item.title}</span>
+                                        </a>
+                                    {/snippet}
+                                </Sidebar.MenuButton>
+                            </Sidebar.MenuItem>
+                        {/each}
+                    </Sidebar.Menu>
+                </Sidebar.GroupContent>
         </Sidebar.Group>
     </Sidebar.Content>
     <Sidebar.Footer>
