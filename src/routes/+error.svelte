@@ -2,13 +2,15 @@
     import { page } from "$app/state";
 </script>
 
-<div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#1e1e22] px-4">
+<div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-secondary px-4">
     <div class="text-9xl text-left">
         {page.status}
     </div>
     <div class="text-4xl text-center">
         <h1>
-            Something went wrong.<br />
+            {#if page.status !== 404}
+                Something went wrong.<br />
+            {/if}
             {page.error?.message} <br />
             <!-- if we're not at the top level, offer the ability to go back one level -->
             {#if page.url.pathname !== '/'}

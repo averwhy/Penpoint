@@ -2,8 +2,10 @@
     import { page } from "$app/state";
     import * as ScrollArea from "$lib/components/ui/scroll-area/index";
     import * as Accordion from "$lib/components/ui/accordion/index";
+    import * as Kbd from "$lib/components/ui/kbd/index";
     import FileText from "@lucide/svelte/icons/file-text";
     import FolderOpen from "@lucide/svelte/icons/folder-open";
+    import { Group } from "./ui/command";
 
     interface DocEntry {
         slug: string;
@@ -27,6 +29,12 @@
     <div class="p-4">
         <nav>
             <ul class="space-y-1">
+                <Kbd.Group>
+                    <Kbd.Root>⌘</Kbd.Root>
+                    <span class="text-muted-foreground">+</span>
+                    <Kbd.Root>K</Kbd.Root>
+                    <span class="text-xs text-muted-foreground">to open search</span>
+                </Kbd.Group>
                 {#each docEntries as entry (entry.slug)}
                     {#if entry.children && entry.children.length > 0}
                         <li>

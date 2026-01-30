@@ -1,6 +1,7 @@
 import type { LayoutServerLoad } from './$types';
 import { readdir } from 'fs/promises';
 import { resolve, join } from 'path';
+import { getSearchableDocs } from '$lib/functions/docs/search.remote';
 
 interface DocEntry {
     slug: string;
@@ -46,8 +47,10 @@ async function getDocEntries(dirPath: string, urlPrefix: string): Promise<DocEnt
 export const load: LayoutServerLoad = async () => {
     const docsPath = resolve('src/routes/app/docs');
     const docEntries = await getDocEntries(docsPath, '/app/docs');
+    const docItems = await getSearchableDocs();
 
     return {
-        docEntries
+        docEntries,
+        docItems
     };
 };

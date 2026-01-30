@@ -48,7 +48,7 @@
 		<img
 			src={CampSNHU}
 			alt="A shot of the SNHU green space during the Camp SNHU event"
-			class="absolute inset-0 h-full w-full object-cover brightness-[0.75] dark:grayscale"
+			class="absolute inset-0 h-full w-full object-cover brightness-[0.75] dark:brightness-[0.55]"
 		/>
 	</div>
 </div>
