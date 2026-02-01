@@ -50,7 +50,7 @@
     <div class="w-full max-w-4xl">
         <Tabs.Root bind:value={activeTab} class="w-full">
             <div class="flex items-center gap-4 mb-6">
-                <Button href="/app/club" variant="ghost">← Back</Button>
+                <Button href="/app/events" variant="ghost">← Back</Button>
                 <div class="flex flex-1 justify-center">
                     <Tabs.List>
                         <Tabs.Trigger value="info">Info</Tabs.Trigger>

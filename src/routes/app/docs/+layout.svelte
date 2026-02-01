@@ -1,6 +1,7 @@
 <script lang="ts">
     import DocsSidebar from "$lib/components/docs-sidebar.svelte";
     import DocsSearch from "$lib/components/docs-search.svelte";
+    import HelpFooter from "$lib/components/help-footer.svelte";
 
     const { data, children } = $props();
 
@@ -17,7 +18,7 @@
 <svelte:window on:keydown={handleKeydown} />
 
 <div class="flex h-full">
-    <aside class="w-64 border-r shrink-0">
+    <aside class="w-64 border-r shrink-0 sticky top-17 max-h-screen overflow-y-auto">
         <DocsSidebar docEntries={data.docEntries} />
     </aside>
     <div class="flex-1 flex flex-col min-w-0">
@@ -27,4 +28,9 @@
             {@render children?.()}
         </main>
     </div>
+</div>
+
+<div class="-mt-15">
+    <HelpFooter />
+    <br />
 </div>
