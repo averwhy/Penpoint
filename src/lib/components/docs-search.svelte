@@ -1,5 +1,6 @@
 <script lang="ts">
     import { type DocsSearchItem } from "$lib/functions/docs/search.remote";
+    import * as Command from "$lib/components/ui/command/index.js";
 
     interface Props {
         docItems: DocsSearchItem[];
@@ -10,8 +11,6 @@
 
     let history: DocsSearchItem[] = $state([]);
     let highlightedValue = $state("");
-
-    import * as Command from "$lib/components/ui/command/index.js";
 
     function handleSelection(item: DocsSearchItem) {
         history = [item, ...history.filter(h => h.title !== item.title)].slice(0, 10);

@@ -21,7 +21,6 @@
         e.preventDefault();
         e.stopPropagation();
         toggleMode();
-        console.log("changed mode");
     }
 
     // Sync mode changes to HTML class
