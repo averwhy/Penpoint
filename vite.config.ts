@@ -12,7 +12,6 @@ export default defineConfig({
                 extends: "./vite.config.ts",
                 test: {
                     name: "client",
-                    environment: "browser",
                     browser: {
                         enabled: true,
                         provider: playwright(),
@@ -39,4 +38,7 @@ export default defineConfig({
             allow: ["uploads"],
         },
     },
+    optimizeDeps: {
+        exclude: ["@lucide/svelte", "svelte-sonner", "vaul-svelte", "bits-ui", "mode-watcher"],
+    }
 });
