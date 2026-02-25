@@ -1,4 +1,6 @@
 node_modules
+.zed/
+.vscode/
 
 # Output
 .output
@@ -22,3 +24,6 @@ Thumbs.db
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vscode/settings.json
+
+# Docker
+docker-compose.yml
