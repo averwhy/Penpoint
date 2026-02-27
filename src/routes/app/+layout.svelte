@@ -3,7 +3,7 @@
     import AppSidebar from "$lib/components/app-sidebar.svelte";
 
     const { data, children } = $props();
-    const { user } = data;
+    const user = $derived(data.user);
 </script>
 
 <Sidebar.Provider>

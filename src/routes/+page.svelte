@@ -9,11 +9,13 @@
     import CampSNHU from "$lib/assets/CampSNHU.jpg";
 
     const { data }: PageProps = $props();
-    const { stats } = data;
+    const stats = $derived(data.stats);
 
-    if (!stats) {
-        toast.error("Failed to load Penmen Pride stats. Please try again later.");
-    }
+    $effect(() => {
+        if (!stats) {
+            toast.error("Failed to load Penmen Pride stats. Please try again later.");
+        }
+    });
 
     // dynamic labels based on semester status
     const isActive = $derived(stats?.type === "active");

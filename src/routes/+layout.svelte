@@ -42,8 +42,8 @@
 
 <header>
     <Toaster richColors />
-    <div class="p-2.5 bg-card fixed w-full top-0 left-0 z-[1000]">
-        <div class="max-w-[1200px] m-auto p-1 flex justify-between items-center">
+    <div class="p-2.5 bg-card fixed w-full top-0 left-0 z-1000">
+        <div class="max-w-300 m-auto p-1 flex justify-between items-center">
             <a data-sveltekit-preload-data="hover" href="/">
                 <img src={pp} alt="Penmen Pride Logo" class="h-10 w-auto" />
             </a>
@@ -62,7 +62,7 @@
                         <NavigationMenu.Item>
                             <NavigationMenu.Trigger class="bg-primary">Students</NavigationMenu.Trigger>
                             <NavigationMenu.Content>
-                                <ul class="grid w-[200px] gap-4 p-2">
+                                <ul class="grid w-50 gap-4 p-2">
                                     <li>
                                         <NavigationMenu.Link href="/points">Points Checker</NavigationMenu.Link>
                                         <NavigationMenu.Link href="/login">Club Login</NavigationMenu.Link>
@@ -74,7 +74,7 @@
                         <NavigationMenu.Item>
                             <NavigationMenu.Trigger class="bg-primary">Faculty</NavigationMenu.Trigger>
                             <NavigationMenu.Content>
-                                <ul class="grid w-[200px] gap-4 p-2">
+                                <ul class="grid w-50 gap-4 p-2">
                                     <li>
                                         <NavigationMenu.Link href="/login">OSI Login</NavigationMenu.Link>
                                         <NavigationMenu.Link href="/register">OSI Registration</NavigationMenu.Link>

@@ -9,24 +9,14 @@
     import HelpFooter from "$lib/components/help-footer.svelte";
 
     const { data }: PageProps = $props();
-    const semesters = data.semesters;
+    const semesters = $derived(data.semesters);
 
     let semesterValue = $state("");
     let selectedSemester = $state<(typeof data.semesters)[number] | undefined>(undefined);
-    const semesterData = data.semesters.map(semester => ({
-        label: `${fallOrSpring(semester.starts)} ${new Date(semester.starts).getFullYear()} (${semester.code})`,
-        value: `${fallOrSpring(semester.starts)} ${new Date(semester.starts).getFullYear()} (${semester.code})`,
-        data: semester,
-    }));
-
     let events = $state<Event[]>([]);
 
     $effect(() => {
         if (selectedSemester) {
-            console.log(
-                "Fetching events for semester:",
-                `${fallOrSpring(selectedSemester.starts)} ${new Date(selectedSemester.starts).getFullYear()} (${selectedSemester.code})`,
-            );
             getEvents({ semesterId: selectedSemester.id }).then(result => {
                 events = result;
             });

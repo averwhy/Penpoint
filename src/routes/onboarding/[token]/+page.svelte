@@ -9,7 +9,7 @@
     import { toast } from "svelte-sonner";
 
     const { data } = $props();
-    const { token } = data;
+    let token = $derived(data.token);
 
     let pending = $state(false);
 </script>

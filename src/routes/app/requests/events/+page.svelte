@@ -4,7 +4,7 @@
     import type { PageProps } from "./$types";
 
     const { data }: PageProps = $props();
-    const { eventRequests } = data;
+    let eventRequests = $derived(data.eventRequests);
 </script>
 
 <div class="justify-center pt-10 mx-10">

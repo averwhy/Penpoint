@@ -8,7 +8,7 @@
     import FlyerViewer from "$lib/components/flyer-viewer.svelte";
 
     const { data }: PageProps = $props();
-    const events = data.data;
+    let events = $derived(data.data);
 
     function isSameDay(date1: Date, date2: Date): boolean {
         return date1.toDateString() === date2.toDateString();
@@ -79,7 +79,7 @@
                             </Card.Footer>
                         </div>
                         {#if entry.hasFlyer && entry.event.image_filename}
-                            <div class="w-24 h-full flex-shrink-0 pr-5">
+                            <div class="w-24 h-full shrink-0 pr-5">
                                 <FlyerViewer
                                     src="/uploads/events/{entry.event.image_filename}"
                                     alt="Flyer for {entry.event.name}"

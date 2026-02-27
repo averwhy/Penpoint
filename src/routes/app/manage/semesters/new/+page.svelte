@@ -14,7 +14,6 @@
     import CalendarIcon from "@lucide/svelte/icons/calendar";
 
     const { data }: PageProps = $props();
-    const { user, semesters } = data;
 
     const df = new DateFormatter("en-US", {
         dateStyle: "long",

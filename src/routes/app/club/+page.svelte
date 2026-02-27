@@ -5,7 +5,7 @@
     import type { PageData } from "./$types";
 
     const { data }: { data: PageData } = $props();
-    const { userClubs } = data;
+    const userClubs = $derived(data.userClubs);
 </script>
 
 <section class="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-10">

@@ -5,7 +5,11 @@
     import type { PageProps } from "./$types";
 
     const { data }: PageProps = $props();
-    const { club, platform, user, userClubs } = data;
+    const user = $derived(data.user);
+    const club = $derived(data.club);
+    const platform = $derived(data.platform);
+    const userClubs = $derived(data.userClubs);
+
 
     const nameGreetings = [
         "Hey there, ",

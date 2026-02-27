@@ -15,34 +15,38 @@
     let currentSemester = $state("Loading...");
 
     let { data }: PageProps = $props();
-    let semester = data?.currentSemester;
-    let semState = data?.semesterState;
+    let semester = $derived(data.currentSemester);
+    let semState = $derived(data.semesterState);
     let canCheckPoints = $state(false);
     currentSemester = "";
-    if (!semester) {
-        currentSemester = "No active semester";
-        canCheckPoints = false;
-    }
-    else {
-        switch (semState) {
-            case "active":
-                currentSemester = `For the current semester (${fallOrSpring(semester?.starts)} ${semester?.starts.getFullYear()} - ${semester?.code})`;
-                canCheckPoints = true;
-                break;
-            case "awaiting":
+    $effect(() => {
+        if (!semester) {
+            currentSemester = "No active semester";
+            canCheckPoints = false;
+        } else {
+            switch (semState) {
+                case "active":
+                    currentSemester = `For the current semester (${fallOrSpring(semester?.starts)} ${semester?.starts.getFullYear()} - ${semester?.code})`;
+                    canCheckPoints = true;
+                    break;
+                case "awaiting":
                 // In case of awaiting we'll just let them check for last semester
-            case "past":
-                currentSemester = `Last semester: ${fallOrSpring(semester?.starts)} ${semester?.starts.getFullYear()} (${semester?.code})`;
-                canCheckPoints = true;
-                break;
+                case "past":
+                    currentSemester = `Last semester: ${fallOrSpring(semester?.starts)} ${semester?.starts.getFullYear()} (${semester?.code})`;
+                    canCheckPoints = true;
+                    break;
+            }
         }
-    }
+    });
 </script>
 
 <div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-4">
-    <div class="w-full max-w-[720px]">
+    <div class="w-full max-w-180">
         <div class="flex items-center gap-6">
-            <h1 class="w-90 text-right text-4xl">Check Your Points<br/><p class="text-right text-sm">{currentSemester}</p></h1>
+            <h1 class="w-90 text-right text-4xl">
+                Check Your Points<br />
+                <p class="text-right text-sm">{currentSemester}</p>
+            </h1>
 
             <div class="items-center gap-2 flex-1 px-4">
                 <form
@@ -92,7 +96,7 @@
 <Drawer.Root bind:open>
     <Drawer.Content>
         <Drawer.Header>
-            <Drawer.Title class="text-center mb-[-20px]">You have...</Drawer.Title>
+            <Drawer.Title class="text-center -mb-5">You have...</Drawer.Title>
         </Drawer.Header>
         <Drawer.Header class="text-center">
             <Drawer.Title class="text-7xl font-bold"><Countup target={points} duration={1} /></Drawer.Title>

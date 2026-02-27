@@ -9,15 +9,14 @@
     import { toast } from "svelte-sonner";
 
     const { data } = $props();
-    const { token } = data;
-
+    let token = $derived(data.token);
     let pending = $state(false);
 </script>
 
 <div class="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background">
     <div class="grid grid-cols-2 gap-x-5">
         <div class="">
-            <h1 class="text-4xl">Reset your Penpoint password</h1>
+            <h1 class="text-4xl">Reset your Penmen Pride password</h1>
             <h3>
                 Forgot your password? No worries!
                 <br />

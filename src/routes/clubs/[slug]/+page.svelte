@@ -8,13 +8,20 @@
     import { browser } from "$app/environment";
 
     const { data }: { data: PageData } = $props();
-    const { club, members, events, semesters, attendance } = data;
+    let club = $derived(data.club);
+    let members = $derived(data.members);
+    let events = $derived(data.events);
+    let semesters = $derived(data.semesters);
+    let attendance = $derived(data.attendance);
+    let logoSrc = $state<string | undefined>(undefined);
 
     const formatDate = (value: Date | string) =>
         new Intl.DateTimeFormat(undefined, { year: "numeric", month: "long", day: "numeric" }).format(new Date(value));
 
-    const logoSrc = club?.image_filename ? `/uploads/clubs/${club.image_filename}` : undefined;
-
+    $effect(() => {
+        logoSrc = club?.image_filename ? `/uploads/clubs/${club.image_filename}` : undefined;
+    });
+    
     const fromPage = browser ? new URLSearchParams(window.location.search).get("from") : undefined;
 </script>
 

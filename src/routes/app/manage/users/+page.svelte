@@ -4,7 +4,7 @@
     import HelpFooter from "$lib/components/help-footer.svelte";
 
     const { data }: PageProps = $props();
-    const { users } = data;
+    let users = $derived(data.users);
 </script>
 
 <div class="justify-center mx-10">

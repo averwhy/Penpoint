@@ -6,9 +6,12 @@
     import HelpFooter from "$lib/components/help-footer.svelte";
     import { logout } from "$lib/functions/logout.remote.js";
     const { data } = $props();
-    const { user, userClubs } = data;
-
-    const initial = user.name?.[0]?.toUpperCase() ?? user.email?.[0]?.toUpperCase() ?? "?";
+    const user = $derived(data.user);
+    const userClubs = $derived(data.userClubs);
+    let initial = $state("?");
+    $effect(() => {
+        initial = user.name?.[0]?.toUpperCase() ?? user.email?.[0]?.toUpperCase() ?? "?";
+    });
 </script>
 
 <div class="mx-auto w-full max-w-3xl px-6 py-10">

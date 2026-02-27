@@ -5,12 +5,16 @@
     import type { PageData } from "./$types";
 
     const { data }: { data: PageData } = $props();
-    const { club, members } = data;
+    const club = $derived(data.club);
+    const members = $derived(data.members);
+    let logoSrc = $state<string | undefined>(undefined);
 
     const formatDate = (value: Date | string) =>
         new Intl.DateTimeFormat(undefined, { year: "numeric", month: "long", day: "numeric" }).format(new Date(value));
 
-    const logoSrc = club?.image_filename ? `/uploads/clubs/${club.image_filename}` : undefined;
+    $effect(() => {
+        logoSrc = club?.image_filename ? `/uploads/clubs/${club.image_filename}` : undefined;
+    });
 </script>
 
 <section class="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-10">

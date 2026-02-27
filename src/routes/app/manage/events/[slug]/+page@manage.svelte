@@ -14,7 +14,9 @@
     import Button from "$lib/components/ui/button/button.svelte";
 
     let { data }: PageProps = $props();
-    let { event, club, hasFlyer } = data;
+    let event = $derived(data.event);
+    let club = $derived(data.club);
+    let hasFlyer = $derived(event.image_filename);
 
     let activeTab = $state("info");
 

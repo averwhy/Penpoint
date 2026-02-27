@@ -21,7 +21,8 @@
     import { enhance } from "$app/forms";
 
     const { data }: PageProps = $props();
-    const { user, userClubs, semesters } = data;
+    const userClubs = $derived(data.userClubs);
+    const semesters = $derived(data.semesters);
 
     // generate a fresh UUID on refresh to prevent duplicate event submissions
     const newEventId = crypto.randomUUID();
@@ -54,9 +55,7 @@
     let selectedSemester = $state<(typeof data.semesters)[number] | undefined>(undefined);
 
     // we don't want people to create events for semesters that have ended
-    let canCreateNewEvents = $derived(
-        !selectedSemester || new Date(selectedSemester.ends) >= new Date()
-    );
+    let canCreateNewEvents = $derived(!selectedSemester || new Date(selectedSemester.ends) >= new Date());
 
     // Popover states
     let buildingOpen = $state(false);
@@ -122,8 +121,7 @@
         if (eventFlyer === null) {
             toast.error("Please upload a flyer for the event");
             return false;
-        } 
-        else {
+        } else {
             if (eventFlyer.size > 5 * 1024 * 1024) {
                 toast.error("Flyer file size exceeds the maximum limit of 5MB");
                 return false;
@@ -219,7 +217,7 @@
                                         </Button>
                                     {/snippet}
                                 </Popover.Trigger>
-                                <Popover.Content class="w-[200px] p-0">
+                                <Popover.Content class="w-50 p-0">
                                     <Command.Root>
                                         <Command.Input placeholder="Search building..." />
                                         <Command.Empty>No building found.</Command.Empty>
@@ -305,8 +303,8 @@
                 </div>
 
                 <p class="text-sm text-muted-foreground my-2">
-                    <span><BulbIcon class="inline h-4 w-4 mr-[1px] mb-1" /></span> Multi-day event? Create separate events
-                    for each day to ensure clarity for students.
+                    <span><BulbIcon class="inline h-4 w-4 mr-px mb-1" /></span> Multi-day event? Create separate events for
+                    each day to ensure clarity for students.
                 </p>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-2">

@@ -6,11 +6,15 @@
     import { Input } from "$lib/components/ui/input/index.js";
     import * as Dialog from "$lib/components/ui/dialog/index";
     const { data } = $props();
-    const { matchedUser, userClubs } = data;
-
-    const initial = matchedUser.name?.[0]?.toUpperCase() ?? matchedUser.email?.[0]?.toUpperCase() ?? "?";
+    let initial = $state("?");
+    let matchedUser = $derived(data.matchedUser);
+    let userClubs = $derived(data.userClubs);
     let deleteDialogOpen = $state(false);
     let deleteConfirmationInput = $state("");
+
+    $effect(() => {
+        initial = matchedUser.name?.[0]?.toUpperCase() ?? matchedUser.email?.[0]?.toUpperCase() ?? "?";
+    });
 </script>
 
 <Dialog.Root bind:open={deleteDialogOpen}>
@@ -95,10 +99,14 @@
             </div>
             <div class="flex items-center gap-2 sm:ml-auto justify-end">
                 <Button type="button" variant="outline" disabled>Send password reset</Button>
-                <Button type="button" variant="destructive" onclick={() => {
-                    deleteDialogOpen = true;
-                    deleteConfirmationInput = "";
-                }}>Delete</Button>
+                <Button
+                    type="button"
+                    variant="destructive"
+                    onclick={() => {
+                        deleteDialogOpen = true;
+                        deleteConfirmationInput = "";
+                    }}>Delete</Button
+                >
             </div>
         </Card.Footer>
     </Card.Root>
