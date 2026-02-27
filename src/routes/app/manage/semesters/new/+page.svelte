@@ -1,8 +1,5 @@
 <script lang="ts">
     import { Button } from "$lib/components/ui/button/index";
-    import { fallOrSpring } from "$lib/utils";
-    import type { PageProps } from "./$types";
-    import DateWithRelativeTooltip from "$lib/components/date-with-relative-tooltip.svelte";
     import * as Card from "$lib/components/ui/card/index";
     import * as Select from "$lib/components/ui/select/index";
     import * as Popover from "$lib/components/ui/popover/index";
@@ -12,8 +9,6 @@
     import { tick } from "svelte";
     import { DateFormatter, type DateValue, getLocalTimeZone } from "@internationalized/date";
     import CalendarIcon from "@lucide/svelte/icons/calendar";
-
-    const { data }: PageProps = $props();
 
     const df = new DateFormatter("en-US", {
         dateStyle: "long",

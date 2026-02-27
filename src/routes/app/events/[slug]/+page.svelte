@@ -15,6 +15,7 @@
     import ClockIcon from "@lucide/svelte/icons/clock";
     import StarIcon from "@lucide/svelte/icons/star";
     import Button from "$lib/components/ui/button/button.svelte";
+    import EventStatistics from "$lib/components/event-statistics.svelte";
 
     let { data }: PageProps = $props();
     let event = $derived(data.event);
@@ -142,9 +143,7 @@
             </Tabs.Content>
 
             <Tabs.Content value="stats">
-                <div class="flex items-center justify-center h-64 text-muted-foreground">
-                    <p>Statistics coming soon...</p>
-                </div>
+                <EventStatistics {event} event_taps={data.event_taps} />
             </Tabs.Content>
         </Tabs.Root>
     </div>

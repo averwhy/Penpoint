@@ -38,7 +38,10 @@ export default defineConfig({
             allow: ["uploads"],
         },
     },
+    ssr: {
+        noExternal: ["layerchart", "svelte-ux"]
+    },
     optimizeDeps: {
-        exclude: ["@lucide/svelte", "svelte-sonner", "vaul-svelte", "bits-ui", "mode-watcher"],
+        exclude: ["@lucide/svelte", "svelte-sonner", "vaul-svelte", "bits-ui", "mode-watcher", "layerchart", "svelte-ux"],
     }
 });

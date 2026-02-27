@@ -127,6 +127,7 @@ export const Tap = z.object({
     id: z.uuid(),
     student_id: StudentId,
     event_id: z.uuid(),
+    created_at: z.coerce.date(),
 });
 export type Tap = z.infer<typeof Tap>;
 

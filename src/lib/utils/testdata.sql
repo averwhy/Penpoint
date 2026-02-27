@@ -37,7 +37,7 @@ INSERT INTO events(id, club_id, semester_id, name, location, starts_at, ends_at)
 INSERT INTO events(club_id, semester_id, name, location, starts_at, ends_at) VALUES ('7ae20177-358d-43bc-8666-999973fe7424', '76027209-00c4-4069-87ad-dc98641a8ef6', 'Stuff A Plush', 'Commuter Lounge', '2026-3-14T10:00:00.000Z', '2026-3-14T13:00:00.000Z');
 
 -- Taps
-INSERT INTO taps(student_id, event_id) VALUES ('1111111', '5bbe52e8-1759-4b5c-b118-a78e06ed8948');
-INSERT INTO taps(student_id, event_id) VALUES ('2222222', '5bbe52e8-1759-4b5c-b118-a78e06ed8948');
-INSERT INTO taps(student_id, event_id) VALUES ('3333333', '5bbe52e8-1759-4b5c-b118-a78e06ed8948');
-INSERT INTO taps(student_id, event_id) VALUES ('4444444', '5bbe52e8-1759-4b5c-b118-a78e06ed8948');
+INSERT INTO taps(student_id, event_id, created_at) VALUES ('1111111', '5bbe52e8-1759-4b5c-b118-a78e06ed8948', '2026-3-7T18:00:00.000Z');
+INSERT INTO taps(student_id, event_id, created_at) VALUES ('2222222', '5bbe52e8-1759-4b5c-b118-a78e06ed8948', '2026-3-7T19:02:00.000Z');
+INSERT INTO taps(student_id, event_id, created_at) VALUES ('3333333', '5bbe52e8-1759-4b5c-b118-a78e06ed8948', '2026-3-7T19:09:00.000Z');
+INSERT INTO taps(student_id, event_id, created_at) VALUES ('4444444', '5bbe52e8-1759-4b5c-b118-a78e06ed8948', '2026-3-7T19:30:00.000Z');
