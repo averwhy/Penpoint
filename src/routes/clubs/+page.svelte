@@ -6,6 +6,16 @@
 
     const { data }: { data: PageData } = $props();
     let clubs = $derived(data.clubs);
+
+    function getClubSlug(name: string, acronym: string | null): string {
+        const normalizedAcronym = acronym?.trim();
+        const slugSource = normalizedAcronym && normalizedAcronym.length > 0 ? normalizedAcronym : name;
+        return slugSource
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-+|-+$)/g, "");
+    }
 </script>
 
 <section class="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-10 mt-20">
@@ -16,7 +26,9 @@
     <div class="grid gap-4">
         {#if clubs.length === 0}
             <Card>
-                <CardContent class="py-6 text-sm text-muted-foreground">There are no clubs yet... something's probably wrong.</CardContent>
+                <CardContent class="py-6 text-sm text-muted-foreground"
+                    >There are no clubs yet... something's probably wrong.</CardContent
+                >
             </Card>
         {:else}
             {#each clubs as club}
@@ -39,8 +51,12 @@
                             <div class="space-y-1">
                                 <div class="flex items-center gap-2">
                                     <CardTitle class="text-base font-semibold leading-tight">
-                                        <a href="/clubs/{(club.acronym?.toLowerCase() ?? club.name.toLowerCase())}?from=clubs" class="hover:underline">
-                                            {club.name} {club.acronym ? `(${club.acronym})` : ""}
+                                        <a
+                                            href="/clubs/{getClubSlug(club.name, club.acronym)}?from=clubs"
+                                            class="hover:underline"
+                                        >
+                                            {club.name}
+                                            {club.acronym ? `(${club.acronym})` : ""}
                                         </a>
                                     </CardTitle>
                                 </div>

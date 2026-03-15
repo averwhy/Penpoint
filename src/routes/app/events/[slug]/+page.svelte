@@ -144,6 +144,7 @@
             <Tabs.Content value="stats">
                 <div>
                     <h1>Sorry, due to technical issues, event statistics aren't able to be implemented yet.</h1>
+                    <h2>This issue is being tracked <a href="https://github.com/averwhy/Penpoint/issues/22" target="_blank" class="text-link-primary hover:text-link-hover">here</a>.</h2>
                 </div>
             </Tabs.Content>
         </Tabs.Root>

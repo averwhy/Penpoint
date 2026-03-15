@@ -2,8 +2,8 @@
     import { Button } from "$lib/components/ui/button/index";
     import * as Field from "$lib/components/ui/field/index.js";
     import { Input } from "$lib/components/ui/input/index.js";
-    import { getPoints } from "$lib/functions/user/points.remote";
-    import * as Drawer from "$lib/components/ui/drawer/index";
+    import { getPointsInActiveSemester } from "$lib/functions/user/points.remote";
+    import * as Dialog from "$lib/components/ui/dialog/index";
     import { toast } from "svelte-sonner";
     import Countup from "$lib/components/countup.svelte";
     import type { PageProps } from "./$types";
@@ -12,6 +12,7 @@
     let pending = $state(false);
     let open = $state(false);
     let points = $state(0);
+    let allTimePoints = $state(0);
     let currentSemester = $state("Loading...");
 
     let { data }: PageProps = $props();
@@ -50,13 +51,14 @@
 
             <div class="items-center gap-2 flex-1 px-4">
                 <form
-                    {...getPoints.enhance(async ({ form, data, submit }) => {
+                    {...getPointsInActiveSemester.enhance(async ({ form, data, submit }) => {
                         pending = true;
                         try {
                             console.log("Submitting points check form");
                             await submit();
-                            console.log("result: ", getPoints.result);
-                            points = getPoints.result?.points ?? 0;
+                            console.log("result: ", getPointsInActiveSemester.result);
+                            points = getPointsInActiveSemester.result?.points ?? 0;
+                            allTimePoints = getPointsInActiveSemester.result?.allTimePoints ?? 0;
                             open = true;
                         } catch (error: any) {
                             console.log("point check failed", error);
@@ -70,7 +72,7 @@
                         <Field.Group>
                             <Field.Field>
                                 <Input
-                                    {...getPoints.fields.student_id.as("text")}
+                                    {...getPointsInActiveSemester.fields.student_id.as("text")}
                                     required
                                     id="student_id"
                                     class="bg-primary"
@@ -93,19 +95,20 @@
         </div>
     </div>
 </div>
-<Drawer.Root bind:open>
-    <Drawer.Content>
-        <Drawer.Header>
-            <Drawer.Title class="text-center -mb-5">You have...</Drawer.Title>
-        </Drawer.Header>
-        <Drawer.Header class="text-center">
-            <Drawer.Title class="text-7xl font-bold"><Countup target={points} duration={1} /></Drawer.Title>
-            <Drawer.Description class="text-2xl">points</Drawer.Description>
-        </Drawer.Header>
-        <Drawer.Footer>
-            <div class="flex justify-center">
-                <Drawer.Close class="bg-secondary py-3 px-7 rounded-xl">Done</Drawer.Close>
-            </div>
-        </Drawer.Footer>
-    </Drawer.Content>
-</Drawer.Root>
+<Dialog.Root bind:open>
+    <Dialog.Content class="w-[90vw] max-w-xs sm:max-w-xs">
+        <Dialog.Header class="text-center sm:text-center!">
+            <Dialog.Title class="text-center sm:text-center!">You have...</Dialog.Title>
+            <Dialog.Description class="text-7xl font-bold text-foreground text-center sm:text-center!">
+                <Countup target={points} duration={1} />
+            </Dialog.Description>
+            <p class="text-2xl text-muted-foreground text-center">points this semester</p>
+            <p class="text-sm text-muted-foreground text-center">
+                <Countup target={allTimePoints} duration={1} /> all time
+            </p>
+        </Dialog.Header>
+        <Dialog.Footer class="sm:justify-center">
+            <Button type="button" variant="secondary" onclick={() => (open = false)}>Done</Button>
+        </Dialog.Footer>
+    </Dialog.Content>
+</Dialog.Root>

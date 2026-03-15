@@ -1,6 +1,7 @@
 <script lang="ts">
     import * as Sidebar from "$lib/components/ui/sidebar/index.js";
     import AppSidebar from "$lib/components/app-sidebar.svelte";
+    import CampSNHU from "$lib/assets/CampSNHU.jpg";
 
     const { data, children } = $props();
     const user = $derived(data.user);

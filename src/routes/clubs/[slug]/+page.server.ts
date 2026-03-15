@@ -4,14 +4,19 @@ import { Club } from '$lib/models';
 import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params }) => {
-  const slug = params.slug;
-  console.log(slug);
+  const slug = params.slug.toLowerCase().trim();
 
   const clubResult = await sql`
     SELECT *
     FROM clubs
-    WHERE LOWER(acronym) = LOWER(${slug})
-    OR LOWER(name) = LOWER(${slug})
+    WHERE LOWER(TRIM(COALESCE(acronym, ''))) = ${slug}
+    OR LOWER(name) = ${slug}
+    OR REGEXP_REPLACE(
+      REGEXP_REPLACE(LOWER(TRIM(name)), '[^a-z0-9]+', '-', 'g'),
+      '(^-+|-+$)',
+      '',
+      'g'
+    ) = ${slug}
     LIMIT 1
   `;
   if (clubResult.length === 0) {
