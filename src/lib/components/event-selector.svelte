@@ -13,6 +13,7 @@
         events?: Event[];
         value?: string;
         selected?: Event | undefined;
+        showPastEvents?: boolean;
         placeholder?: string;
         disabled?: boolean;
         widthClass?: string;
@@ -25,6 +26,7 @@
         events = $bindable<Event[]>([]),
         value = $bindable(""),
         selected = $bindable<Event | undefined>(undefined),
+        showPastEvents = $bindable(false),
         placeholder = $bindable("Select an event..."),
         disabled = $bindable<boolean>(false),
         widthClass = $bindable("w-[200px]"),
@@ -38,11 +40,18 @@
     let triggerRef = $state<HTMLButtonElement>(null!);
 
     const eventData = $derived(
-        events.map(event => ({
-            label: event.name,
-            value: event.id,
-            data: event,
-        })),
+        events
+            .map(event => ({
+                label: event.name,
+                value: event.id,
+                data: event,
+            }))
+            .filter(event => {
+                if (showPastEvents) {
+                    return true;
+                }
+                return new Date(event.data.ends_at) >= new Date();
+            }),
     );
 
     const selectedValue = $derived(eventData.find(f => f.value === value));

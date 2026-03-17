@@ -1,6 +1,8 @@
 <script lang="ts">
     import { Button } from "$lib/components/ui/button";
     import { Input } from "$lib/components/ui/input";
+    import { Checkbox } from "$lib/components/ui/checkbox/index.js";
+    import { Label } from "$lib/components/ui/label/index.js";
     import * as Card from "$lib/components/ui/card";
     import * as Select from "$lib/components/ui/select";
     import { tap, manualTap } from "$lib/functions/tap.remote";
@@ -20,6 +22,7 @@
     let selectedEvent = $state("");
     let swipeHistory = $state<SwipeRecord[]>([]);
     let isCapturing = $state(false);
+    let showPastEvents = $state(false);
 
     const eventName = $derived(data.events.find(event => event.id === selectedEvent)?.name ?? "Select an event…");
 
@@ -147,7 +150,6 @@
 
 <div class="flex items-center justify-center min-h-[calc(100vh-68px)] mx-10 py-8">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-3xl">
-        <!-- Left column: Scan form -->
         <form
             {...tap.preflight(Tap.omit({ id: true })).enhance(async ({ form, data, submit }) => {
                 try {
@@ -167,18 +169,22 @@
                     <EventSelector
                         bind:value={selectedEvent}
                         events={data.events}
+                        bind:showPastEvents
                         placeholder="Select an event…"
                         widthClass="w-full bg-secondary text-muted-foreground"
                         selectActive={true}
                     />
                     <input {...tap.fields.event_id.as("text")} value={selectedEvent} hidden />
                 </div>
+                <div class="flex items-center gap-1.5">
+                    <Checkbox id="pastEvents" bind:checked={showPastEvents} />
+                    <Label for="pastEvents">Show past events</Label>
+                </div>
                 <Input class="w-full bg-primary" placeholder="Student ID" {...tap.fields.student_id.as("text")} />
                 <Button variant="success" type="submit">Scan In</Button>
             </div>
         </form>
 
-        <!-- Right column: Swipe history -->
         <Card.Root class="h-fit max-h-[calc(100vh-300px)] overflow-hidden flex flex-col">
             <Card.Header>
                 <Card.Title>Swipe History</Card.Title>

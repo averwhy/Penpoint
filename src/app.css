@@ -43,6 +43,7 @@ html.dark {
   --sidebar-accent-foreground: oklch(1 0 0);
   --sidebar-border: #141417;
   --sidebar-ring: oklch(0.709 0.01 56.259);
+  --pride-yellow: #FDB714;
 }
 
 .light,
@@ -82,6 +83,7 @@ html.light {
   --sidebar-accent-foreground: oklch(0.085 0.001 106.423);
   --sidebar-border: #d0d0d8;
   --sidebar-ring: oklch(0.709 0.01 56.259);
+  --pride-yellow: #FDB714;
 }
 
 @theme inline {
@@ -123,6 +125,7 @@ html.light {
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-pride-yellow: var(--pride-yellow);
 }
 
 @layer base {

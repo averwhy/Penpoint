@@ -7,3 +7,8 @@ export function sgaOrAbove(role: string): boolean {
     const allowedRoles = ["sga", "admin"];
     return allowedRoles.includes(role);
 }
+
+export function isAdmin(role: string): boolean {
+    const allowedRoles = ["admin"];
+    return allowedRoles.includes(role);
+}

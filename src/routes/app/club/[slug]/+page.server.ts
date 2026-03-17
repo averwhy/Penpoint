@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { sql } from '$lib/server/postgres';
-import { Club } from '$lib/models';
+import { Club, Event } from '$lib/models';
 
 export const load: PageServerLoad = async ({ params }) => {
   const slug = params.slug;
@@ -21,5 +21,13 @@ export const load: PageServerLoad = async ({ params }) => {
   `;
   const members = membersResult;
 
-  return { slug, club: club, members: members };
+  const clubEventsResult = await sql`
+    SELECT *
+    FROM events
+    WHERE club_id = ${club.id}
+    ORDER BY starts_at DESC
+  `;
+  const events = clubEventsResult.map(row => Event.parse(row));
+
+  return { slug, club: club, members: members, events: events };
 }

@@ -19,6 +19,7 @@
     const { user }: { user: User } = $props();
 
     import { logout } from "$lib/functions/logout.remote";
+    import { pendingEvents } from "$lib/functions/events.remote";
 
     // Menu items.
     let items = [
@@ -90,7 +91,7 @@
             title: "Get Help",
             url: "/app/help",
             icon: CircleQuestion,
-        }
+        },
     ];
 
     function pageMatchesItem(itemUrl: string, pathname: string) {
@@ -102,6 +103,43 @@
               ? "bg-background"
               : "";
     }
+
+    function shouldShowEventRequestPing(itemUrl: string) {
+        return itemUrl === "/app/requests/events" && hasCheckedPendingEvents && eventsPendingApproval;
+    }
+
+    let eventsPendingApproval = $state(false);
+    let hasCheckedPendingEvents = $state(false);
+
+    $effect(() => {
+        let cancelled = false;
+
+        if (user.role === "sga" || user.role === "admin") {
+            hasCheckedPendingEvents = false;
+            pendingEvents()
+                .then(result => {
+                    if (cancelled) return;
+                    eventsPendingApproval = result;
+                })
+                .catch(() => {
+                    if (cancelled) return;
+                    eventsPendingApproval = false;
+                })
+                .finally(() => {
+                    if (cancelled) return;
+                    hasCheckedPendingEvents = true;
+                });
+        } else {
+            eventsPendingApproval = false;
+            hasCheckedPendingEvents = true;
+        }
+
+        console.log(eventsPendingApproval);
+
+        return () => {
+            cancelled = true;
+        };
+    });
 </script>
 
 <Sidebar.Root variant="floating" collapsible="icon" class="pt-19">
@@ -138,6 +176,16 @@
                                         </a>
                                     {/snippet}
                                 </Sidebar.MenuButton>
+                                {#if shouldShowEventRequestPing(item.url)}
+                                    <Sidebar.MenuBadge class="" aria-hidden="true">
+                                        <span class="relative block h-2.5 w-2.5">
+                                            <span
+                                                class="absolute inset-0 animate-ping rounded-full bg-pride-yellow/80 opacity-75"
+                                            ></span>
+                                            <span class="relative block h-2.5 w-2.5 rounded-full bg-pride-yellow"></span>
+                                        </span>
+                                    </Sidebar.MenuBadge>
+                                {/if}
                             </Sidebar.MenuItem>
                         {/each}
                     </Sidebar.Menu>
@@ -163,22 +211,22 @@
                 </Sidebar.GroupContent>
             {/if}
             <Sidebar.GroupLabel>Docs & Help</Sidebar.GroupLabel>
-                <Sidebar.GroupContent>
-                    <Sidebar.Menu>
-                        {#each docItems as item (item.title)}
-                            <Sidebar.MenuItem>
-                                <Sidebar.MenuButton class={pageMatchesItem(item.url, page.url.pathname)}>
-                                    {#snippet child({ props })}
-                                        <a href={item.url} {...props}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </a>
-                                    {/snippet}
-                                </Sidebar.MenuButton>
-                            </Sidebar.MenuItem>
-                        {/each}
-                    </Sidebar.Menu>
-                </Sidebar.GroupContent>
+            <Sidebar.GroupContent>
+                <Sidebar.Menu>
+                    {#each docItems as item (item.title)}
+                        <Sidebar.MenuItem>
+                            <Sidebar.MenuButton class={pageMatchesItem(item.url, page.url.pathname)}>
+                                {#snippet child({ props })}
+                                    <a href={item.url} {...props}>
+                                        <item.icon />
+                                        <span>{item.title}</span>
+                                    </a>
+                                {/snippet}
+                            </Sidebar.MenuButton>
+                        </Sidebar.MenuItem>
+                    {/each}
+                </Sidebar.Menu>
+            </Sidebar.GroupContent>
         </Sidebar.Group>
     </Sidebar.Content>
     <Sidebar.Footer>

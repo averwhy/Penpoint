@@ -3,10 +3,12 @@
     import Button from "$lib/components/ui/button/button.svelte";
     import { Card, CardContent, CardHeader, CardTitle } from "$lib/components/ui/card/index";
     import type { PageData } from "./$types";
+    import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
 
     const { data }: { data: PageData } = $props();
     const club = $derived(data.club);
     const members = $derived(data.members);
+    const events = $derived(data.events);
     let logoSrc = $state<string | undefined>(undefined);
 
     const formatDate = (value: Date | string) =>
@@ -66,6 +68,30 @@
                         </div>
                     </div>
                 {/each}
+            {/if}
+        </CardContent>
+    </Card>
+
+    <Card>
+        <CardHeader>
+            <CardTitle>Events</CardTitle>
+        </CardHeader>
+        <CardContent class="divide-y">
+            {#if events.length === 0}
+                <p class="text-sm text-muted-foreground">No events yet.</p>
+            {:else}
+                <ScrollArea>
+                    {#each events as event}
+                        <div class="flex items-center gap-4 py-3">
+                            <div class="flex flex-col">
+                                <span class="font-medium hover:underline"
+                                    ><a href="/app/events/{event.id}">{event.name}</a></span
+                                >
+                                <span class="text-sm text-muted-foreground">{formatDate(event.starts_at)}</span>
+                            </div>
+                        </div>
+                    {/each}
+                </ScrollArea>
             {/if}
         </CardContent>
     </Card>

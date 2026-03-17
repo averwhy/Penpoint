@@ -11,6 +11,8 @@ export const load: PageServerLoad = async () => {
     const semester = await getActiveSemester(true);
     if (!semester) { return {data: undefined } }
 
+    console.log("semester:", semester);
+
     const result = await sql`
         SELECT 
             e.id,
@@ -63,6 +65,6 @@ export const load: PageServerLoad = async () => {
             hasFlyer,
         };
     });
-
+    
     return { data: events };
 }

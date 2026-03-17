@@ -15,6 +15,11 @@
     import ClockIcon from "@lucide/svelte/icons/clock";
     import StarIcon from "@lucide/svelte/icons/star";
     import Button from "$lib/components/ui/button/button.svelte";
+    import { cancelEvent } from "$lib/functions/events/status.remote";
+    import { ca } from "zod/v4/locales";
+    import { toast } from "svelte-sonner";
+    import { success } from "zod";
+    import { redirect } from "@sveltejs/kit";
 
     let { data }: PageProps = $props();
     let event = $derived(data.event);
@@ -144,7 +149,13 @@
             <Tabs.Content value="stats">
                 <div>
                     <h1>Sorry, due to technical issues, event statistics aren't able to be implemented yet.</h1>
-                    <h2>This issue is being tracked <a href="https://github.com/averwhy/Penpoint/issues/22" target="_blank" class="text-link-primary hover:text-link-hover">here</a>.</h2>
+                    <h2>
+                        This issue is being tracked <a
+                            href="https://github.com/averwhy/Penpoint/issues/22"
+                            target="_blank"
+                            class="text-link-primary hover:text-link-hover">here</a
+                        >.
+                    </h2>
                 </div>
             </Tabs.Content>
         </Tabs.Root>
@@ -161,7 +172,18 @@
         </Dialog.Header>
         <Dialog.Footer>
             <Button variant="outline" onclick={() => (deleteDialogOpen = false)}>Cancel</Button>
-            <Button variant="destructive" onclick={() => {}}>Delete Event</Button>
+            <Button
+                variant="destructive"
+                onclick={() => {
+                    try {
+                        cancelEvent({ event_id: event.id });
+                        toast.success("Event cancelled and deleted successfully");
+                        redirect(300, "/app/events");
+                    } catch {
+                        toast.error("Failed to cancel event");
+                    }
+                }}>Delete Event</Button
+            >
         </Dialog.Footer>
     </Dialog.Content>
 </Dialog.Root>

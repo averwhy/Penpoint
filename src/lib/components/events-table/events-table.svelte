@@ -86,6 +86,7 @@
                     name: row.original.name,
                     id: row.original.id,
                     approval_status: row.original.approval_status,
+                    ends_at: row.original.ends_at,
                     showAdminActions: showAdminActions || false,
                 }),
         },

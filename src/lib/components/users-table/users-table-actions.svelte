@@ -24,25 +24,26 @@
             <DropdownMenu.Label>Actions</DropdownMenu.Label>
             <DropdownMenu.Item
                 onclick={() => {
-                    navigator.clipboard.writeText(id);
-                    toast.success("User ID copied to clipboard");
-                }}>Copy user ID</DropdownMenu.Item
+                    window.location.href = `/app/manage/users/${id}`;
+                }}>View user</DropdownMenu.Item
             >
+            <DropdownMenu.Item
+                class="text-destructive"
+                onclick={() => (window.location.href = `/app/manage/users/${id}`)}>Delete user</DropdownMenu.Item
+            >
+            <DropdownMenu.Separator />
             <DropdownMenu.Item
                 onclick={() => {
                     navigator.clipboard.writeText(email);
                     toast.success("User email copied to clipboard");
                 }}>Copy email</DropdownMenu.Item
             >
+            <DropdownMenu.Item
+                onclick={() => {
+                    navigator.clipboard.writeText(id);
+                    toast.success("User ID copied to clipboard");
+                }}>Copy user ID</DropdownMenu.Item
+            >
         </DropdownMenu.Group>
-        <DropdownMenu.Separator />
-        <DropdownMenu.Item
-            onclick={() => {
-                window.location.href = `/app/manage/users/${id}`;
-            }}>View user</DropdownMenu.Item
-        >
-        <DropdownMenu.Item class="text-destructive" onclick={() => (window.location.href = `/app/manage/users/${id}`)}
-            >Delete user</DropdownMenu.Item
-        >
     </DropdownMenu.Content>
 </DropdownMenu.Root>

@@ -20,15 +20,19 @@
     <DropdownMenu.Content>
         <DropdownMenu.Group>
             <DropdownMenu.Label>Actions</DropdownMenu.Label>
-            <DropdownMenu.Item onclick={() => {
-                navigator.clipboard.writeText(id);
-                toast.success("Semester ID copied to clipboard");
-            }}>Copy semester ID</DropdownMenu.Item>
+            <DropdownMenu.Item
+                onclick={() => {
+                    /* navigate to edit page */
+                    window.location.href = `/app/manage/semesters/${id}`;
+                }}>View semester</DropdownMenu.Item
+            >
+            <DropdownMenu.Separator />
+            <DropdownMenu.Item
+                onclick={() => {
+                    navigator.clipboard.writeText(id);
+                    toast.success("Semester ID copied to clipboard");
+                }}>Copy semester ID</DropdownMenu.Item
+            >
         </DropdownMenu.Group>
-        <DropdownMenu.Separator />
-        <DropdownMenu.Item onclick={() => {
-            /* navigate to edit page */
-            window.location.href = `/app/manage/semesters/${id}`;
-        }}>Edit semester</DropdownMenu.Item>
     </DropdownMenu.Content>
 </DropdownMenu.Root>

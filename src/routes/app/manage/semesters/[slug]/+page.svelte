@@ -96,64 +96,54 @@
         <h2 class="text-xl font-semibold mb-4">Statistics</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <Card.Root>
-                <Card.Content class="flex items-center gap-4 pt-6">
-                    <TicketIcon class="h-8 w-8 text-muted-foreground" />
-                    <div>
-                        <p class="text-3xl font-bold">{stats.totalEvents}</p>
-                        <p class="text-sm text-muted-foreground">Total Events</p>
-                    </div>
+                <Card.Content class="text-5xl">
+                    {stats.totalEvents}
                 </Card.Content>
+                <Card.Footer class="text-xl">Total Events</Card.Footer>
             </Card.Root>
 
             <Card.Root>
-                <Card.Content class="flex items-center gap-4 pt-6">
-                    <TicketIcon class="h-8 w-8 text-green-600" />
-                    <div>
-                        <p class="text-3xl font-bold">{stats.acceptedEvents}</p>
-                        <p class="text-sm text-muted-foreground">Accepted Events</p>
-                    </div>
+                <Card.Content class="text-5xl">
+                    {stats.acceptedEvents}
                 </Card.Content>
+                <Card.Footer class="text-xl">Accepted Events</Card.Footer>
             </Card.Root>
 
             <Card.Root>
-                <Card.Content class="flex items-center gap-4 pt-6">
-                    <UsersIcon class="h-8 w-8 text-muted-foreground" />
-                    <div>
-                        <p class="text-3xl font-bold">{stats.uniqueStudents}</p>
-                        <p class="text-sm text-muted-foreground">Students Participating</p>
-                    </div>
+                <Card.Content class="text-5xl">
+                    {stats.uniqueStudents}
                 </Card.Content>
+                <Card.Footer class="text-xl">Unique Students</Card.Footer>
             </Card.Root>
 
             <Card.Root>
-                <Card.Content class="flex items-center gap-4 pt-6">
-                    <StarIcon class="h-8 w-8 text-yellow-500" />
-                    <div>
-                        <p class="text-3xl font-bold">{stats.totalPointsEarned}</p>
-                        <p class="text-sm text-muted-foreground">Points Earned</p>
-                    </div>
+                <Card.Content class="text-5xl">
+                    {stats.totalPointsEarned}
                 </Card.Content>
+                <Card.Footer class="text-xl">Total Points Earned</Card.Footer>
             </Card.Root>
 
             <Card.Root>
-                <Card.Content class="flex items-center gap-4 pt-6">
-                    <ZapIcon class="h-8 w-8 text-muted-foreground" />
-                    <div>
-                        <p class="text-3xl font-bold">{stats.totalTaps}</p>
-                        <p class="text-sm text-muted-foreground">Total Taps</p>
-                    </div>
+                <Card.Content class="text-5xl">
+                    {stats.totalTaps}
                 </Card.Content>
+                <Card.Footer class="text-xl">Total Taps</Card.Footer>
             </Card.Root>
 
-            <Card.Root>
-                <Card.Content class="flex items-center gap-4 pt-6">
-                    <BuildingIcon class="h-8 w-8 text-muted-foreground" />
-                    <div>
-                        <p class="text-3xl font-bold">{stats.clubsParticipating}</p>
-                        <p class="text-sm text-muted-foreground">Clubs Participating</p>
-                    </div>
+            <Card.Root class="">
+                <Card.Content class="text-5xl">
+                    {stats.clubsParticipating}
                 </Card.Content>
+                <Card.Footer class="text-xl">Clubs Participating</Card.Footer>
             </Card.Root>
         </div>
+        <h2 class="text-xl font-semibold my-4">Export <br/> <a class="text-link-primary hover:underline hover:text-link-hover text-sm" href={""} target="_blank">Learn more</a></h2>
+        <Card.Root>
+            <Card.Content>
+                <flex class="flex flex-col gap-4 max-w-3/4 mx-auto">
+                    <Button variant="outline" href={""}>Export top point earners (CSV)</Button>
+                </flex>
+            </Card.Content>
+        </Card.Root>
     </div>
 </div>

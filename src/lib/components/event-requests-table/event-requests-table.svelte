@@ -26,6 +26,7 @@
     import { createRawSnippet } from "svelte";
     import DataTableActions from "./event-requests-table-actions.svelte";
     import DataTableCheckbox from "./event-requests-table-checkbox.svelte";
+    import DateWithRelativeTooltip from "../date-with-relative-tooltip.svelte";
 
     interface Props {
         data: Event[];
@@ -36,7 +37,8 @@
         eventId: string;
         eventName: string;
         location: string;
-        points: number;
+        starts_at: Date;
+        ends_at: Date;
         special_requests: string | null;
     };
 
@@ -48,7 +50,8 @@
             eventId: event.id,
             eventName: event.name,
             location: event.location,
-            points: event.point_value,
+            starts_at: new Date(event.starts_at),
+            ends_at: new Date(event.ends_at),
             special_requests: event.special_requests,
         })),
     );
@@ -103,17 +106,20 @@
             },
         },
         {
-            accessorKey: "points",
-            header: "Points",
+            accessorKey: "starts_at",
+            header: "Start Time",
             cell: ({ row }) => {
-                const pointsSnippet = createRawSnippet<[{ points: number }]>(getPoints => {
-                    const { points } = getPoints();
-                    return {
-                        render: () => `<div>${points}</div>`,
-                    };
+                return renderComponent(DateWithRelativeTooltip, {
+                    date: row.original.starts_at,
                 });
-                return renderSnippet(pointsSnippet, {
-                    points: row.original.points,
+            },
+        },
+        {
+            accessorKey: "ends_at",
+            header: "End Time",
+            cell: ({ row }) => {
+                return renderComponent(DateWithRelativeTooltip, {
+                    date: row.original.ends_at,
                 });
             },
         },
@@ -125,7 +131,9 @@
                     const { hasRequests } = getRequests();
                     return {
                         render: () =>
-                            `<div class="text-sm text-muted-foreground">${hasRequests ? "Yes" : "None"}</div>`,
+                            hasRequests
+                                ? `<div class="text-sm font-medium">"${row.original.special_requests!.length > 40 ? row.original.special_requests!.substring(0, 40) + "..." : row.original.special_requests}"</div>`
+                                : `<div class="text-sm text-muted-foreground">None</div>`,
                     };
                 });
                 return renderSnippet(requestsSnippet, {
@@ -140,6 +148,7 @@
                 renderComponent(DataTableActions, {
                     requestId: row.original.id,
                     eventId: row.original.eventId,
+                    eventName: row.original.eventName,
                     specialRequests: row.original.special_requests,
                 }),
         },
