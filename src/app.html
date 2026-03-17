@@ -3,6 +3,15 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script>
+            (function() {
+                var stored = localStorage.getItem('mode-watcher-mode');
+                var theme;
+                if (stored === 'light' || stored === 'dark') { theme = stored; } 
+				else { theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; }
+                document.documentElement.className = theme;
+            })();
+        </script>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
