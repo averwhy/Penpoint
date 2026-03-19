@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { Badge } from "$lib/components/ui/badge/index";
-    import { Button } from "$lib/components/ui/button/index";
     import { Card, CardContent, CardTitle } from "$lib/components/ui/card/index";
     import type { PageData } from "./$types";
 
@@ -45,7 +43,7 @@
                                 <div
                                     class="flex h-10 w-10 items-center justify-center rounded-md border bg-card text-xs font-semibold uppercase"
                                 >
-                                    {club.acronym?.slice(0, 4) || "?"}
+                                    {club.acronym ? club.acronym.slice(0, 4) : club.name?.slice(0, 1)}
                                 </div>
                             {/if}
                             <div class="space-y-1">

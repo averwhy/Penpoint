@@ -37,7 +37,7 @@
                 <img src={logoSrc} alt={`${club.name} logo`} class="h-20 w-20 rounded-lg object-cover border" />
             {:else}
                 <div class="flex h-20 w-20 items-center justify-center rounded-lg border bg-card text-lg font-semibold">
-                    {club.acronym.slice(0, 3).toUpperCase()}
+                    {club.acronym ? club.acronym.slice(0, 3).toUpperCase() : club.name.slice(0, 1).toUpperCase()}
                 </div>
             {/if}
             <div class="space-y-1">

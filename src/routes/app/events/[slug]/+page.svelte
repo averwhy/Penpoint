@@ -49,6 +49,7 @@
     const duration = $derived(humanizeDuration(event.ends_at.getTime() - event.starts_at.getTime(), { largest: 2 }));
 
     let deleteDialogOpen = $state(false);
+    let deleteConfirmationDialogOpen = $state(false);
     let detailsDialogOpen = $state(false);
     let editDialogOpen = $state(false);
 </script>
@@ -177,8 +178,7 @@
                 onclick={() => {
                     try {
                         cancelEvent({ event_id: event.id });
-                        toast.success("Event cancelled and deleted successfully");
-                        redirect(300, "/app/events");
+                        deleteConfirmationDialogOpen = true;
                     } catch {
                         toast.error("Failed to cancel event");
                     }
@@ -236,6 +236,20 @@
         <Dialog.Footer>
             <Button variant="outline" onclick={() => (detailsDialogOpen = false)}>Cancel</Button>
             <Button variant="default" onclick={() => {}}>Save changes</Button>
+        </Dialog.Footer>
+    </Dialog.Content>
+</Dialog.Root>
+
+<Dialog.Root bind:open={deleteConfirmationDialogOpen}>
+    <Dialog.Content>
+        <Dialog.Header>
+            <Dialog.Title>Success</Dialog.Title>
+            <Dialog.Description>
+                {event.name} has been successfully cancelled and deleted.
+            </Dialog.Description>
+        </Dialog.Header>
+        <Dialog.Footer>
+            <Button variant="outline" onclick={() => (redirect(303, "/app/events"))}>Go to Events</Button>
         </Dialog.Footer>
     </Dialog.Content>
 </Dialog.Root>

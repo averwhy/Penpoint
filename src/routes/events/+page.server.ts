@@ -9,9 +9,7 @@ const uploadsDir = path.join(process.cwd(), "uploads", "events");
 
 export const load: PageServerLoad = async () => {
     const semester = await getActiveSemester(true);
-    if (!semester) { return {data: undefined } }
-
-    console.log("semester:", semester);
+    if (!semester) { return { data: undefined } }
 
     const result = await sql`
         SELECT 
@@ -65,6 +63,6 @@ export const load: PageServerLoad = async () => {
             hasFlyer,
         };
     });
-    
+
     return { data: events };
 }

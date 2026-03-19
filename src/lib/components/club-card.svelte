@@ -14,10 +14,20 @@
     let { title, club, from = undefined }: Props = $props();
 
     let clubData: Club | undefined = $state<Club | undefined>();
-    
+
+    function getClubSlug(name: string, acronym: string | null): string {
+        const normalizedAcronym = acronym?.trim();
+        const slugSource = normalizedAcronym && normalizedAcronym.length > 0 ? normalizedAcronym : name;
+        return slugSource
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-+|-+$)/g, "");
+    }
+
     $effect(() => {
         const clubId = typeof club === "string" ? club : club.id;
-        getClub(clubId).then((data) => {
+        getClub(clubId).then(data => {
             clubData = data;
         });
     });
@@ -26,14 +36,24 @@
 <div>
     {#if clubData}
         <HoverCard.Root>
-            <HoverCard.Trigger class="hover:underline" href={`/clubs/${clubData.acronym}${from ? `?from=${from}` : ""}`}>
+            <HoverCard.Trigger
+                class="hover:underline"
+                href={`/clubs/${getClubSlug(clubData.name, clubData.acronym)}${from ? `?from=${from}` : ""}`}
+            >
                 {title}
             </HoverCard.Trigger>
             <HoverCard.Content class="w-80">
                 <div class="flex justify-between space-x-4">
                     <div class="space-y-1">
-                        <h4 class="text-sm font-semibold">{clubData.name}</h4>
-                        <p class="text-sm">{clubData.acronym}</p>
+                        <h4 class="text-sm font-semibold">
+                            {clubData.name}
+                            {#if clubData.acronym}<span class="text-sm text-muted-foreground">({clubData.acronym})</span
+                                >{/if}
+                        </h4>
+
+                        {#if clubData.bio}<p class="text-sm">{clubData.bio}</p>{:else}<p class="text-sm italic">
+                                No bio available
+                            </p>{/if}
                         <div class="flex items-center pt-2">
                             {#if clubData.governing_board}
                                 <Badge variant="default" class="text-xs">Governing Board</Badge>

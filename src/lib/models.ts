@@ -37,8 +37,6 @@ export type Registration = z.infer<typeof Registration>;
 
 export const Student = z.object({
     student_id: StudentId,
-    email: z.email().max(100).nullable(),
-    name: z.string().max(100).nullable(),
     created_at: z.coerce.date(),
     updated_at: z.coerce.date(),
 });
@@ -51,8 +49,7 @@ export const User = z.object({
     name: z.string().max(64),
     role: z.enum(["inactive", "unapproved", "blocked", "club", "sga", "admin"]),
     pending: z.boolean().default(false),
-    request_reason: z.string().max(10000),
-    requested_at: z.coerce.date(),
+    request_reason: z.string().max(1000).nullable(),
     last_login: z.coerce.date(),
     created_at: z.coerce.date(),
     updated_at: z.coerce.date(),
@@ -84,7 +81,7 @@ export type Semester = z.infer<typeof Semester>;
 export const Club = z.object({
     id: z.uuid(),
     name: z.string().max(100),
-    acronym: z.string().max(100),
+    acronym: z.string().max(10).nullable(),
     bio: z.string().max(300).nullable(),
     governing_board: z.boolean(),
     university_office: z.boolean(),

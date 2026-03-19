@@ -47,7 +47,7 @@ async function submitTap(student_id: string, event_id: string) {
     RETURNING *
 `;
   if (result.length === 0)
-    error(500, { message: `${student.name ?? student.student_id} has already been tapped for ${event.name}.` });
+    error(500, { message: `${student.student_id} has already been tapped for ${event.name}.` });
 
   return { student, tap: Tap.parse(result[0]) };
 }

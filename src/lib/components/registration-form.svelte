@@ -61,7 +61,7 @@
                     <Input {...register.fields.student_id.as("text")} placeholder="1234567" required />
                 </Field.Field>
                 <Field.Field>
-                    <Textarea {...register.fields.reason.as("text")} placeholder="Why are you requesting an account?" />
+                    <Textarea {...register.fields.reason.as("text")} placeholder="Why are you requesting an account?" maxlength={1000} />
                 </Field.Field>
                 <Field.Group>
                     <Field.Field>

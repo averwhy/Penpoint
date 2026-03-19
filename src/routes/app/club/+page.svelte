@@ -6,6 +6,16 @@
 
     const { data }: { data: PageData } = $props();
     const userClubs = $derived(data.userClubs);
+
+    function getClubSlug(name: string, acronym: string | null): string {
+        const normalizedAcronym = acronym?.trim();
+        const slugSource = normalizedAcronym && normalizedAcronym.length > 0 ? normalizedAcronym : name;
+        return slugSource
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-+|-+$)/g, "");
+    }
 </script>
 
 <section class="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-10">
@@ -39,7 +49,7 @@
                             <div class="space-y-1">
                                 <div class="flex items-center gap-2">
                                     <CardTitle class="text-base font-semibold leading-tight">
-                                        <a href="/app/club/{club.acronym.toLowerCase()}" class="hover:underline">
+                                        <a href={`/app/club/${getClubSlug(club.name, club.acronym)}`} class="hover:underline">
                                             {club.name} ({club.acronym})
                                         </a>
                                     </CardTitle>

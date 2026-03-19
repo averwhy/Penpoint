@@ -156,7 +156,7 @@
                     await submit();
                     tap.fields.student_id.set("");
                     toast.success("Student tapped successfully", {
-                        description: `${tap.result?.student.name ?? tap.result?.student.student_id ?? data.student_id} tapped into ${eventName} successfully.`,
+                        description: `${tap.result?.student.student_id ?? data.student_id} tapped into ${eventName} successfully.`,
                     });
                 } catch (error: any) {
                     console.error("tap failed", error);

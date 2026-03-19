@@ -104,7 +104,7 @@
             header: "Request Reason",
             cell: ({ row }) => {
                 return renderComponent(Text, {
-                    text: row.original.request_reason,
+                    text: row.original.request_reason ?? "No reason provided",
                 });
             },
         },

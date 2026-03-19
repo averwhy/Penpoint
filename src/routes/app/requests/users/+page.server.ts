@@ -6,7 +6,15 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals }) => {
     const result = await sql`
-        SELECT * FROM users
+        SELECT 
+            id, 
+            student_id, 
+            email, 
+            name, 
+            request_reason, 
+            created_at, 
+            updated_at 
+        FROM users
         WHERE users.role = 'unapproved'
     `;
     const users = result.map(row => NewUser.parse(row));

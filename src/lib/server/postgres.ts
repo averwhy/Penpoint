@@ -88,13 +88,11 @@ export async function getLastSemester(): Promise<Semester | undefined> {
 }
 
 export async function createStudent({
-    student_id,
-    email,
-    name,
-}: Pick<Student, "student_id" | "email" | "name">): Promise<Student> {
+    student_id
+}: Pick<Student, "student_id">): Promise<Student> {
     const result = await sql`
-        INSERT INTO students (student_id, email, name)
-        VALUES (${student_id}, ${email ?? null}, ${name ?? null})
+        INSERT INTO students (student_id)
+        VALUES (${student_id})
         RETURNING *
 	`;
 

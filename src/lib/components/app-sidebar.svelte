@@ -134,8 +134,6 @@
             hasCheckedPendingEvents = true;
         }
 
-        console.log(eventsPendingApproval);
-
         return () => {
             cancelled = true;
         };
