@@ -124,12 +124,11 @@ export async function updateUserPassword(email: string, password_hash: string) {
     `;
 }
 
-export async function studentExists(student_id: string, email: string): Promise<boolean> {
+export async function studentExists(student_id: string): Promise<boolean> {
     const result = await sql`
         SELECT student_id
         FROM students
         WHERE student_id = ${student_id}
-        OR email = ${email}
         LIMIT 1
 	`;
 

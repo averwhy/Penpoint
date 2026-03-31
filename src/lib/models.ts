@@ -27,7 +27,6 @@ export type Login = z.infer<typeof Login>;
 export const Registration = z.object({
     name: z.string().min(1).max(100),
     email: z.email().max(100),
-    // password: Password, // password schema should only be used here
     student_id: StudentId,
     reason: z.string().min(1).max(10000),
 });
@@ -96,7 +95,7 @@ export const ClubUser = z.object({
     position: z.string().max(100),
     user_id: z.uuid(),
     club_id: z.uuid(),
-    for_semester: z.uuid(),
+    for_semester: z.uuid().nullable(),
     created_at: z.coerce.date(),
     updated_at: z.coerce.date(),
 });

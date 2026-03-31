@@ -97,6 +97,7 @@
             ) {
                 flash("error");
                 toast.error("Duplicate swipe", { description: "That student has already swiped for this event!" });
+                return
             }
 
             try {

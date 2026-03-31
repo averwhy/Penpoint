@@ -5,7 +5,7 @@ import { error } from "@sveltejs/kit";
 
 export const register = form(Registration, async register => {
     const [foundStudent, foundUser] = await Promise.all([
-        studentExists(register.student_id, register.email),
+        studentExists(register.student_id),
         userExists(register.student_id, register.email),
     ]);
 

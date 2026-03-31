@@ -17,12 +17,8 @@ export const init: ServerInit = async () => {
             const hashedPassword = await hashPassword(password);
 
             await sql`
-                INSERT INTO students (email, student_id, name)
-                VALUES (
-                    ${email},
-                    ${init_id},
-                    ${init_name}
-                )
+                INSERT INTO students (student_id)
+                VALUES (${init_id})
                 ON CONFLICT DO NOTHING
             `;
 
@@ -46,11 +42,12 @@ export const init: ServerInit = async () => {
                 );
                 // Create SGA
                 const clubResult = await sql`
-                    INSERT INTO clubs (id, name, acronym, governing_board)
+                    INSERT INTO clubs (id, name, acronym, bio, governing_board)
                     VALUES (
                         '5f92e1a1-5be4-4cc3-8c96-0ff12dbf6e5a',
                         'Student Government Association',
                         'SGA',
+                        'Dedicated to improving your student experience and making your voice heard!',
                         true
                     )
                     ON CONFLICT DO NOTHING

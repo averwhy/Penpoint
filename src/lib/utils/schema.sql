@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS club_users(
     position TEXT NOT NULL,
     user_id UUID REFERENCES users(id) NOT NULL,
     club_id UUID REFERENCES clubs(id) NOT NULL,
-    for_semester UUID REFERENCES semesters(id) NOT NULL,
+    for_semester UUID REFERENCES semesters(id),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

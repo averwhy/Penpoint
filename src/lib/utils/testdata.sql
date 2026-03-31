@@ -3,20 +3,20 @@
 -- This is assuming that this test data is put it during semester A1 (Jan 2026-April 2026)
 INSERT INTO semesters(id, starts, ends, code) VALUES ('76027209-00c4-4069-87ad-dc98641a8ef6', '2026-1-5T00:00:00.000Z', '2026-4-25T00:00:00.000Z', 'A1');
 
-INSERT INTO students(student_id, name) VALUES ('1111111', 'Joe');
-INSERT INTO students(student_id, name) VALUES ('2222222', 'Mary');
-INSERT INTO students(student_id, name) VALUES ('3333333', 'Steven');
-INSERT INTO students(student_id, name) VALUES ('4444444', 'Paul');
-INSERT INTO students(student_id, name) VALUES ('5555555', 'Sarah');
-INSERT INTO students(student_id, name) VALUES ('6666666', 'Colin');
-INSERT INTO students(student_id, name) VALUES ('7777777', 'Debbie');
-INSERT INTO students(student_id, name) VALUES ('8888888', 'Nick');
-INSERT INTO students(student_id, name) VALUES ('9999999', 'Lisa');
+INSERT INTO students(student_id) VALUES ('1111111');
+INSERT INTO students(student_id) VALUES ('2222222');
+INSERT INTO students(student_id) VALUES ('3333333');
+INSERT INTO students(student_id) VALUES ('4444444');
+INSERT INTO students(student_id) VALUES ('5555555');
+INSERT INTO students(student_id) VALUES ('6666666');
+INSERT INTO students(student_id) VALUES ('7777777');
+INSERT INTO students(student_id) VALUES ('8888888');
+INSERT INTO students(student_id) VALUES ('9999999');
 
 --INSERT INTO clubs(id, name, acronym, governing_board) VALUES ('5f92e1a1-5be4-4cc3-8c96-0ff12dbf6e5a', 'Student Government Association', 'SGA', true);
 -- ^ commented out because we do it in the init in hooks.server.ts now
-INSERT INTO clubs(id, name, acronym, governing_board) VALUES ('7ae20177-358d-43bc-8666-999973fe7424', 'Penmen Press', '', false);
-INSERT INTO clubs(id, name, acronym, governing_board) VALUES ('c518dacc-3bbe-4c52-bebe-9bdb409cd01c', 'Coordinators of Activies, Programs and Events', 'CAPE', true);
+INSERT INTO clubs(id, name, acronym, bio, governing_board) VALUES ('7ae20177-358d-43bc-8666-999973fe7424', 'Penmen Press', '', 'Writing SNHUs Story', false);
+INSERT INTO clubs(id, name, acronym, bio, governing_board) VALUES ('c518dacc-3bbe-4c52-bebe-9bdb409cd01c', 'Coordinators of Activies, Programs and Events', 'CAPE', 'CAPE is your ticket to entertainment!', true);
 
 -- 2 SGA events
 INSERT INTO events(club_id, semester_id, name, location, starts_at, ends_at) VALUES ('5f92e1a1-5be4-4cc3-8c96-0ff12dbf6e5a', '76027209-00c4-4069-87ad-dc98641a8ef6', 'Campus Conversations', 'Green Space', '2026-2-4T12:00:00.000Z', '2026-2-4T22:00:00.000Z');

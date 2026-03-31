@@ -16,10 +16,9 @@
     import StarIcon from "@lucide/svelte/icons/star";
     import Button from "$lib/components/ui/button/button.svelte";
     import { cancelEvent } from "$lib/functions/events/status.remote";
-    import { ca } from "zod/v4/locales";
     import { toast } from "svelte-sonner";
-    import { success } from "zod";
     import { redirect } from "@sveltejs/kit";
+    import { goto } from "$app/navigation";
 
     let { data }: PageProps = $props();
     let event = $derived(data.event);
@@ -249,7 +248,7 @@
             </Dialog.Description>
         </Dialog.Header>
         <Dialog.Footer>
-            <Button variant="outline" onclick={() => (redirect(303, "/app/events"))}>Go to Events</Button>
+            <Button variant="outline" onclick={() => goto("/app/events")}>Go to Events</Button>
         </Dialog.Footer>
     </Dialog.Content>
 </Dialog.Root>
