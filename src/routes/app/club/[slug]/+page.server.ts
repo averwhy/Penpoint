@@ -47,16 +47,15 @@ export const actions: Actions = {
         const formData = await request.formData();
 
         // Extract form fields
-        const eventId = (formData.get("id") as string) || crypto.randomUUID();
         const clubId = formData.get("clubId") as string;
-        const flyerFile = formData.get("flyer") as File | null;
+        const clubLogo = formData.get("logo") as File | null;
 
         if (!sgaOrAbove(locals.user.role) || (!userClubs || !userClubs.some((c) => c.id === clubId))) {
             return fail(403, { message: "Forbidden" });
         }
 
         // Validate and save file
-        const filename = await uploadFile(flyerFile, eventId, "events");
+        const filename = await uploadFile(clubLogo, clubId, "clubs");
         if (typeof filename !== "string") {
             // uploadFile returns an ActionFailure on error
             return filename;
@@ -73,6 +72,6 @@ export const actions: Actions = {
             return fail(500, { message: "Failed to update club image in database due to internal error" });
         }
 
-        redirect(303, `/app/club/${eventId}`);
+        redirect(303, `/app/club/${clubId}`);
     },
 };
