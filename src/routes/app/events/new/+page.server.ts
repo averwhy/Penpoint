@@ -4,20 +4,6 @@ import { sql } from "$lib/server/postgres";
 import { clubOrAbove } from "$lib/utils/permissions";
 import { uploadFile } from "$lib/functions/file-upload";
 
-const uploadDir = path.join(process.cwd(), "uploads", "events");
-
-const ALLOWED_TYPES = ["image/png", "image/jpg", "image/jpeg"];
-const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
-
-function getFileExtension(mimeType: string): string {
-    const extensions: Record<string, string> = {
-        "image/png": ".png",
-        "image/jpg": ".jpg",
-        "image/jpeg": ".jpeg",
-    };
-    return extensions[mimeType] ?? ".bin";
-}
-
 export const actions: Actions = {
     default: async ({ request, locals }) => {
         if (!locals.user) {
