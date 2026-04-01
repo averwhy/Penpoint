@@ -18,6 +18,8 @@
     }
 
     const { data }: PageProps = $props();
+    
+    
 
     let selectedEvent = $state("");
     let swipeHistory = $state<SwipeRecord[]>([]);

@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Card, CardContent, CardTitle } from "$lib/components/ui/card/index";
+    import { toast } from "svelte-sonner";
     import type { PageData } from "./$types";
 
     const { data }: { data: PageData } = $props();
@@ -14,6 +15,14 @@
             .replace(/[^a-z0-9]+/g, "-")
             .replace(/(^-+|-+$)/g, "");
     }
+
+    $effect(() => {
+        if (data.unavailable) {
+            toast.error("Clubs data is currently unavailable. Please try again later.", {
+                duration: 10000,
+            });
+        }
+    });
 </script>
 
 <section class="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-10 mt-20">
@@ -22,9 +31,9 @@
     </header>
 
     <div class="grid gap-4">
-        {#if clubs.length === 0}
+        {#if clubs === null}
             <Card>
-                <CardContent class="py-6 text-sm text-muted-foreground"
+                <CardContent class="py-3 text-xl text-muted-foreground"
                     >There are no clubs yet... something's probably wrong.</CardContent
                 >
             </Card>

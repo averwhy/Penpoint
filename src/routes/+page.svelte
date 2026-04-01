@@ -12,8 +12,8 @@
     const stats = $derived(data.stats);
 
     $effect(() => {
-        if (!stats) {
-            toast.error("Failed to load Penmen Pride stats. Please try again later.");
+        if (data.unavailable) {
+            toast.error("Failed to load Penmen Pride stats. Please try again later.", { duration: 10000 });
         }
     });
 

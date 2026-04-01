@@ -9,6 +9,7 @@
     import FlyerViewer from "$lib/components/flyer-viewer.svelte";
     import ChevronsRight from "@lucide/svelte/icons/chevrons-right";
     import ChevronsDown from "@lucide/svelte/icons/chevrons-down";
+    import { toast } from "svelte-sonner";
 
     const { data }: PageProps = $props();
     let events = $derived(data.data);
@@ -32,6 +33,14 @@
         if (date.getMinutes() == 0) return date.toLocaleTimeString("en-US", { hour: "numeric" });
         return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
     }
+
+    $effect(() => {
+        if (data.unavailable) {
+            toast.error("Events data is currently unavailable. Please try again later.", {
+                duration: 10000,
+            });
+        }
+    });
 </script>
 
 <div class="flex justify-center w-full px-4 py-8">
@@ -172,8 +181,10 @@
                     </Collapsible.Content>
                 </Collapsible.Root>
             {/if}
-        {:else}
+        {:else if (data.data === undefined)}
             <div class="text-3xl mt-20">There's no semester that's currently active or upcoming. Check back later!</div>
+        {:else}
+            <div class="text-3xl mt-20">Something went wrong when retrieving event data. Check back later!</div>
         {/if}
     </div>
 </div>

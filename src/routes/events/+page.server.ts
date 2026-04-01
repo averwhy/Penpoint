@@ -1,15 +1,25 @@
 import type { PageServerLoad } from "./$types";
-import type { Semester, Event } from "$lib/models";
 import { getActiveSemester, sql } from "$lib/server/postgres";
-import { error } from "@sveltejs/kit";
+import { isHttpError } from "@sveltejs/kit";
 import { existsSync } from "fs";
 import path from "path";
 
 const uploadsDir = path.join(process.cwd(), "uploads", "events");
 
 export const load: PageServerLoad = async () => {
-    const semester = await getActiveSemester(true);
-    if (!semester) { return { data: undefined } }
+    let semester: Awaited<ReturnType<typeof getActiveSemester> | undefined>;
+    try {
+        semester = await getActiveSemester(true);
+        if (!semester) { return { data: undefined } }
+    } catch (err: unknown) {
+        if (isHttpError(err, 503)) {
+            return {
+                data: null,
+                unavailable: true,
+            };
+        }
+        throw err;
+    }
 
     const result = await sql`
         SELECT 

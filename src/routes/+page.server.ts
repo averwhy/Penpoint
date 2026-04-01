@@ -1,56 +1,74 @@
 import type { Semester } from "$lib/models";
 import { getActiveSemester, getNextSemester, getLastSemester, sql } from "$lib/server/postgres";
+import { isHttpError } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 type SemesterType = "active" | "awaiting" | "past";
 
 export const load: PageServerLoad = async () => {
-    const now = new Date();
+    try {
+        const now = new Date();
 
-    // Check for active semester first
-    const active = await getActiveSemester(false).catch(() => undefined);
-    if (active) {
-        const stats = await getSemesterStats(active);
-        return {
-            stats: {
-                type: "active" as SemesterType,
-                ...stats,
-                daysLeft: Math.ceil((new Date(active.ends).getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
-            },
-        };
-    }
+        // Check for active semester first
+        const active = await getActiveSemester(false);
+        if (active) {
+            const stats = await getSemesterStats(active);
+            return {
+                stats: {
+                    type: "active" as SemesterType,
+                    ...stats,
+                    daysLeft: Math.ceil((new Date(active.ends).getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
+                },
+                unavailable: false,
+            };
+        }
 
-    // No active semester - check for future semester
-    const future = await getNextSemester();
-    if (future) {
-        // Show past semester stats with countdown to future semester
+        // No active semester - check for future semester
+        const future = await getNextSemester();
+        if (future) {
+            // Show past semester stats with countdown to future semester
+            const past = await getLastSemester();
+            if (past) {
+                const stats = await getSemesterStats(past);
+                return {
+                    stats: {
+                        type: "awaiting" as SemesterType,
+                        ...stats,
+                        daysLeft: Math.ceil((new Date(future.starts).getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
+                    },
+                    unavailable: false,
+                };
+            }
+        }
+
+        // Fallback to past semester only (no future semester exists)
         const past = await getLastSemester();
         if (past) {
             const stats = await getSemesterStats(past);
             return {
                 stats: {
-                    type: "awaiting" as SemesterType,
+                    type: "past" as SemesterType,
                     ...stats,
-                    daysLeft: Math.ceil((new Date(future.starts).getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
+                    daysLeft: 0,
                 },
+                unavailable: false,
             };
         }
-    }
 
-    // Fallback to past semester only (no future semester exists)
-    const past = await getLastSemester();
-    if (past) {
-        const stats = await getSemesterStats(past);
         return {
-            stats: {
-                type: "past" as SemesterType,
-                ...stats,
-                daysLeft: 0,
-            },
+            stats: null,
+            unavailable: false,
         };
-    }
+    } catch (err: unknown) {
+        if (isHttpError(err, 503)) {
+            return {
+                stats: null,
+                unavailable: true,
+            };
+        }
 
-    return { stats: null };
+        throw err;
+    }
 };
 
 async function getSemesterStats(semester: Semester) {
