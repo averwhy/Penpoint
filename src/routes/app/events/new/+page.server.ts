@@ -1,8 +1,8 @@
-import { fail, redirect, type Actions, type RequestEvent } from "@sveltejs/kit";
-import { writeFile } from "fs/promises";
+import { fail, redirect, type Actions } from "@sveltejs/kit";
 import path from "path";
 import { sql } from "$lib/server/postgres";
 import { clubOrAbove } from "$lib/utils/permissions";
+import { uploadFile } from "$lib/functions/file-upload";
 
 const uploadDir = path.join(process.cwd(), "uploads", "events");
 
@@ -41,39 +41,11 @@ export const actions: Actions = {
         const endDateTime = formData.get("endDateTime") as string;
         const flyerFile = formData.get("flyer") as File | null;
 
-        // Validate required fields
-        if (!clubId || !semesterId || !eventTitle || !building || !startDateTime || !endDateTime) {
-            return fail(400, { message: "Missing required fields" });
-        }
-
-        // Validate file
-        if (!flyerFile || flyerFile.size === 0) {
-            return fail(400, { message: "Please upload a flyer for the event" });
-        }
-
-        if (!ALLOWED_TYPES.includes(flyerFile.type)) {
-            return fail(400, {
-                message: "Invalid flyer file type. Please upload a PNG, JPG, or JPEG image.",
-            });
-        }
-
-        if (flyerFile.size > MAX_SIZE_BYTES) {
-            return fail(400, {
-                message: "Flyer file size exceeds the maximum limit of 5MB.",
-            });
-        }
-
-        // Save file with proper extension
-        const extension = getFileExtension(flyerFile.type);
-        const filename = `${eventId}${extension}`;
-        const filepath = path.join(uploadDir, filename);
-
-        try {
-            const buffer = Buffer.from(await flyerFile.arrayBuffer());
-            await writeFile(filepath, buffer);
-        } catch (e) {
-            console.error("Failed to save flyer file:", e);
-            return fail(500, { message: "Failed to save flyer file" });
+        // Validate and save file
+        const filename = await uploadFile(flyerFile, eventId, "events");
+        if (typeof filename !== "string") {
+            // uploadFile returns an ActionFailure on error
+            return filename;
         }
 
         // Insert into database

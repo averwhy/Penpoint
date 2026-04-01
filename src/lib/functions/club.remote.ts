@@ -33,6 +33,25 @@ export const getFirstClubFromUser = query(z.string(), async (userId) => {
             WHERE cu.user_id = ${userId}
             LIMIT 1
         `;
-    if (result.length === 0) return undefined;
+    if (result.length === 0) return null;
     return Club.parse(result.at(0));
+});
+
+export const getUserClubs = query(z.string(), async (userId) => {
+    const event = getRequestEvent();
+    if (!event.locals.user) {
+        error(401, "Unauthorized");
+    }
+
+    if (!clubOrAbove(event.locals.user.role)) {
+        error(403, "Forbidden");
+    }
+    const result = await sql`
+            SELECT c.*
+            FROM clubs c
+            JOIN club_users cu ON c.id = cu.club_id
+            WHERE cu.user_id = ${userId}
+        `;
+    if (result.length === 0) return null;
+    return result.map((row) => Club.parse(row));
 });

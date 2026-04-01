@@ -9,6 +9,7 @@
     const club = $derived(data.club);
     const members = $derived(data.members);
     const events = $derived(data.events);
+    const user = $derived(data.user);
     let logoSrc = $state<string | undefined>(undefined);
 
     const formatDate = (value: Date | string) =>
@@ -16,6 +17,7 @@
 
     $effect(() => {
         logoSrc = club?.image_filename ? `/uploads/clubs/${club.image_filename}` : undefined;
+        console.log(`${user.id} is in ${members.map((m) => m.id).join(", ")}: ${members.some((member) => member.id === user.id)}`);
     });
 </script>
 
@@ -46,6 +48,19 @@
             </div>
         </div>
     </div>
+
+    <Card>
+        <CardHeader>
+            <CardTitle>Bio</CardTitle>
+        </CardHeader>
+        <CardContent class="divide-y">
+            {#if club.bio}
+                <p class="italic">{club.bio}</p>
+            {:else}
+                <p>No bio available.</p>
+            {/if}
+        </CardContent>
+    </Card>
 
     <Card>
         <CardHeader>
@@ -95,4 +110,11 @@
             {/if}
         </CardContent>
     </Card>
+
+    {#if members.some((member) => member.id === user.id)}
+        <div class="flex justify-start gap-4">
+            <Button variant="secondary">Edit Logo</Button>
+            <Button variant="secondary">Edit Bio</Button>
+        </div>
+    {/if}
 </section>
