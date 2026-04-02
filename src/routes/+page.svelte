@@ -42,7 +42,11 @@
         loading="lazy"
     />
     <div class="absolute inset-0 z-0 bg-background/60 backdrop-blur-sm"></div>
-    <h1 class="relative z-10 mb-8 text-center text-7xl font-semibold text-foreground tracking-wide">Penmen Pride</h1>
+    <h1
+        class="relative z-10 mb-8 text-center text-5xl sm:text-6xl lg:text-7xl font-semibold text-foreground tracking-wide pt-23"
+    >
+        Penmen Pride
+    </h1>
     <div class="relative z-10 grid grid-cols-2 gap-x-3 gap-y-3">
         <Card.Root>
             <Card.Content class="text-5xl">

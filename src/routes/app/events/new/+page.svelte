@@ -41,6 +41,7 @@
         { label: "Paul Hall", value: "Paul Hall" },
         { label: "ACC", value: "ACC" },
         { label: "Robert Frost Green Space", value: "Robert Frost Green Space" },
+        { label: "Wolak Library Learning Commons", value: "Wolak Library Learning Commons" },
         { label: "Other", value: "Other" },
     ];
 
