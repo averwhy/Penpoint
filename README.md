@@ -9,13 +9,16 @@
 
 A lightweight yet robust event point tracking system, built around college clubs.
 
+It utilizies mobile wallet passes to enable students to earn points for attending events.
+
 Penpoint is built with the Svelte 5, utilizing remote functions for a typesafe API.
 
 > [!NOTE]
-> Penpoint is under active development! It's expected to be mostly complete by the end of 2025.
+> Penpoint is under active development! It's expected to be mostly complete by the fall of 2026.
 
 ## Setup
-Penpoint was made with ease of setup in mind. Svelte, the framework used for this site, combines the website and backend, so you'll only have to setup this website..
+Penpoint was made with ease of setup in mind. Svelte, the framework used for this site, combines the website and backend, so you'll only have to setup this website.
+With that in mind, you will need an Apple Developer account and a Google Wallet API key.
 
 > [!CAUTION]
 > The setup guide is a work in progress, as is Penpoint.
