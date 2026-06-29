@@ -10,13 +10,10 @@ export const Password = z
     .refine(val => /[0-9]/.test(val), {
         error: "Password must contain at least one number.",
     })
-    .refine(val => /[^A-Za-z0-9].*[^A-Za-z0-9]/.test(val), {
-        error: "Password must contain at least two special characters.",
+    .refine(val => /[^A-Za-z0-9]/.test(val), {
+        error: "Password must contain at least one special character.",
     });
 export type Password = z.infer<typeof Password>;
-
-export const StudentId = z.string().regex(/^\d{7}$/);
-export type StudentId = z.infer<typeof StudentId>;
 
 export const Login = z.object({
     email: z.email().max(100),
@@ -27,26 +24,17 @@ export type Login = z.infer<typeof Login>;
 export const Registration = z.object({
     name: z.string().min(1).max(100),
     email: z.email().max(100),
-    student_id: StudentId,
-    reason: z.string().min(1).max(10000),
+    _password: Password,
 });
 export type Registration = z.infer<typeof Registration>;
 
 // db schemas
 
-export const Student = z.object({
-    student_id: StudentId,
-    created_at: z.coerce.date(),
-    updated_at: z.coerce.date(),
-});
-export type Student = z.infer<typeof Student>;
-
 export const User = z.object({
     id: z.uuid(),
-    student_id: StudentId,
     email: z.email().max(64),
     name: z.string().max(64),
-    role: z.enum(["inactive", "unapproved", "blocked", "club", "sga", "admin"]),
+    role: z.enum(["inactive", "student", "blocked", "club", "sga", "admin"]),
     pending: z.boolean().default(false),
     request_reason: z.string().max(1000).nullable(),
     last_login: z.coerce.date(),
@@ -58,10 +46,8 @@ export type User = z.infer<typeof User>;
 
 export const NewUser = User.pick({
     id: true,
-    student_id: true,
     email: true,
     name: true,
-    request_reason: true,
     created_at: true,
     updated_at: true,
 });
@@ -119,13 +105,23 @@ export const Event = z.object({
 });
 export type Event = z.infer<typeof Event>;
 
-export const Tap = z.object({
+export const WalletPass = z.object({
     id: z.uuid(),
-    student_id: StudentId,
+    user_id: z.uuid(),
+    public_id: z.string().max(10),
+    expires_at: z.coerce.date(),
+    created_at: z.coerce.date(),
+    updated_at: z.coerce.date(),
+});
+export type WalletPass = z.infer<typeof WalletPass>;
+
+export const Scan = z.object({
+    id: z.uuid(),
+    wallet_pass_id: z.uuid(),
     event_id: z.uuid(),
     created_at: z.coerce.date(),
 });
-export type Tap = z.infer<typeof Tap>;
+export type Scan = z.infer<typeof Scan>;
 
 export const Location = z.object({
     id: z.uuid(),
@@ -138,7 +134,7 @@ export type Location = z.infer<typeof Location>;
 // API Request schemas
 
 export const PointCheck = z.object({
-    student_id: StudentId,
+    wallet_pass_id: z.string().max(10),
 });
 export type PointCheck = z.infer<typeof PointCheck>;
 

@@ -1,19 +1,10 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- regular students (They won't be able to login to anything)
-CREATE TABLE IF NOT EXISTS students (
-    student_id VARCHAR(7) PRIMARY KEY,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
-
--- Club eboard members and SGA (and probably OSI too)
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    student_id VARCHAR(7) REFERENCES students(student_id) NOT NULL,
     email VARCHAR(64) UNIQUE NOT NULL,
     name VARCHAR(64) NOT NULL,
-    role VARCHAR(10) NOT NULL DEFAULT 'unapproved', -- 'inactive', 'unapproved', 'blocked', 'club', 'sga', 'admin'
+    role VARCHAR(10) NOT NULL DEFAULT 'student', -- 'inactive', 'student', 'blocked', 'club', 'sga', 'admin'
     pending BOOLEAN NOT NULL DEFAULT FALSE,
     request_reason VARCHAR(1000),
     password_hash TEXT,
@@ -71,12 +62,22 @@ CREATE TABLE IF NOT EXISTS events (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS taps (
+CREATE TABLE IF NOT EXISTS wallet_passes (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    student_id VARCHAR(7) REFERENCES students(student_id) NOT NULL,
+    user_id UUID REFERENCES users(id),
+    public_id VARCHAR(10) UNIQUE NOT NULL,
+    expires_at TIMESTAMPTZ NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (id, user_id) -- One pass per user (if they get a new one the old one is deleted)
+);
+
+CREATE TABLE IF NOT EXISTS scans (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    wallet_pass_id UUID REFERENCES wallet_passes(id) NOT NULL,
     event_id UUID REFERENCES events(id) NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    UNIQUE (student_id, event_id)
+    UNIQUE (wallet_pass_id, event_id)
 );
 
 CREATE TABLE IF NOT EXISTS locations (

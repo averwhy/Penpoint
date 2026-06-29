@@ -20,6 +20,13 @@
     let semState = $derived(data.semesterState);
     let canCheckPoints = $state(false);
     currentSemester = "";
+
+    /*
+    TODO: Check if they're logged in and just display it
+    TODO: If they're logged in, add a 'see full profile' button
+    TODO: If not logged in, display the points but prompt to make an account so they can keep track of their points
+    */
+
     $effect(() => {
         if (!semester) {
             currentSemester = "No active semester";
@@ -72,11 +79,11 @@
                         <Field.Group>
                             <Field.Field>
                                 <Input
-                                    {...getPointsInActiveSemester.fields.student_id.as("text")}
+                                    {...getPointsInActiveSemester.fields.wallet_pass_id.as("text")}
                                     required
-                                    id="student_id"
+                                    id="wallet_pass_id"
                                     class="bg-primary"
-                                    placeholder="Enter student ID"
+                                    placeholder="Enter pass ID"
                                     disabled={!canCheckPoints}
                                 />
                             </Field.Field>

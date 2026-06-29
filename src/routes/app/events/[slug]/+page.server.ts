@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { sql } from '$lib/server/postgres';
-import { Event, Club, Tap } from '$lib/models';
+import { Event, Club, Scan } from '$lib/models';
 import { existsSync } from 'fs';
 import { error } from '@sveltejs/kit';
 import path from 'path';
@@ -27,7 +27,7 @@ export const load: PageServerLoad = async ({ params }) => {
     `,
     sql`
       SELECT *
-      FROM taps
+      FROM scans
       WHERE event_id = ${slug}
       ORDER BY created_at ASC
     `
@@ -39,7 +39,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
   const event = Event.parse(eventResult.at(0));
   const club = Club.parse(clubResult.at(0));
-  const event_taps = tapsResult.map((row: unknown) => Tap.parse(row));
+  const event_taps = tapsResult.map((row: unknown) => Scan.parse(row));
 
   let hasFlyer = false;
   if (event.image_filename) {

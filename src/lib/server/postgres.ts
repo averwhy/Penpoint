@@ -1,5 +1,5 @@
 import { privateEnv } from "$lib/env/private";
-import { Semester, Student, User } from "$lib/models";
+import { Semester, User } from "$lib/models";
 import { error } from "@sveltejs/kit";
 import postgres from "postgres";
 
@@ -87,29 +87,15 @@ export async function getLastSemester(): Promise<Semester | undefined> {
     return Semester.parse(result[0]);
 }
 
-export async function createStudent({
-    student_id
-}: Pick<Student, "student_id">): Promise<Student> {
-    const result = await sql`
-        INSERT INTO students (student_id)
-        VALUES (${student_id})
-        RETURNING *
-	`;
-
-    return Student.parse(result[0]);
-}
-
 export async function createUser(
-    student_id: string,
     email: string,
     name: string,
-    request_reason: string,
-    role = "unapproved",
+    role = "student",
     password_hash?: string,
 ): Promise<User> {
     const result = await sql`
-        INSERT INTO users (student_id, email, name, role, request_reason, password_hash)
-        VALUES (${student_id}, ${email}, ${name}, ${role}, ${request_reason}, ${password_hash ?? null})
+        INSERT INTO users (email, name, role, password_hash)
+        VALUES (${email}, ${name}, ${role}, ${password_hash ?? null})
         RETURNING *
 	`;
 
@@ -135,14 +121,15 @@ export async function studentExists(student_id: string): Promise<boolean> {
     return result.count === 1;
 }
 
-export async function userExists(student_id: string, email: string): Promise<boolean> {
+export async function userExists(email: string): Promise<boolean> {
     const result = await sql`
         SELECT student_id
         FROM users
-        WHERE student_id = ${student_id}
-        OR email = ${email}
+        WHERE email = ${email}
         LIMIT 1
 	`;
 
     return result.count === 1;
 }
+
+// TODO: createPass? getPass?

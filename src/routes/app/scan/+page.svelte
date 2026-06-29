@@ -5,24 +5,22 @@
     import { Label } from "$lib/components/ui/label/index.js";
     import * as Card from "$lib/components/ui/card";
     import * as Select from "$lib/components/ui/select";
-    import { tap, manualTap } from "$lib/functions/tap.remote";
-    import { Tap } from "$lib/models";
+    import { scan, manualScan } from "$lib/functions/scan.remote";
+    import { Scan } from "$lib/models";
     import { toast } from "svelte-sonner";
     import type { PageProps } from "./$types";
     import EventSelector from "$lib/components/event-selector.svelte";
 
     interface SwipeRecord {
-        studentId: string;
+        wallet_pass_id: string;
         eventName: string;
         timestamp: Date;
     }
 
     const { data }: PageProps = $props();
-    
-    
 
     let selectedEvent = $state("");
-    let swipeHistory = $state<SwipeRecord[]>([]);
+    let scanHistory = $state<SwipeRecord[]>([]);
     let isCapturing = $state(false);
     let showPastEvents = $state(false);
 
@@ -68,7 +66,7 @@
 
                 // Clear any text that might have gotten into the input
                 setTimeout(() => {
-                    tap.fields.student_id.set("");
+                    scan.fields.wallet_pass_id.set("");
                 }, 10);
 
                 if (selectedEvent === "") {
@@ -89,42 +87,41 @@
     }
 
     async function parseCardData(raw: string) {
-        let match = raw.match(/^;77(\d+)=/);
-        if (match) {
-            const studentId = match[1];
+        try {
+            const walletPassId = raw; // The scanners will pickup the entire QR code which we can just use it directly
             if (
-                swipeHistory.find(r => {
-                    return r.studentId === studentId;
+                scanHistory.find(r => {
+                    return r.wallet_pass_id === walletPassId;
                 })
             ) {
                 flash("error");
-                toast.error("Duplicate swipe", { description: "That student has already swiped for this event!" });
-                return
+                toast.error("Duplicate scan", { description: "That student has already scanned for this event!" });
+                return;
             }
 
             try {
-                await manualTap({ student_id: studentId, event_id: selectedEvent });
+                await manualScan({ wallet_pass_id: walletPassId, event_id: selectedEvent });
             } catch (error: any) {
                 flash("error");
-                toast.error("Failed to tap student", { description: error?.body.message });
+                toast.error("Failed to scan student", { description: error?.body.message });
                 return;
             }
 
             flash("success");
-            toast.success("Card scanned", { description: `Scanned student ID: ${studentId}` });
+            toast.success("Pass scanned", { description: `Scanned wallet pass ID: ${walletPassId}` });
 
-            // Add to swipe history
-            swipeHistory = [
+            // Add to scan history
+            scanHistory = [
                 {
-                    studentId,
+                    wallet_pass_id: walletPassId,
                     eventName: eventName,
                     timestamp: new Date(),
                 },
-                ...swipeHistory,
+                ...scanHistory,
             ];
-        } else {
+        } catch (error) {
             flash("error");
-            toast.error("Failed to parse card data");
+            toast.error(`Failed to parse card data: ${error}`);
         }
     }
 
@@ -154,16 +151,16 @@
 <div class="flex items-center justify-center min-h-[calc(100vh-68px)] mx-10 py-8">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-3xl">
         <form
-            {...tap.preflight(Tap.omit({ id: true })).enhance(async ({ form, data, submit }) => {
+            {...scan.preflight(Scan.omit({ id: true })).enhance(async ({ form, data, submit }) => {
                 try {
                     await submit();
-                    tap.fields.student_id.set("");
-                    toast.success("Student tapped successfully", {
-                        description: `${tap.result?.student.student_id ?? data.student_id} tapped into ${eventName} successfully.`,
+                    scan.fields.wallet_pass_id.set("");
+                    toast.success("Pass scanned successfully", {
+                        description: `${scan.result?.scan.wallet_pass_id ?? data.wallet_pass_id} scanned into ${eventName} successfully.`, // TODO account for if it finds an user
                     });
                 } catch (error: any) {
-                    console.error("tap failed", error);
-                    toast.error("Failed to tap student", { description: error?.body.message });
+                    console.error("scan failed", error);
+                    toast.error("Failed to scan pass", { description: error?.body.message });
                 }
             })}
         >
@@ -177,33 +174,33 @@
                         widthClass="w-full bg-secondary text-muted-foreground"
                         selectActive={true}
                     />
-                    <input {...tap.fields.event_id.as("text")} value={selectedEvent} hidden />
+                    <input {...scan.fields.event_id.as("text")} value={selectedEvent} hidden />
                 </div>
                 <div class="flex items-center gap-1.5">
                     <Checkbox id="pastEvents" bind:checked={showPastEvents} />
                     <Label for="pastEvents">Show past events</Label>
                 </div>
-                <Input class="w-full bg-primary" placeholder="Student ID" {...tap.fields.student_id.as("text")} />
+                <Input class="w-full bg-primary" placeholder="Pass ID" {...scan.fields.wallet_pass_id.as("text")} />
                 <Button variant="success" type="submit">Scan In</Button>
             </div>
         </form>
 
         <Card.Root class="h-fit max-h-[calc(100vh-300px)] overflow-hidden flex flex-col">
             <Card.Header>
-                <Card.Title>Swipe History</Card.Title>
+                <Card.Title>Scan History</Card.Title>
                 <Card.Description>
-                    {swipeHistory.length} scan{swipeHistory.length !== 1 ? "s" : ""} this session
+                    {scanHistory.length} scan{scanHistory.length !== 1 ? "s" : ""} this session
                 </Card.Description>
             </Card.Header>
             <Card.Content class="overflow-y-auto flex-1">
-                {#if swipeHistory.length === 0}
-                    <p class="text-muted-foreground text-sm text-center py-8">No swipes yet</p>
+                {#if scanHistory.length === 0}
+                    <p class="text-muted-foreground text-sm text-center py-8">No scans yet</p>
                 {:else}
                     <div class="space-y-3">
-                        {#each swipeHistory as record (record.timestamp.getTime())}
+                        {#each scanHistory as record (record.timestamp.getTime())}
                             <div class="flex items-center justify-between border-b pb-2 last:border-b-0">
                                 <div>
-                                    <p class="font-mono font-medium">{record.studentId}</p>
+                                    <p class="font-mono font-medium">{record.wallet_pass_id}</p>
                                     <p class="text-sm text-muted-foreground">{record.eventName}</p>
                                 </div>
                                 <span class="text-sm text-muted-foreground">{formatTime(record.timestamp)}</span>
