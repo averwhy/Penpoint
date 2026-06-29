@@ -27,3 +27,7 @@ vite.config.ts.timestamp-*
 
 # Docker
 docker-compose.yml
+
+# file uploads
+uploads/clubs/*
+uploads/events/*
