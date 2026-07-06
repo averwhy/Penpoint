@@ -57,7 +57,7 @@ export const load: PageServerLoad = async () => {
 
         return {
             stats: null,
-            unavailable: false,
+            unavailable: true,
         };
     } catch (err: unknown) {
         if (isHttpError(err, 503)) {

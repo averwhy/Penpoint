@@ -83,7 +83,7 @@
                                     required
                                     id="wallet_pass_id"
                                     class="bg-primary"
-                                    placeholder="Enter pass ID"
+                                    placeholder="Enter 10-digit pass ID"
                                     disabled={!canCheckPoints}
                                 />
                             </Field.Field>

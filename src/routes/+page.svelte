@@ -12,7 +12,11 @@
     const stats = $derived(data.stats);
 
     $effect(() => {
-        if (data.unavailable) {
+        if (data.unavailable && data.stats === null) {
+            toast.warning("Failed to load Penmen Pride stats. There may be no semesters to load data from.", {
+                duration: 10000,
+            });
+        } else if (data.unavailable) {
             toast.error("Failed to load Penmen Pride stats. Please try again later.", { duration: 10000 });
         }
     });
@@ -126,8 +130,22 @@
                 <a href="https://snhusga.org/penmen-pride" class="text-blue-400 hover:text-blue-600">here.</a>
             </Accordion.Content>
         </Accordion.Item>
-        <Accordion.Item value="item-2">
-            <Accordion.Trigger>How do i earn points?</Accordion.Trigger>
+        <Accordion.Item value="item-3">
+            <Accordion.Trigger>How does it work?</Accordion.Trigger>
+            <Accordion.Content>
+                First, get a Penmen Pride Pass by visiting <a href="/pass" class="text-blue-400 hover:text-blue-600"
+                    >this page</a
+                >. You'll add it to your mobile phones wallet (either Apple Wallet or Google Wallet). Then, attend
+                events that have Penmen Pride!<br /> When you attend an event, an SGA senator will scan your Penmen
+                Pride Pass at the event and you'll earn points!
+                <span class="font-bold">Important:</span> You should make an account here on Penmen Pride so you don't
+                lose your points, and so you can check your points at any time! You'll be prompted to create an account
+                when you get your Penmen Pride Pass, or you can create one
+                <a href="/register" class="text-blue-400 hover:text-blue-600">here</a>.
+            </Accordion.Content>
+        </Accordion.Item>
+        <Accordion.Item value="item-4">
+            <Accordion.Trigger>Where can I earn points?</Accordion.Trigger>
             <Accordion.Content>
                 Events that have Penmen Pride are listed
                 <a href="/events" class="text-blue-400 hover:text-blue-600">here</a>. By attending them, you'll earn
@@ -136,7 +154,7 @@
                 iPad to claim your points!
             </Accordion.Content>
         </Accordion.Item>
-        <Accordion.Item value="item-3">
+        <Accordion.Item value="item-5">
             <Accordion.Trigger>What can I do with my points?</Accordion.Trigger>
             <Accordion.Content>
                 When the semester ends, the students with the most points will win prizes!<br />
@@ -144,21 +162,22 @@
                 <a href="https://snhusga.org/penmen-pride" class="text-blue-400 hover:text-blue-600">here.</a>
             </Accordion.Content>
         </Accordion.Item>
-        <Accordion.Item value="item-4">
+        <Accordion.Item value="item-6">
             <Accordion.Trigger>How can I check my points?</Accordion.Trigger>
             <Accordion.Content>
-                Head to the points checking page
-                <a href="/points" class="text-blue-400 hover:text-blue-600">here</a>, and enter your student ID.
+                A few different ways! You can enter your 10 digit pass ID <a href="/points" class="text-blue-400 hover:text-blue-600">on the point checking page here</a>, or follow your phone's specific instructions below:
+                <br />
+                Apple: Double click your power button to open your wallet, tap/click your pass, tap the 3 dots in the top right, then tap 'Pass details'. You'll see a URL that will show your points!<br />
+                Google: WIP (sorry)
             </Accordion.Content>
         </Accordion.Item>
-        <Accordion.Item value="item-5">
+        <Accordion.Item value="item-7">
             <Accordion.Trigger>I have an event I want Penmen Pride to be at! How do I request it?</Accordion.Trigger>
             <Accordion.Content>
-                As a club E-Board member, you can request an account
-                <a href="/register" class="text-blue-400 hover:text-blue-600">here</a>. After approval from SGA, you can
-                login
-                <a href="/login" class="text-blue-400 hover:text-blue-600">here</a> and create a new event. <br />
-                If you already have an account, just login and create a new event!
+                As a club E-Board member of a club, or a staff member/student worker of an office on campus, please
+                <a href="mailto:StudentGovernmentAssociation@snhu.edu" class="text-blue-400 hover:text-blue-600"
+                    >email SGA</a
+                > to obtain permissions for your account to be able to request events, see scan statistics, and more!
             </Accordion.Content>
         </Accordion.Item>
     </Accordion.Root>
