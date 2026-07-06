@@ -1,6 +1,6 @@
 import { form } from "$app/server";
 import { Registration } from "$lib/models";
-import { createUser, studentExists, userExists } from "$lib/server/postgres";
+import { createUser, userExists } from "$lib/server/postgres";
 import { error } from "@sveltejs/kit";
 
 export const register = form(Registration, async register => {

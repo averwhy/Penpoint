@@ -9,7 +9,7 @@
 
 A lightweight yet robust event point tracking system, built around college clubs.
 
-It utilizies mobile wallet passes to enable students to earn points for attending events.
+It utilizies Apple Wallet & Google Wallet mobile passes with unique QR codes to enable students to earn points for attending events.
 
 Penpoint is built with the Svelte 5, utilizing remote functions for a typesafe API.
 

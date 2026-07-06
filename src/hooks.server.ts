@@ -10,27 +10,18 @@ export const init: ServerInit = async () => {
     if (privateEnv.PENPOINT_INIT) {
         const { email, password } = privateEnv.PENPOINT_INIT;
         const init_name = "Penny Point";
-        const init_id = "0000000";
         const init_role = "admin"; // Don't change
 
         async function init() {
             const hashedPassword = await hashPassword(password);
 
-            await sql`
-                INSERT INTO students (student_id)
-                VALUES (${init_id})
-                ON CONFLICT DO NOTHING
-            `;
-
             const result = await sql`
-                INSERT INTO users (email, student_id, name, role, password_hash, request_reason)
+                INSERT INTO users (email, name, role, password_hash)
                 VALUES (
                     ${email},
-                    ${init_id},
                     ${init_name},
                     ${init_role},
-                    ${hashedPassword},
-                    'Initial Penpoint admin user.'
+                    ${hashedPassword}
                 )
                 ON CONFLICT DO NOTHING
                 RETURNING *
@@ -95,7 +86,7 @@ export const auth = (async ({ event, resolve }) => {
             const users = await sql`
                 SELECT *
                 FROM users u
-                WHERE u.id = ${payload.sub} AND u.role IS DISTINCT FROM 'unapproved'
+                WHERE u.id = ${payload.sub} AND u.role IS DISTINCT FROM 'inactive'
                 LIMIT 1
             `.catch(() => []);
 

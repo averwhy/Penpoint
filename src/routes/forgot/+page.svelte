@@ -24,28 +24,26 @@
             <div class="w-full max-w-xs">
                 <ForgotForm
                     bind:pending
-                    {...requestPasswordReset
-                        .preflight(z.object({ email: z.email() }))
-                        .enhance(async ({ form, data, submit }) => {
-                            pending = true;
-                            try {
-                                await submit();
-                                form.reset();
-                                toast.success("Password reset requested", {
-                                    description:
-                                        "If the email is associated with an account, you will receive a password reset email shortly.",
-                                });
-                            } catch (error: any) {
-                                // ignore redirects
-                                if (error?.status >= 300 && error?.status < 400) {
-                                    throw error;
-                                }
-                                console.error("forgot failed", error);
-                                toast.error("Password reset request failed", { description: error?.body.message });
-                            } finally {
-                                pending = false;
+                    {...requestPasswordReset.preflight(z.object({ email: z.email() })).enhance(async form => {
+                        pending = true;
+                        try {
+                            await form.submit();
+                            form.element.reset();
+                            toast.success("Password reset requested", {
+                                description:
+                                    "If the email is associated with an account, you will receive a password reset email shortly.",
+                            });
+                        } catch (error: any) {
+                            // ignore redirects
+                            if (error?.status >= 300 && error?.status < 400) {
+                                throw error;
                             }
-                        })}
+                            console.error("forgot failed", error);
+                            toast.error("Password reset request failed", { description: error?.body.message });
+                        } finally {
+                            pending = false;
+                        }
+                    })}
                 />
             </div>
         </div>

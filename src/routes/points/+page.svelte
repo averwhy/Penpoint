@@ -58,11 +58,11 @@
 
             <div class="items-center gap-2 flex-1 px-4">
                 <form
-                    {...getPointsInActiveSemester.enhance(async ({ form, data, submit }) => {
+                    {...getPointsInActiveSemester.enhance(async form => {
                         pending = true;
                         try {
                             console.log("Submitting points check form");
-                            await submit();
+                            await form.submit();
                             console.log("result: ", getPointsInActiveSemester.result);
                             points = getPointsInActiveSemester.result?.points ?? 0;
                             allTimePoints = getPointsInActiveSemester.result?.allTimePoints ?? 0;

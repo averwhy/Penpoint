@@ -21,11 +21,11 @@
     </Card.Header>
     <Card.Content>
         <form
-            {...register.preflight(Registration).enhance(async ({ form, data, submit }) => {
+            {...register.preflight(Registration).enhance(async form => {
                 pending = true;
                 try {
-                    await submit();
-                    form.reset();
+                    await form.submit();
+                    form.element.reset();
 
                     // TODO: Redirect to profile overview
                 } catch (error: any) {

@@ -17,8 +17,7 @@ export const setPassword = form(SetPassword, async ({ _password, token }) => {
     if (users.length === 0) error(401, { message: "Invalid credentials" });
 
     const user = User.parse(users[0]);
-    if (!user.pending) error(403, { message: "This account has already been activated." });
-
+    
     if (user.role === "blocked")
         error(403, { message: "Access denied. Your account has been blocked." });
 

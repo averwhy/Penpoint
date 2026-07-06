@@ -151,13 +151,13 @@
 <div class="flex items-center justify-center min-h-[calc(100vh-68px)] mx-10 py-8">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-3xl">
         <form
-            {...scan.preflight(Scan.omit({ id: true })).enhance(async ({ form, data, submit }) => {
+            {...scan.preflight(Scan.omit({ id: true })).enhance(async (form) => {
                 try {
-                    await submit();
-                    scan.fields.wallet_pass_id.set("");
+                    await form.submit();
                     toast.success("Pass scanned successfully", {
-                        description: `${scan.result?.scan.wallet_pass_id ?? data.wallet_pass_id} scanned into ${eventName} successfully.`, // TODO account for if it finds an user
+                        description: `${scan.result?.scan.wallet_pass_id ?? form.fields.wallet_pass_id.value()} scanned into ${eventName} successfully.`, // TODO account for if it finds an user
                     });
+                    scan.fields.wallet_pass_id.set("");
                 } catch (error: any) {
                     console.error("scan failed", error);
                     toast.error("Failed to scan pass", { description: error?.body.message });

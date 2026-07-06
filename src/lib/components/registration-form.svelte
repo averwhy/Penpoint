@@ -22,21 +22,21 @@
     <Card.Header>
         <Card.Title>Request an account</Card.Title>
         <Card.Description>
-            Enter your information below to create an account.
-            If you are an SGA, Club E-Board member, or OSI staff, create an account here if you haven't already, then
-            please email <a href="mailto:StudentGovernmentAssociation@snhu.edu">sga@snhu.edu</a> to obtain the correct role for your account.
+            Enter your information below to create an account. If you are an SGA, Club E-Board member, or OSI staff,
+            create an account here if you haven't already, then please email <a
+                href="mailto:StudentGovernmentAssociation@snhu.edu">sga@snhu.edu</a
+            > to obtain the correct role for your account.
         </Card.Description>
     </Card.Header>
     <Card.Content>
         <form
-            {...register.preflight(Registration).enhance(async ({ form, submit }) => {
+            {...register.preflight(Registration).enhance(async form => {
                 pending = true;
                 try {
-                    await submit();
-                    form.reset();
-                    
-                    // TODO: redirect to login page with a success message
+                    await form.submit();
+                    form.element.reset();
 
+                    // TODO: redirect to login page with a success message
                 } catch (error: any) {
                     if (error?.status >= 300 && error?.status < 400) {
                         throw error;

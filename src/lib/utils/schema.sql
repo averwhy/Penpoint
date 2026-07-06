@@ -5,8 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(64) UNIQUE NOT NULL,
     name VARCHAR(64) NOT NULL,
     role VARCHAR(10) NOT NULL DEFAULT 'student', -- 'inactive', 'student', 'blocked', 'club', 'sga', 'admin'
-    pending BOOLEAN NOT NULL DEFAULT FALSE,
-    request_reason VARCHAR(1000),
+    expected_graduation_year INT,
     password_hash TEXT,
     last_login TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -40,7 +39,6 @@ CREATE TABLE IF NOT EXISTS club_users(
     position TEXT NOT NULL,
     user_id UUID REFERENCES users(id) NOT NULL,
     club_id UUID REFERENCES clubs(id) NOT NULL,
-    for_semester UUID REFERENCES semesters(id),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -66,6 +64,7 @@ CREATE TABLE IF NOT EXISTS wallet_passes (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES users(id),
     public_id VARCHAR(10) UNIQUE NOT NULL,
+    variant VARCHAR(6) NOT NULL -- 'apple' or 'google'
     expires_at TIMESTAMPTZ NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
