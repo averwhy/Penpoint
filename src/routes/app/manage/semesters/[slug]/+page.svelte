@@ -125,9 +125,9 @@
 
             <Card.Root>
                 <Card.Content class="text-5xl">
-                    {stats.totalTaps}
+                    {stats.totalScans}
                 </Card.Content>
-                <Card.Footer class="text-xl">Total Taps</Card.Footer>
+                <Card.Footer class="text-xl">Total Scans</Card.Footer>
             </Card.Root>
 
             <Card.Root class="">

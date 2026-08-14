@@ -163,3 +163,10 @@ export type LoginResponse = z.infer<typeof LoginResponse>;
 // Other requests
 export const SetPassword = z.object({ _password: Password, token: z.string() });
 export type SetPassword = z.infer<typeof SetPassword>;
+
+export const NewSemester = z.object({
+    starts: z.string(),
+    ends: z.string(),
+    code: z.string().max(3),
+})
+export type NewSemester = z.infer<typeof NewSemester>;

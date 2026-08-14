@@ -111,7 +111,7 @@
             <Command.Root>
                 <Command.Input placeholder="Search events..." />
                 <Command.List>
-                    <Command.Empty>No event found.</Command.Empty>
+                    <Command.Empty>No events found.</Command.Empty>
                     <Command.Group value="events">
                         {#each eventData as event (event.value)}
                             <Command.Item value={event.value} onSelect={() => handleSelect(event.value)}>

@@ -51,6 +51,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
+    "start": "node build",
     "format": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json,svelte}\"",
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",

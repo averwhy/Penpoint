@@ -1,0 +1,20 @@
+services:
+  ppdb:
+    image: postgres:18.0-alpine
+    ports:
+      - "5431:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./src/lib/utils/schema.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    environment:
+      # Configure your database username, password, and name as preferred
+      POSTGRES_USER: your_database_username
+      POSTGRES_PASSWORD: your_secure_database_password
+      POSTGRES_DB: your_database_name
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U your_database_name -d your_database_name"] # Remember to replace the database name and username here!
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  pgdata:

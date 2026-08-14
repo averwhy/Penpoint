@@ -141,6 +141,12 @@
         if (!canCreateNewEvents) {
             toast.error("The selected semester has ended. You cannot create new events for it.");
         }
+
+        if (semesters.length === 0) {
+            toast.error("There are no semesters to create an event under. Please contact SGA for assistance.", {
+                duration: 60000, // 1 minute
+            });
+        }
     });
 </script>
 

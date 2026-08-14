@@ -56,9 +56,9 @@ export const init: ServerInit = async () => {
                 `;
                 console.log("Created the SGA club and assigned the initial admin user.");
                 // Load test data
-                const file = fs.readFileSync("./src/lib/utils/testdata.sql", "utf8");
-                await db.unsafe(file);
-                console.log("Loaded test data");
+                //const file = fs.readFileSync("./src/lib/utils/testdata.sql", "utf8");
+                //await db.unsafe(file);
+                //console.log("Loaded test data");
             } else
                 console.warn(
                     "A user with the email provided in the PENPOINT_INIT_EMAIL environment variable already exists.",

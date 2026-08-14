@@ -1,12 +1,14 @@
 <script lang="ts">
     import * as Accordion from "$lib/components/ui/accordion/index.js";
     import * as Card from "$lib/components/ui/card/index.js";
+    import { Button } from "$lib/components/ui/button/index.js";
     import { Skeleton } from "$lib/components/ui/skeleton/index";
     import * as Tooltip from "$lib/components/ui/tooltip/index";
     import Countup from "$lib/components/countup.svelte";
     import type { PageProps } from "./$types";
     import { toast } from "svelte-sonner";
     import CampSNHU from "$lib/assets/CampSNHU.jpg";
+    import { goto } from "$app/navigation";
 
     const { data }: PageProps = $props();
     const stats = $derived(data.stats);
@@ -51,6 +53,9 @@
     >
         Penmen Pride
     </h1>
+    <div class="relative z-10 mb-8 text-center text-lg sm:text-xl lg:text-2xl font-medium text-foreground/80 tracking-wide">
+        <Button variant="ghost" onclick={() => goto('/pass')}>Start Earning Points</Button>
+    </div>
     <div class="relative z-10 grid grid-cols-2 gap-x-3 gap-y-3">
         <Card.Root>
             <Card.Content class="text-5xl">

@@ -10,7 +10,7 @@ const uploadsDir = path.join(process.cwd(), 'uploads', 'events');
 export const load: PageServerLoad = async ({ params }) => {
   const slug = params.slug;
 
-  const [eventResult, clubResult, tapsResult] = await Promise.all([
+  const [eventResult, clubResult, scansResult] = await Promise.all([
     sql`
       SELECT *
       FROM events
@@ -39,7 +39,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
   const event = Event.parse(eventResult.at(0));
   const club = Club.parse(clubResult.at(0));
-  const event_taps = tapsResult.map((row: unknown) => Scan.parse(row));
+  const event_scans = scansResult.map((row: unknown) => Scan.parse(row));
 
   let hasFlyer = false;
   if (event.image_filename) {
@@ -52,6 +52,6 @@ export const load: PageServerLoad = async ({ params }) => {
     event,
     club,
     hasFlyer,
-    event_taps,
+    event_scans,
   };
 }

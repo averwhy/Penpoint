@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS semesters (
     ends TIMESTAMPTZ NOT NULL,
     code VARCHAR(3) NOT NULL, -- E.g. A3 (it's snhu's new semester coding system)
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (starts, ends) -- no two semesters can have the same start and end dates
 );
 
 CREATE TABLE IF NOT EXISTS clubs (
@@ -64,7 +65,7 @@ CREATE TABLE IF NOT EXISTS wallet_passes (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES users(id),
     public_id VARCHAR(10) UNIQUE NOT NULL,
-    variant VARCHAR(6) NOT NULL -- 'apple' or 'google'
+    variant VARCHAR(6) NOT NULL, -- 'apple' or 'google'
     expires_at TIMESTAMPTZ NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
