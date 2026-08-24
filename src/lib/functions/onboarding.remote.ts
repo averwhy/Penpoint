@@ -17,13 +17,12 @@ export const setPassword = form(SetPassword, async ({ _password, token }) => {
     if (users.length === 0) error(401, { message: "Invalid credentials" });
 
     const user = User.parse(users[0]);
-    if (!user.pending) error(403, { message: "This account has already been activated." });
-
-    if (user.role === "unapproved")
-        error(403, { message: "Access denied. Please wait for approval email from SGA before logging in." });
+    
+    if (user.role === "blocked")
+        error(403, { message: "Access denied. Your account has been blocked." });
 
     if (user.role === "inactive")
-        error(401, { message: "Access denied. Your account has been marked as inactive. Contact SGA for assistance." });
+        error(403, { message: "Access denied. Your account has been marked as inactive. Contact SGA for assistance." });
 
     const passwordHash = await hashPassword(_password);
 

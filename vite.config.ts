@@ -1,4 +1,4 @@
-import { defineConfig } from "vitest/config";
+import { defineConfig } from "vite";
 import tailwindcss from "@tailwindcss/vite";
 import { sveltekit } from "@sveltejs/kit/vite";
 

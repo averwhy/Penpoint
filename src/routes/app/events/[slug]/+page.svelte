@@ -130,7 +130,7 @@
                         </Card.Root>
 
                         <div class="text-sm text-muted-foreground">
-                            Created <DateWithRelativeTooltip date={event.created_at} />
+                            created <DateWithRelativeTooltip date={event.created_at} />
                         </div>
                         <!-- If they have perms to edit then we'll show the edit button -->
                         {#if data.userClubs.some(c => c.id === event.club_id)}

@@ -67,7 +67,7 @@
                     <p class="text-lg font-medium break-all">
                         {matchedUser.email}
                         <span class="text-xs text-muted-foreground pl-3"
-                            >Joined {new Date(matchedUser.created_at).toLocaleDateString()}</span
+                            >joined {new Date(matchedUser.created_at).toLocaleDateString()}</span
                         >
                     </p>
                 </div>
@@ -82,7 +82,7 @@
                             <Badge variant="outline">{club.acronym}</Badge>
                             {#if club.created_at}
                                 <span class="text-xs text-muted-foreground"
-                                    >Created {new Date(userClubs[0].created_at).toLocaleDateString()}</span
+                                    >created {new Date(userClubs[0].created_at).toLocaleDateString()}</span
                                 >
                             {/if}
                         </div>

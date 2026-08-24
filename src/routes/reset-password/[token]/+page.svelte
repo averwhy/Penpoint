@@ -25,11 +25,11 @@
         </div>
         <div class="items-center gap-2 flex-1">
             <form
-                {...resetPassword.preflight(SetPassword).enhance(async ({ form, data, submit }) => {
+                {...resetPassword.preflight(SetPassword).enhance(async form => {
                     pending = true;
                     try {
-                        await submit();
-                        form.reset();
+                        await form.submit();
+                        form.element.reset();
                     } catch (error: any) {
                         // ignore redirects
                         if (error?.status >= 300 && error?.status < 400) {

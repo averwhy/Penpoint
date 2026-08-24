@@ -4,8 +4,18 @@ import { Login, User } from "$lib/models";
 import { generateAccessToken, verifyPassword } from "$lib/server/auth";
 import { sql } from "$lib/server/postgres";
 import { error, redirect } from "@sveltejs/kit";
+import validateTurnstile from "$lib/server/turnstile";
 
 export const login = form(Login, async login => {
+    const event = getRequestEvent();
+    const turnstileToken = login['cfTurnstileResponse'];
+    
+    const isTurnstileValid = await validateTurnstile(turnstileToken, event.getClientAddress());
+
+    if (!isTurnstileValid) {
+        error(400, { message: "Security challenge failed. Please try again." });
+    }
+
     const users = await sql`
         SELECT *
         FROM users u
@@ -25,11 +35,11 @@ export const login = form(Login, async login => {
 
     if (!isValidPassword) error(401, { message: "Invalid credentials" });
 
-    if (user.role === "unapproved")
-        error(403, { message: "Access denied. Please wait for approval email from SGA before logging in." });
-
     if (user.role === "inactive")
-        error(401, { message: "Access denied. Your account has been marked as inactive. Contact SGA for assistance." });
+        error(403, { message: "Access denied. Your account has been marked as inactive. Contact SGA for assistance." });
+
+    if (user.role === "blocked")
+        error(403, { message: "Access denied. Your account has been blocked." });
 
     const accessToken = generateAccessToken(user.id);
 
@@ -39,9 +49,7 @@ export const login = form(Login, async login => {
         WHERE id = ${user.id}
     `;
 
-    const { cookies } = getRequestEvent();
-
-    cookies.set("authorization", `Bearer ${accessToken}`, {
+    event.cookies.set("authorization", `Bearer ${accessToken}`, {
         path: "/",
         httpOnly: true,
         sameSite: "lax",

@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { sql } from '$lib/server/postgres';
-import { Event, Club, Tap } from '$lib/models';
+import { Event, Club, Scan } from '$lib/models';
 import { existsSync } from 'fs';
 import { error } from '@sveltejs/kit';
 import path from 'path';
@@ -10,7 +10,7 @@ const uploadsDir = path.join(process.cwd(), 'uploads', 'events');
 export const load: PageServerLoad = async ({ params }) => {
   const slug = params.slug;
 
-  const [eventResult, clubResult, tapsResult] = await Promise.all([
+  const [eventResult, clubResult, scansResult] = await Promise.all([
     sql`
       SELECT *
       FROM events
@@ -27,7 +27,7 @@ export const load: PageServerLoad = async ({ params }) => {
     `,
     sql`
       SELECT *
-      FROM taps
+      FROM scans
       WHERE event_id = ${slug}
       ORDER BY created_at ASC
     `
@@ -39,7 +39,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
   const event = Event.parse(eventResult.at(0));
   const club = Club.parse(clubResult.at(0));
-  const event_taps = tapsResult.map((row: unknown) => Tap.parse(row));
+  const event_scans = scansResult.map((row: unknown) => Scan.parse(row));
 
   let hasFlyer = false;
   if (event.image_filename) {
@@ -52,6 +52,6 @@ export const load: PageServerLoad = async ({ params }) => {
     event,
     club,
     hasFlyer,
-    event_taps,
+    event_scans,
   };
 }

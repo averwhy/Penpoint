@@ -12,18 +12,21 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 
 export function generateAccessToken(userId: string): string {
     return jwt.sign({ sub: userId, type: "access" }, privateEnv.jwtSecrets.access, {
+        algorithm: "HS512",
         expiresIn: "7d",
     });
 }
 
 export function generateOnboardingToken(userId: string): string {
     return jwt.sign({ sub: userId, type: "onboarding" }, privateEnv.jwtSecrets.onboarding, {
+        algorithm: "HS512",
         expiresIn: "3d",
     });
 }
 
 export function generateResetPasswordToken(userId: string): string {
     return jwt.sign({ sub: userId, type: "resetPassword" }, privateEnv.jwtSecrets.resetPassword, {
+        algorithm: "HS512",
         expiresIn: "15m",
     });
 }

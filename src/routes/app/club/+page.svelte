@@ -55,7 +55,7 @@
                                     </CardTitle>
                                 </div>
                                 <p class="text-xs text-muted-foreground">
-                                    Created {new Date(club.created_at).toLocaleDateString()}
+                                    created {new Date(club.created_at).toLocaleDateString()}
                                 </p>
                             </div>
                         </div>

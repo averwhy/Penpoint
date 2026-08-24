@@ -20,27 +20,27 @@ export const load: PageServerLoad = async ({ params, parent }) => {
         acceptedEventsResult,
         totalPointsResult,
         uniqueStudentsResult,
-        totalTapsResult,
+        totalScansResult,
         clubCountResult,
     ] = await Promise.all([
         sql`SELECT count(*) AS count FROM events WHERE semester_id = ${slug}`,
         sql`SELECT count(*) AS count FROM events WHERE semester_id = ${slug} AND approval_status = 'accepted'`,
         sql`
             SELECT coalesce(sum(e.point_value), 0)::int AS total
-            FROM taps t
-            JOIN events e ON t.event_id = e.id
+            FROM scans s
+            JOIN events e ON s.event_id = e.id
             WHERE e.semester_id = ${slug}
         `,
         sql`
-            SELECT count(DISTINCT t.student_id)::int AS count
-            FROM taps t
-            JOIN events e ON t.event_id = e.id
+            SELECT count(DISTINCT s.wallet_pass_id)::int AS count
+            FROM scans s
+            JOIN events e ON s.event_id = e.id
             WHERE e.semester_id = ${slug}
         `,
         sql`
             SELECT count(*)::int AS count
-            FROM taps t
-            JOIN events e ON t.event_id = e.id
+            FROM scans s
+            JOIN events e ON s.event_id = e.id
             WHERE e.semester_id = ${slug}
         `,
         sql`
@@ -59,7 +59,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
             acceptedEvents: acceptedEventsResult[0].count,
             totalPointsEarned: totalPointsResult[0].total,
             uniqueStudents: uniqueStudentsResult[0].count,
-            totalTaps: totalTapsResult[0].count,
+            totalScans: totalScansResult[0].count,
             clubsParticipating: clubCountResult[0].count,
         },
     };

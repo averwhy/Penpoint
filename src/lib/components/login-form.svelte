@@ -6,13 +6,16 @@
     import Eye from "@lucide/svelte/icons/eye";
     import EyeOff from "@lucide/svelte/icons/eye-closed";
     import type { HTMLFormAttributes } from "svelte/elements";
+    import { Turnstile } from "svelte-turnstile";
+    import { publicEnv } from "$lib/env/public";
 
     let {
         ref = $bindable(null),
         pending = $bindable(false),
         class: className,
+        turnstileToken = $bindable(""),
         ...restProps
-    }: WithElementRef<HTMLFormAttributes> & { pending?: boolean } = $props();
+    }: WithElementRef<HTMLFormAttributes> & { pending?: boolean, turnstileToken?: string } = $props();
 
     const id = $props.id();
     let showPassword = $state(false);
@@ -25,7 +28,7 @@
             <p class="text-muted-foreground text-balance text-sm">
                 Enter your email below to login to your account
                 <br />
-                Access is granted only to SGA, OSI, and Club E-Board members.
+                Check points, event attendance history, and more
             </p>
         </div>
         <Field>
@@ -62,6 +65,9 @@
                         <Eye class="h-4 w-4" />
                     {/if}
                 </Button>
+            </div>
+            <div>
+                <Turnstile responseFieldName="cfTurnstileResponse" on:callback={(e) => turnstileToken = e.detail.token} siteKey={publicEnv.CF_TURNSTILE_KEY ?? ""} theme="auto" />
             </div>
         </Field>
         <Field>

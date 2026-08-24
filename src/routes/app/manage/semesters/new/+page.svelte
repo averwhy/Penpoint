@@ -9,6 +9,9 @@
     import { tick } from "svelte";
     import { DateFormatter, type DateValue, getLocalTimeZone } from "@internationalized/date";
     import CalendarIcon from "@lucide/svelte/icons/calendar";
+    import { createSemester } from "$lib/functions/semester.remote";
+    import { NewSemester } from "$lib/models";
+    import { toast } from "svelte-sonner";
 
     const df = new DateFormatter("en-US", {
         dateStyle: "long",
@@ -21,6 +24,8 @@
     let endDateOpen = $state(false);
     let startDateTriggerRef = $state<HTMLButtonElement>(null!);
     let endDateTriggerRef = $state<HTMLButtonElement>(null!);
+
+    let pending = $state(false);
 
     function closeAndFocusStartDate() {
         startDateOpen = false;
@@ -110,130 +115,175 @@
     ];
 
     const triggerContent = $derived(semCodes.find(f => f.value === semesterCode)?.label ?? "Select a term code");
+
+    function toIsoDate(value: DateValue | undefined): string {
+        if (!value) return "";
+        return value.toDate(getLocalTimeZone()).toISOString();
+    }
+
+    function resetFormState() {
+        semesterCode = "A3";
+        startDate = undefined;
+        endDate = undefined;
+        startDateOpen = false;
+        endDateOpen = false;
+    }
 </script>
 
-<div class="flex justify-center py-10 px-4">
-    <Card.Root class="w-full max-w-sm">
-        <Card.Header>
-            <Card.Title>Create New Semester</Card.Title>
-            <Card.Description>Add a new semester to your calendar</Card.Description>
-        </Card.Header>
-        <Card.Content class="space-y-6">
-            <!-- Semester Code Dropdown -->
-            <div class="space-y-2">
-                <Label for="semester-code">Semester Code</Label>
-                <Select.Root type="single" bind:value={semesterCode}>
-                    <Select.Trigger class="w-full">
-                        {triggerContent}
-                    </Select.Trigger>
-                    <Select.Content>
-                        <Select.Group>
-                            <Select.Label>Term Codes</Select.Label>
-                            {#each semCodes as semCode (semCode.value)}
-                                <Select.Item
-                                    value={semCode.value}
-                                    label={semCode.label}
-                                    disabled={semCode.value === "Select a term code"}
+<div>
+    <form
+        {...createSemester.preflight(NewSemester).enhance(async form => {
+            if (pending) return;
+
+            pending = true;
+            try {
+                await form.submit();
+                resetFormState();
+                toast.success("Semester created successfully");
+            } catch (error: any) {
+                // ignore redirects
+                if (error?.status >= 300 && error?.status < 400) {
+                    throw error;
+                }
+                console.error("create semester failed", error);
+                toast.error("Create semester failed", { description: error?.body.message });
+            } finally {
+                pending = false;
+            }
+        })}
+        class="flex justify-center py-10 px-4"
+    >
+        <input type="hidden" name="starts" value={toIsoDate(startDate)} />
+        <input type="hidden" name="ends" value={toIsoDate(endDate)} />
+        <input type="hidden" name="code" value={semesterCode} />
+
+        <Card.Root class="w-full max-w-sm">
+            <Card.Header>
+                <Card.Title>Create New Semester</Card.Title>
+                <Card.Description>Add a new semester to your calendar</Card.Description>
+            </Card.Header>
+            <Card.Content class="space-y-6">
+                <!-- Semester Code Dropdown -->
+                <div class="space-y-2">
+                    <Label for="semester-code">Semester Code</Label>
+                    <Select.Root type="single" bind:value={semesterCode}>
+                        <Select.Trigger class="w-full">
+                            {triggerContent}
+                        </Select.Trigger>
+                        <Select.Content>
+                            <Select.Group>
+                                <Select.Label>Term Codes</Select.Label>
+                                {#each semCodes as semCode (semCode.value)}
+                                    <Select.Item
+                                        value={semCode.value}
+                                        label={semCode.label}
+                                        disabled={semCode.value === "Select a term code"}
+                                    >
+                                        {semCode.label}
+                                    </Select.Item>
+                                {/each}
+                            </Select.Group>
+                        </Select.Content>
+                    </Select.Root>
+                </div>
+
+                <!-- Semester Start Date -->
+                <div class="space-y-2">
+                    <Label class="text-base font-semibold">Semester Start Date</Label>
+                    <Popover.Root bind:open={startDateOpen}>
+                        <Popover.Trigger bind:ref={startDateTriggerRef}>
+                            {#snippet child({ props })}
+                                <Button
+                                    {...props}
+                                    variant="outline"
+                                    class={cn(
+                                        "w-full justify-start text-left font-normal",
+                                        !startDate && "text-muted-foreground",
+                                    )}
                                 >
-                                    {semCode.label}
-                                </Select.Item>
-                            {/each}
-                        </Select.Group>
-                    </Select.Content>
-                </Select.Root>
-            </div>
+                                    <CalendarIcon class="mr-2 h-4 w-4" />
+                                    {startDate ? df.format(startDate.toDate(getLocalTimeZone())) : "Pick a date"}
+                                </Button>
+                            {/snippet}
+                        </Popover.Trigger>
+                        <Popover.Content class="w-auto p-0">
+                            <Calendar
+                                bind:value={startDate}
+                                type="single"
+                                initialFocus
+                                onValueChange={v => {
+                                    startDate = v;
+                                    closeAndFocusStartDate();
+                                }}
+                            />
+                        </Popover.Content>
+                    </Popover.Root>
+                </div>
 
-            <!-- Semester Start Date -->
-            <div class="space-y-2">
-                <Label class="text-base font-semibold">Semester Start Date</Label>
-                <Popover.Root bind:open={startDateOpen}>
-                    <Popover.Trigger bind:ref={startDateTriggerRef}>
-                        {#snippet child({ props })}
-                            <Button
-                                {...props}
-                                variant="outline"
-                                class={cn(
-                                    "w-full justify-start text-left font-normal",
-                                    !startDate && "text-muted-foreground",
-                                )}
-                            >
-                                <CalendarIcon class="mr-2 h-4 w-4" />
-                                {startDate ? df.format(startDate.toDate(getLocalTimeZone())) : "Pick a date"}
-                            </Button>
-                        {/snippet}
-                    </Popover.Trigger>
-                    <Popover.Content class="w-auto p-0">
-                        <Calendar
-                            bind:value={startDate}
-                            type="single"
-                            initialFocus
-                            onValueChange={v => {
-                                startDate = v;
-                                closeAndFocusStartDate();
-                            }}
-                        />
-                    </Popover.Content>
-                </Popover.Root>
-            </div>
+                <!-- Semester End Date -->
+                <div class="space-y-2">
+                    <Label class="text-base font-semibold">Semester End Date</Label>
+                    <Popover.Root bind:open={endDateOpen}>
+                        <Popover.Trigger bind:ref={endDateTriggerRef}>
+                            {#snippet child({ props })}
+                                <Button
+                                    {...props}
+                                    variant="outline"
+                                    class={cn(
+                                        "w-full justify-start text-left font-normal",
+                                        !endDate && "text-muted-foreground",
+                                    )}
+                                >
+                                    <CalendarIcon class="mr-2 h-4 w-4" />
+                                    {endDate ? df.format(endDate.toDate(getLocalTimeZone())) : "Pick a date"}
+                                </Button>
+                            {/snippet}
+                        </Popover.Trigger>
+                        <Popover.Content class="w-auto p-0">
+                            <Calendar
+                                bind:value={endDate}
+                                type="single"
+                                initialFocus
+                                onValueChange={v => {
+                                    endDate = v;
+                                    closeAndFocusEndDate();
+                                }}
+                            />
+                        </Popover.Content>
+                    </Popover.Root>
+                </div>
 
-            <!-- Semester End Date -->
-            <div class="space-y-2">
-                <Label class="text-base font-semibold">Semester End Date</Label>
-                <Popover.Root bind:open={endDateOpen}>
-                    <Popover.Trigger bind:ref={endDateTriggerRef}>
-                        {#snippet child({ props })}
-                            <Button
-                                {...props}
-                                variant="outline"
-                                class={cn(
-                                    "w-full justify-start text-left font-normal",
-                                    !endDate && "text-muted-foreground",
-                                )}
-                            >
-                                <CalendarIcon class="mr-2 h-4 w-4" />
-                                {endDate ? df.format(endDate.toDate(getLocalTimeZone())) : "Pick a date"}
-                            </Button>
-                        {/snippet}
-                    </Popover.Trigger>
-                    <Popover.Content class="w-auto p-0">
-                        <Calendar
-                            bind:value={endDate}
-                            type="single"
-                            initialFocus
-                            onValueChange={v => {
-                                endDate = v;
-                                closeAndFocusEndDate();
-                            }}
-                        />
-                    </Popover.Content>
-                </Popover.Root>
-            </div>
+                <!-- Duration Text -->
+                {#if durationText}
+                    <div class="p-3 bg-muted rounded-md">
+                        <p class="text-sm text-muted-foreground">Duration</p>
+                        <p class="text-lg font-medium">{durationText}</p>
+                    </div>
+                {/if}
 
-            <!-- Duration Text -->
-            {#if durationText}
-                <div class="p-3 bg-muted rounded-md">
-                    <p class="text-sm text-muted-foreground">Duration</p>
-                    <p class="text-lg font-medium">{durationText}</p>
+                <!-- Preview Text -->
+                {#if previewText}
+                    <div class="p-3 bg-muted rounded-md">
+                        <p class="text-sm text-muted-foreground">Preview</p>
+                        <p class="text-lg font-medium">{previewText}</p>
+                    </div>
+                {/if}
+            </Card.Content>
+            {#if errorText}
+                <div class="font-bold justify-center flex">
+                    <Label class="text-destructive">{errorText}</Label>
                 </div>
             {/if}
-
-            <!-- Preview Text -->
-            {#if previewText}
-                <div class="p-3 bg-muted rounded-md">
-                    <p class="text-sm text-muted-foreground">Preview</p>
-                    <p class="text-lg font-medium">{previewText}</p>
-                </div>
-            {/if}
-        </Card.Content>
-        {#if errorText}
-            <div class="font-bold justify-center flex">
-                <Label class="text-destructive">{errorText}</Label>
-            </div>
-        {/if}
-        <Card.Footer>
-            <Button class="w-full" type="submit" variant="success" disabled={!(startDate && endDate && !errorText)}
-                >Create Semester</Button
-            >
-        </Card.Footer>
-    </Card.Root>
+            <Card.Footer>
+                <Button
+                    class="w-full"
+                    type="submit"
+                    variant="success"
+                    disabled={pending || !(startDate && endDate && !errorText)}
+                >
+                    {pending ? "Creating..." : "Create Semester"}
+                </Button>
+            </Card.Footer>
+        </Card.Root>
+    </form>
 </div>

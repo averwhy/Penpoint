@@ -117,7 +117,7 @@
                             </Card.Content>
                         </Card.Root>
                         <div class="text-sm text-muted-foreground">
-                            Created <DateWithRelativeTooltip date={event.created_at} />
+                            created <DateWithRelativeTooltip date={event.created_at} />
                         </div>
                         <div class="flex justify-end gap-4">
                             <Button variant="secondary">Change Date</Button>

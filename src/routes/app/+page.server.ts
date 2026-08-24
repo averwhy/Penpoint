@@ -11,23 +11,6 @@ export const load: PageServerLoad = async ({ locals }) => {
     // Get active semester, or fall back to last semester if none active
     const semester = (await getActiveSemester(false).catch(() => undefined)) ?? (await getLastSemester());
 
-    if (!semester) {
-        // No semester at all - return minimal data
-        return {
-            club: undefined,
-            platform: {
-                semester: {
-                    eventsHosted: 0,
-                    pointsEarned: 0,
-                    attendanceCount: 0,
-                    upcomingEvents: 0,
-                    uniqueClubsHostingEvents: 0,
-                },
-                allTime: { eventsHosted: 0, pointsEarned: 0, attendanceCount: 0 },
-            },
-        };
-    }
-
     // Platform-wide statistics
     const [
         upcomingEventsResult,
@@ -39,33 +22,33 @@ export const load: PageServerLoad = async ({ locals }) => {
         platformAllTimePointsResult,
         platformAllTimeAttendanceResult,
     ] = await Promise.all([
-        sql`
+        semester ? sql`
             SELECT COUNT(*) as count
             FROM events
             WHERE semester_id = ${semester.id}
-        `,
-        sql`
+        ` : undefined,
+        semester ? sql`
             SELECT COUNT(DISTINCT club_id) as count
             FROM events
             WHERE semester_id = ${semester.id}
-        `,
-        sql`
+        ` : undefined,
+        semester ? sql`
             SELECT COUNT(*) as count
             FROM events
             WHERE semester_id = ${semester.id}
-        `,
-        sql`
+        ` : undefined,
+        semester ? sql`
             SELECT SUM(e.point_value) as total_points
-            FROM taps t
-            JOIN events e ON t.event_id = e.id
+            FROM scans s
+            JOIN events e ON s.event_id = e.id
             WHERE e.semester_id = ${semester.id}
-        `,
-        sql`
-            SELECT COUNT(t.id) as count
-            FROM taps t
-            JOIN events e ON t.event_id = e.id
+        ` : undefined,
+        semester ? sql`
+            SELECT COUNT(s.id) as count
+            FROM scans s
+            JOIN events e ON s.event_id = e.id
             WHERE e.semester_id = ${semester.id}
-        `,
+        ` : undefined,
         sql`
             SELECT COUNT(*) as count
             FROM events
@@ -73,13 +56,13 @@ export const load: PageServerLoad = async ({ locals }) => {
         `,
         sql`
             SELECT SUM(e.point_value) as total_points
-            FROM taps t
-            JOIN events e ON t.event_id = e.id
+            FROM scans s
+            JOIN events e ON s.event_id = e.id
         `,
         sql`
-            SELECT COUNT(t.id) as count
-            FROM taps t
-            JOIN events e ON t.event_id = e.id
+            SELECT COUNT(s.id) as count
+            FROM scans s
+            JOIN events e ON s.event_id = e.id
         `,
     ]);
 
@@ -111,40 +94,39 @@ export const load: PageServerLoad = async ({ locals }) => {
             clubAllTimePointsResult,
             clubAllTimeAttendanceResult,
         ] = await Promise.all([
-            sql`
+            semester ? sql`
                 SELECT COUNT(*) as count
                 FROM club_users
                 WHERE club_id = ${userClub.id}
-                AND for_semester = ${semester.id}
-            `,
-            sql`
+            ` : undefined,
+            semester ? sql`
                 SELECT COUNT(*) as count
                 FROM events e
                 JOIN club_users cu ON e.club_id = cu.club_id
                 WHERE cu.user_id = ${locals.user.id} AND e.semester_id = ${semester.id}
-            `,
-            sql`
+            ` : undefined,
+            semester ? sql`
                 SELECT SUM(e.point_value) as total_points
-                FROM taps t
-                JOIN events e ON t.event_id = e.id
+                FROM scans s
+                JOIN events e ON s.event_id = e.id
                 JOIN club_users cu ON e.club_id = cu.club_id
                 WHERE cu.user_id = ${locals.user.id} AND e.semester_id = ${semester.id}
-            `,
-            sql`
-                SELECT COUNT(t.id) as count
-                FROM taps t
-                JOIN events e ON t.event_id = e.id
+            ` : undefined,
+            semester ?  sql`
+                SELECT COUNT(s.id) as count
+                FROM scans s
+                JOIN events e ON s.event_id = e.id
                 JOIN club_users cu ON e.club_id = cu.club_id
                 WHERE cu.user_id = ${locals.user.id} AND e.semester_id = ${semester.id}
-            `,
-            sql`
+            ` : undefined,
+            semester ? sql`
                 SELECT COUNT(*) as count
                 FROM events e
                 JOIN club_users cu ON e.club_id = cu.club_id
                 WHERE cu.user_id = ${locals.user.id}
                 AND e.starts_at > now() 
                 AND e.semester_id = ${semester.id}
-            `,
+            ` : undefined,
             sql`
                 SELECT COUNT(*) as count
                 FROM events e
@@ -153,15 +135,15 @@ export const load: PageServerLoad = async ({ locals }) => {
             `,
             sql`
                 SELECT SUM(e.point_value) as total_points
-                FROM taps t
-                JOIN events e ON t.event_id = e.id
+                FROM scans s
+                JOIN events e ON s.event_id = e.id
                 JOIN club_users cu ON e.club_id = cu.club_id
                 WHERE cu.user_id = ${locals.user.id}
             `,
             sql`
-                SELECT COUNT(t.id) as count
-                FROM taps t
-                JOIN events e ON t.event_id = e.id
+                SELECT COUNT(s.id) as count
+                FROM scans s
+                JOIN events e ON s.event_id = e.id
                 JOIN club_users cu ON e.club_id = cu.club_id
                 WHERE cu.user_id = ${locals.user.id}
             `,
@@ -169,17 +151,17 @@ export const load: PageServerLoad = async ({ locals }) => {
 
         clubStats = {
             semester: {
-                eventsHosted: Number(clubSemesterEventsResult[0]?.count ?? 0),
-                pointsEarned: Number(clubSemesterPointsResult[0]?.total_points ?? 0),
-                attendanceCount: Number(clubSemesterAttendanceResult[0]?.count ?? 0),
-                upcomingEvents: Number(clubUpcomingEventsResult[0]?.count ?? 0),
+                eventsHosted: clubSemesterEventsResult ? Number(clubSemesterEventsResult[0]?.count ?? 0) : 0,
+                pointsEarned: clubSemesterPointsResult ? Number(clubSemesterPointsResult[0]?.total_points ?? 0) : 0,
+                attendanceCount: clubSemesterAttendanceResult ? Number(clubSemesterAttendanceResult[0]?.count ?? 0) : 0,
+                upcomingEvents: clubUpcomingEventsResult ? Number(clubUpcomingEventsResult[0]?.count ?? 0) : 0,
             },
             allTime: {
                 eventsHosted: Number(clubAllTimeEventsResult[0]?.count ?? 0),
                 pointsEarned: Number(clubAllTimePointsResult[0]?.total_points ?? 0),
                 attendanceCount: Number(clubAllTimeAttendanceResult[0]?.count ?? 0),
             },
-            members: Number(clubMembersResult[0]?.count ?? 0),
+            members: clubMembersResult ? Number(clubMembersResult[0]?.count ?? 0) : 0,
         };
     }
 
@@ -187,11 +169,11 @@ export const load: PageServerLoad = async ({ locals }) => {
         club: clubStats,
         platform: {
             semester: {
-                eventsHosted: Number(platformSemesterEventsResult[0]?.count ?? 0),
-                pointsEarned: Number(platformSemesterPointsResult[0]?.total_points ?? 0),
-                attendanceCount: Number(platformSemesterAttendanceResult[0]?.count ?? 0),
-                upcomingEvents: Number(upcomingEventsResult[0]?.count ?? 0),
-                uniqueClubsHostingEvents: Number(uniqueClubsHostingEventsResult[0]?.count ?? 0),
+                eventsHosted: platformSemesterEventsResult ? Number(platformSemesterEventsResult[0]?.count ?? 0) : 0,
+                pointsEarned: platformSemesterPointsResult ? Number(platformSemesterPointsResult[0]?.total_points ?? 0) : 0,
+                attendanceCount: platformSemesterAttendanceResult ? Number(platformSemesterAttendanceResult[0]?.count ?? 0) : 0,
+                upcomingEvents: upcomingEventsResult ? Number(upcomingEventsResult[0]?.count ?? 0): 0,
+                uniqueClubsHostingEvents: uniqueClubsHostingEventsResult ? (uniqueClubsHostingEventsResult[0]?.count ?? 0) : 0,
             },
             allTime: {
                 eventsHosted: Number(platformAllTimeEventsResult[0]?.count ?? 0),

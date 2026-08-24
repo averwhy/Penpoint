@@ -60,34 +60,14 @@
                             <NavigationMenu.Link href="/clubs">Clubs</NavigationMenu.Link>
                         </NavigationMenu.Item>
                         <NavigationMenu.Item>
-                            <NavigationMenu.Trigger class="bg-primary">Students</NavigationMenu.Trigger>
-                            <NavigationMenu.Content>
-                                <ul class="grid w-50 gap-4 p-2">
-                                    <li>
-                                        <NavigationMenu.Link href="/points">Points Checker</NavigationMenu.Link>
-                                        <NavigationMenu.Link href="/login">Club Login</NavigationMenu.Link>
-                                        <NavigationMenu.Link href="/register">Club Registration</NavigationMenu.Link>
-                                    </li>
-                                </ul>
-                            </NavigationMenu.Content>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Trigger class="bg-primary">Faculty</NavigationMenu.Trigger>
-                            <NavigationMenu.Content>
-                                <ul class="grid w-50 gap-4 p-2">
-                                    <li>
-                                        <NavigationMenu.Link href="/login">OSI Login</NavigationMenu.Link>
-                                        <NavigationMenu.Link href="/register">OSI Registration</NavigationMenu.Link>
-                                    </li>
-                                </ul>
-                            </NavigationMenu.Content>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
                             <NavigationMenu.Link
                                 href="https://www.snhusga.org/penmen-pride"
                                 target="_blank"
                                 rel="noopener noreferrer">About</NavigationMenu.Link
                             >
+                        </NavigationMenu.Item>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link href="/login">Login</NavigationMenu.Link>
                         </NavigationMenu.Item>
                     </NavigationMenu.List>
                 </NavigationMenu.Root>

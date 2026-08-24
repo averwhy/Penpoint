@@ -47,11 +47,6 @@
             icon: IdCard,
         },
         {
-            title: "New User Requests",
-            url: "/app/requests/users",
-            icon: AddUser,
-        },
-        {
             title: "Event Requests",
             url: "/app/requests/events",
             icon: CalendarCheck,
@@ -180,7 +175,8 @@
                                             <span
                                                 class="absolute inset-0 animate-ping rounded-full bg-pride-yellow/80 opacity-75"
                                             ></span>
-                                            <span class="relative block h-2.5 w-2.5 rounded-full bg-pride-yellow"></span>
+                                            <span class="relative block h-2.5 w-2.5 rounded-full bg-pride-yellow"
+                                            ></span>
                                         </span>
                                     </Sidebar.MenuBadge>
                                 {/if}

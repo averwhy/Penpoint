@@ -21,6 +21,16 @@
         "What's up, ",
         "Ahoy, ",
         "Today's a good day, ",
+        "How goes it, ",
+        "Greetings, ",
+        "Nice to see you, ",
+        "Good day, ",
+        "Aloha, ",
+        "Long time no see, ",
+        "Pleased to see you, ",
+        "Very nice to see you, ",
+        "Hola, ",
+        "Nice to have you back, "
     ];
 
     const greeting = hydratable("greeting", () => nameGreetings[Math.floor(Math.random() * nameGreetings.length)]);
@@ -53,7 +63,7 @@
                             <br /> <br />
                             {club?.members} E-Board members (on Penmen Pride)
                             <br /> <br />
-                            Created <DateWithRelativeTooltip
+                            created <DateWithRelativeTooltip
                                 date={userClubs[0].created_at}
                                 reverse={true}
                                 underline={false}

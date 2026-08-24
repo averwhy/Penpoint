@@ -27,6 +27,8 @@ export const privateEnv = z
         SMTP_PORT: z.coerce.number().optional().default(587),
         /** SMTP username. */
         SMTP_USERNAME: z.string().optional(),
+        /** Cloudflare Turnstile secret key. */
+        CF_TURNSTILE_SECRET: z.string().optional(),
     })
     .transform(env => {
         const {
@@ -40,6 +42,7 @@ export const privateEnv = z
             SMTP_PASSWORD,
             SMTP_PORT,
             SMTP_USERNAME,
+            CF_TURNSTILE_SECRET,
             ...rest
         } = env;
 
@@ -63,6 +66,13 @@ export const privateEnv = z
                           password: SMTP_PASSWORD,
                           port: SMTP_PORT,
                           username: SMTP_USERNAME,
+                      },
+                  }
+                : {}),
+            ...(CF_TURNSTILE_SECRET
+                ? {
+                      cfTurnstile: {
+                          secretKey: CF_TURNSTILE_SECRET,
                       },
                   }
                 : {}),

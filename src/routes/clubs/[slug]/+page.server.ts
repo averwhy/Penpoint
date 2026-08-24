@@ -42,9 +42,9 @@ export const load: PageServerLoad = async ({ params }) => {
       WHERE club_id = ${club.id}
     `,
     sql`
-      SELECT COUNT(t.id) AS attendance_count
-      FROM taps t
-      JOIN events e ON t.event_id = e.id
+      SELECT COUNT(s.id) AS attendance_count
+      FROM scans s
+      JOIN events e ON s.event_id = e.id
       WHERE e.club_id = ${club.id}
     `
   ]);
