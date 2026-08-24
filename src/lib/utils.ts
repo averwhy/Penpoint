@@ -19,3 +19,5 @@ export function fallOrSpring(semesterStart: Date): "Spring" | "Fall" {
     // return 'Spring' for a start date before jun 1, else 'Fall'
     return month < 5 ? "Spring" : "Fall";
 }
+
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

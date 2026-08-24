@@ -18,6 +18,9 @@ export type Password = z.infer<typeof Password>;
 export const Login = z.object({
     email: z.email().max(100),
     _password: z.string(), // don't use password schema for logging in, it's used on registration
+    'cfTurnstileResponse': z.string({
+        error: "Please complete the Turnstile challenge to verify you're not a robot.",
+    })
 });
 export type Login = z.infer<typeof Login>;
 
@@ -25,8 +28,20 @@ export const Registration = z.object({
     name: z.string().min(1).max(100),
     email: z.email().max(100),
     _password: Password,
+    'cfTurnstileResponse': z.string({
+        error: "Please complete the Turnstile challenge to verify you're not a robot.",
+    })
 });
 export type Registration = z.infer<typeof Registration>;
+
+export const NewWalletPass = z.object({
+    user_id: z.uuid().optional(),
+    variant: z.enum(["apple", "google"]),
+    'cfTurnstileResponse': z.string({
+        error: "Please complete the Turnstile challenge to verify you're not a robot.",
+    })
+});
+export type NewWalletPass = z.infer<typeof NewWalletPass>;
 
 // db schemas
 

@@ -74,7 +74,7 @@ export const load: PageServerLoad = async () => {
 async function getSemesterStats(semester: Semester) {
     const [pointEarnersResult, pointsEarnedResult, upcomingEventsResult, totalEventsResult] = await Promise.all([
         sql`
-            SELECT COUNT(DISTINCT s.student_id)
+            SELECT COUNT(DISTINCT s.wallet_pass_id) as count
             FROM scans s
             JOIN events e ON s.event_id = e.id
             WHERE e.semester_id = ${semester.id}

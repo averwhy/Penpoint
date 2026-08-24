@@ -6,6 +6,7 @@
     import { toast } from "svelte-sonner";
 
     let pending = $state(false);
+    let turnstileToken = $state("");
 </script>
 
 <div class="grid min-h-svh lg:grid-cols-2">
@@ -14,7 +15,15 @@
             <div class="w-full max-w-xs">
                 <LoginForm
                     bind:pending
+                    bind:turnstileToken
                     {...login.preflight(Login).enhance(async form => {
+                        if (!turnstileToken) {
+                            toast.error("Please complete the Turnstile challenge to verify you're not a robot.");
+                            return;
+                        }
+                        console.log("Submitting form with Turnstile token:", turnstileToken);
+                        form.fields.cfTurnstileResponse.set(turnstileToken);
+
                         pending = true;
                         try {
                             await form.submit();

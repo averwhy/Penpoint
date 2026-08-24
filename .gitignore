@@ -31,3 +31,6 @@ docker-compose.yml
 # file uploads
 uploads/clubs/*
 uploads/events/*
+
+.dev.vars*
+!.dev.vars.example

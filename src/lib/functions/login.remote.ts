@@ -4,8 +4,18 @@ import { Login, User } from "$lib/models";
 import { generateAccessToken, verifyPassword } from "$lib/server/auth";
 import { sql } from "$lib/server/postgres";
 import { error, redirect } from "@sveltejs/kit";
+import validateTurnstile from "$lib/server/turnstile";
 
 export const login = form(Login, async login => {
+    const event = getRequestEvent();
+    const turnstileToken = login['cfTurnstileResponse'];
+    
+    const isTurnstileValid = await validateTurnstile(turnstileToken, event.getClientAddress());
+
+    if (!isTurnstileValid) {
+        error(400, { message: "Security challenge failed. Please try again." });
+    }
+
     const users = await sql`
         SELECT *
         FROM users u
@@ -39,9 +49,7 @@ export const login = form(Login, async login => {
         WHERE id = ${user.id}
     `;
 
-    const { cookies } = getRequestEvent();
-
-    cookies.set("authorization", `Bearer ${accessToken}`, {
+    event.cookies.set("authorization", `Bearer ${accessToken}`, {
         path: "/",
         httpOnly: true,
         sameSite: "lax",

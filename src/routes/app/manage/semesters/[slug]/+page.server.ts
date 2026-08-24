@@ -32,7 +32,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
             WHERE e.semester_id = ${slug}
         `,
         sql`
-            SELECT count(DISTINCT s.student_id)::int AS count
+            SELECT count(DISTINCT s.wallet_pass_id)::int AS count
             FROM scans s
             JOIN events e ON s.event_id = e.id
             WHERE e.semester_id = ${slug}

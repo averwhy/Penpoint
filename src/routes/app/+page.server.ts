@@ -98,7 +98,6 @@ export const load: PageServerLoad = async ({ locals }) => {
                 SELECT COUNT(*) as count
                 FROM club_users
                 WHERE club_id = ${userClub.id}
-                AND for_semester = ${semester.id}
             ` : undefined,
             semester ? sql`
                 SELECT COUNT(*) as count

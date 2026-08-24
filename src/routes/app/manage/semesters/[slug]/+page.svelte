@@ -88,7 +88,7 @@
                 </div>
 
                 <div class="text-sm text-muted-foreground">
-                    Created <DateWithRelativeTooltip date={semester.created_at} />
+                    created <DateWithRelativeTooltip date={semester.created_at} />
                 </div>
             </Card.Content>
         </Card.Root>

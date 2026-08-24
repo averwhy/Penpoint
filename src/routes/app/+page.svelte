@@ -63,7 +63,7 @@
                             <br /> <br />
                             {club?.members} E-Board members (on Penmen Pride)
                             <br /> <br />
-                            Created <DateWithRelativeTooltip
+                            created <DateWithRelativeTooltip
                                 date={userClubs[0].created_at}
                                 reverse={true}
                                 underline={false}

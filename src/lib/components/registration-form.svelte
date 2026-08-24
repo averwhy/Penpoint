@@ -9,23 +9,27 @@
     import { toast } from "svelte-sonner";
     import { register } from "$lib/functions/register.remote";
     import { Registration } from "$lib/models";
-    import { Textarea } from "$lib/components/ui/textarea/index.js";
     import Disc from "@lucide/svelte/icons/disc-3";
     import RegisterIcon from "@lucide/svelte/icons/user-plus";
+    import { Turnstile } from "svelte-turnstile";
+    import { publicEnv } from "$lib/env/public";
 
-    let { ...restProps }: ComponentProps<typeof Card.Root> = $props();
+    let { turnstileToken = $bindable(""), ...restProps }: ComponentProps<typeof Card.Root> & { turnstileToken?: string } = $props();
     let pending = $state(false);
     let isCampusLeader = $state(false); // sga, osi or e-board member
 </script>
 
 <Card.Root {...restProps}>
     <Card.Header>
-        <Card.Title>Request an account</Card.Title>
+        <Card.Title>Create an account</Card.Title>
         <Card.Description>
-            Enter your information below to create an account. If you are an SGA, Club E-Board member, or OSI staff,
-            create an account here if you haven't already, then please email <a
-                href="mailto:StudentGovernmentAssociation@snhu.edu">sga@snhu.edu</a
-            > to obtain the correct role for your account.
+            Enter your information below to create an account.
+            <br />
+            If you are an SGA senator, Club E-Board member, or university staff, create an account here if you haven't already,
+            then please email
+            <a href="mailto:StudentGovernmentAssociation@snhu.edu" class="text-link-primary hover:text-link-hover"
+                >sga@snhu.edu</a
+            > to gain access to create events, edit club details, and more.
         </Card.Description>
     </Card.Header>
     <Card.Content>
@@ -74,6 +78,14 @@
                     <Field.Description class="px-6 text-center">
                         Already have an account? <a href="/login">Sign in</a>
                     </Field.Description>
+                </Field.Field>
+                <Field.Field>
+                        <Turnstile
+                            responseFieldName="cfTurnstileResponse"
+                            on:callback={e => (turnstileToken = e.detail.token)}
+                            siteKey={publicEnv.CF_TURNSTILE_KEY ?? ""}
+                            theme="auto"
+                        />
                 </Field.Field>
             </Field.Group>
         </form>
