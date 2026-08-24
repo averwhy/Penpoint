@@ -53,11 +53,11 @@
   "private": true,
   "scripts": {
     "dev": "vite dev",
-    "build": "wrangler types && vite build",
+    "build": "vite build",
     "start": "node build",
     "format": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json,svelte}\"",
     "preview": "bun run build && wrangler dev",
-    "prepare": "wrangler types && svelte-kit sync || echo ''",
+    "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "deploy": "bun run build && wrangler deploy",
